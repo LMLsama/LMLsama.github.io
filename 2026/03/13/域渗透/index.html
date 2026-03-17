@@ -240,7 +240,7 @@
         <p class="main-left--name">lmlsama</p>
         <div class="main-left--tags">
           <span class="main-left--tag">kong</span>
-          <span class="main-left--tag"></span>
+          <span class="main-left--tag">kong</span>
         </div>
       </div>
     </div>
@@ -335,7 +335,7 @@
       </p>
       <p class="main-left--subtitle">
         <span>上线时间：</span>
-        <span>1490天</span>
+        <span>1491天</span>
       </p>
       <p class="main-left--subtitle">
         <span>当前版本：</span>
@@ -429,7 +429,7 @@
 <p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260315183216926.png" alt="image-20260315173341400"></p>
 <h3 id="IPC-前提"><a href="#IPC-前提" class="headerlink" title="IPC$ 前提"></a>IPC$ 前提</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 139、445 端口开启</span><br><span class="line">2. 管理员开启默认共享 (一般来说默认都是开启的)</span><br><span class="line">3. ipc$ 一般不会默认开启,但c$和d$会开</span><br><span class="line">4. 管理员已经在入侵主机登陆过留有记录</span><br></pre></td></tr></table></figure>
 
-<h3 id="IPC-入侵实战"><a href="#IPC-入侵实战" class="headerlink" title="IPC$ 入侵实战"></a>IPC$ 入侵实战</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1. 拿下 win7 shell 权限</span><br><span class="line">2. 提权为超级管理员 (必须)</span><br><span class="line">3. 拿到域控主机的密码[密码可见 / 密码加密但是可解密 / 密码加密且不可解密](提权)</span><br><span class="line">4. cs 命令 mimikatz</span><br><span class="line">5. mimikatz sekurlsa::logonpasswords（可以找域控主机是否在本机登录过，会存有遗留密码）</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">下面是基于实验而言，非实际：</span><br><span class="line">6. 如果不显示 win2012 的密码 我们模拟登录一下</span><br><span class="line">7. shell net use \win2012 Hackme123!/user:lmlsama\administrator     建立从当前计算机到目标服务器 win2012 的 IPC$（或网络共享）连接。简单来说，就是用指定的用户名和密码登录远程的 win2012 服务器。</span><br></pre></td></tr></table></figure>
+<h3 id="IPC-入侵实战"><a href="#IPC-入侵实战" class="headerlink" title="IPC$ 入侵实战"></a>IPC$ 入侵实战</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1. 拿下 win7 shell 权限</span><br><span class="line">2. 提权为超级管理员 (必须)</span><br><span class="line">3. 拿到域控主机的密码[密码可见 / 密码加密但是可解密 / 密码加密且不可解密](提权)</span><br><span class="line">4. cs 命令 mimikatz</span><br><span class="line">5. mimikatz sekurlsa::logonpasswords（可以找域控主机是否在本机登录过，会存有遗留密码----win7以后是加密存储的）</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">下面是基于实验而言，非实际：</span><br><span class="line">6. 如果不显示 win2012 的密码 我们模拟登录一下</span><br><span class="line">7. shell net use \win2012 Hackme123!/user:lmlsama\administrator     建立从当前计算机到目标服务器 win2012 的 IPC$（或网络共享）连接。简单来说，就是用指定的用户名和密码登录远程的 win2012 服务器。</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260315183216927.png" alt="image-20260315174101692"></p>
 <h3 id="通过-ipc-共享目录-上传文件"><a href="#通过-ipc-共享目录-上传文件" class="headerlink" title="通过 ipc$ 共享目录 上传文件"></a>通过 ipc$ 共享目录 上传文件</h3><p><strong>1 打通通道 验证密码(提权)</strong></p>
@@ -601,7 +601,7 @@
       <i class="iconfont icon-gonggao"></i>
     </div>
     <div class="main-right--content">
-      Hello 欢迎你们来到博客小站，希望能在这里收获到有用的东西哦！ 
+      Hello，欢迎你们来到博客小站，希望能在这里收获到有用的东西哦！ 
     </div>
   </div>
 
